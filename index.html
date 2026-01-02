@@ -1,82 +1,156 @@
 <!doctype html>
-<html lang="cs">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CaffeineTracker – Garmin widget</title>
-  <meta name="description" content="CaffeineTracker – Garmin Connect IQ widget pro sledování příjmu kofeinu a lepší spánek. Koupě unlocku přes Stripe, unlock kód dorazí automaticky." />
+  <title>Caffeine Tracker for Garmin — Track caffeine, sleep better</title>
+  <meta name="description" content="Caffeine Tracker is a Garmin Connect IQ widget to log caffeine and understand its impact on your day and sleep. Buy unlock via Stripe and receive your code automatically." />
+
   <style>
-    :root { color-scheme: light dark; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; line-height: 1.5; }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 24px; }
-    header { padding: 28px 0 10px; }
-    .badge { display:inline-block; padding:6px 10px; border:1px solid rgba(127,127,127,.35); border-radius:999px; font-size: 13px; opacity: .9; }
-    h1 { font-size: 40px; margin: 10px 0 6px; }
-    p.lead { font-size: 18px; opacity:.9; max-width: 70ch; }
-    .grid { display:grid; grid-template-columns: 1.2fr .8fr; gap: 18px; margin-top: 18px; }
-    @media (max-width: 880px){ .grid { grid-template-columns: 1fr; } }
+    :root { color-scheme: light dark; --max: 1040px; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.5; }
+    a { color: inherit; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 26px 18px; }
+    .top { display:flex; gap:14px; align-items:center; padding: 10px 0 18px; }
+    .icon { width: 64px; height: 64px; border-radius: 14px; border: 1px solid rgba(127,127,127,.25); background: rgba(127,127,127,.08); object-fit: cover; }
+    .badge { display:inline-block; padding:6px 10px; border:1px solid rgba(127,127,127,.35); border-radius: 999px; font-size: 13px; opacity:.9; }
+    h1 { margin: 8px 0 6px; font-size: 40px; letter-spacing: -0.02em; }
+    .lead { font-size: 18px; opacity: .9; max-width: 75ch; margin: 0; }
+    .cta { display:flex; gap:10px; flex-wrap: wrap; margin-top: 14px; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(127,127,127,.35); text-decoration:none; font-weight: 650; }
+    .btn.primary { background: #635bff; color: #fff; border-color: transparent; }
+    .muted { opacity:.85; font-size: 14px; margin-top: 10px; }
+
+    .grid { display:grid; grid-template-columns: 1.15fr .85fr; gap: 16px; margin-top: 18px; }
+    @media (max-width: 900px){ .grid { grid-template-columns: 1fr; } }
+
     .card { border:1px solid rgba(127,127,127,.25); border-radius: 16px; padding: 18px; background: rgba(127,127,127,.05); }
-    .btn { display:inline-flex; align-items:center; justify-content:center; padding: 12px 16px; border-radius: 12px;
-           border: 1px solid rgba(127,127,127,.35); text-decoration:none; font-weight: 650; }
-    .btn.primary { background: #635bff; color: white; border-color: transparent; }
-    .btnrow { display:flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-    ul { margin: 10px 0 0 18px; }
-    .muted { opacity:.85; font-size: 14px; }
-    .steps ol { margin: 10px 0 0 18px; }
-    footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid rgba(127,127,127,.25); font-size: 13px; opacity: .9; }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.95em; }
+    h2 { margin: 0 0 10px; font-size: 18px; }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin: 6px 0; }
+
+    .shots { display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media (max-width: 900px){ .shots { grid-template-columns: repeat(2, 1fr); } }
+    .shot { width: 100%; border-radius: 14px; border: 1px solid rgba(127,127,127,.25); background: rgba(127,127,127,.06); object-fit: cover; }
+
+    .codegrid { display:grid; grid-template-columns: .95fr 1.05fr; gap: 14px; align-items: start; }
+    @media (max-width: 900px){ .codegrid { grid-template-columns: 1fr; } }
+    .steps { margin: 0; padding-left: 18px; }
+    .callout { border: 1px dashed rgba(127,127,127,.35); border-radius: 14px; padding: 12px 14px; background: rgba(127,127,127,.04); }
+    .callout b { font-weight: 750; }
+    .small { font-size: 13px; opacity: .85; margin-top: 8px; }
+
+    footer { margin-top: 22px; padding-top: 14px; border-top: 1px solid rgba(127,127,127,.25); font-size: 13px; opacity: .9; display:flex; gap: 12px; flex-wrap: wrap; }
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <header>
-      <span class="badge">Garmin Connect IQ • CaffeineTracker</span>
-      <h1>Sleduj kofein. Spi líp.</h1>
-      <p class="lead">
-        CaffeineTracker je widget pro Garmin hodinky, který ti pomůže mít přehled o příjmu kofeinu a nezasahovat si do spánku.
-      </p>
-      <div class="btnrow">
-        <!-- TODO: sem vlož svůj Stripe Payment Link -->
-        <a class="btn primary" href="https://buy.stripe.com/REPLACE_ME" target="_blank" rel="noopener">Koupit unlock</a>
-        <a class="btn" href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714" target="_blank" rel="noopener">
-          Otevřít v Connect IQ Store
-        </a>
-      </div>
-      <p class="muted">Po zaplacení ti přijde unlock kód automaticky e-mailem. Na checkoutu vyplníš svůj <b>App code</b>.</p>
-    </header>
+    <div class="top">
+      <img class="icon" src="assets/brown-coffee-cup-icon.png" alt="Caffeine Tracker app icon">
+      <div>
+        <span class="badge">Garmin Connect IQ • Widget</span>
+        <h1>Caffeine Tracker</h1>
+        <p class="lead">
+          Log caffeine in seconds and see what’s still “in your system”.
+          Make smarter cut-off decisions — and protect your sleep.
+        </p>
 
-    <section class="grid">
+        <div class="cta">
+          <!-- TODO: replace with your Stripe Payment Link -->
+          <a class="btn primary" href="https://buy.stripe.com/REPLACE_ME" target="_blank" rel="noopener">Buy unlock</a>
+
+          <a class="btn" href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714"
+             target="_blank" rel="noopener">View in Connect IQ Store</a>
+        </div>
+
+        <div class="muted">
+          After purchase, you’ll receive your unlock code automatically by email. During checkout, paste your <b>App Code</b>.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
       <div class="card">
-        <h2>Jak to funguje</h2>
+        <h2>How it works</h2>
         <ul>
-          <li>Nainstaluješ widget z Connect IQ Store</li>
-          <li>V aplikaci si zobrazíš <b>App code</b></li>
-          <li>Klikneš na <b>Koupit unlock</b> a na Stripe checkoutu vložíš App code</li>
-          <li>Po úspěšné platbě ti přijde e-mailem <b>unlock kód</b></li>
+          <li>Install the widget from the Connect IQ Store.</li>
+          <li>Open the app and copy your <b>App Code</b>.</li>
+          <li>Click <b>Buy unlock</b> and paste the App Code during Stripe checkout.</li>
+          <li>After successful payment, the <b>unlock code is emailed automatically</b>.</li>
         </ul>
       </div>
 
-      <div class="card steps">
-        <h2>FAQ</h2>
-        <p><b>Kde najdu App code?</b><br/>V aplikaci v sekci Unlock / License (doplň dle UI).</p>
-        <p><b>Kdy přijde unlock kód?</b><br/>Typicky do pár minut po platbě (automatizace přes webhook).</p>
-        <p><b>Nechci zadávat App code do Stripe</b><br/>Můžeš použít kontakt/support a poslat ho ručně – ale automatika je rychlejší.</p>
+      <div class="card">
+        <h2>Why you’ll like it</h2>
+        <ul>
+          <li>Quick caffeine logging directly on your watch</li>
+          <li>Clear graph of remaining caffeine level</li>
+          <li>History view of past drinks</li>
+          <li>Designed for fast, one-handed use</li>
+          <li>One-time unlock — no subscription</li>
+        </ul>
       </div>
-    </section>
+    </div>
 
-    <section class="card" style="margin-top:18px">
-      <h2>Kontakt</h2>
-      <p class="muted">
-        Support: <a href="mailto:Ondrej.Bozek@gmail.com">Ondrej.Bozek@gmail.com</a>
-        • <span class="muted">Refund policy / privacy policy můžeš doplnit sem</span>
-      </p>
-    </section>
+    <div class="card" style="margin-top:16px">
+      <h2>How to find your App Code</h2>
+
+      <div class="codegrid">
+        <div>
+          <img class="shot" src="assets/MenuDetail.png" alt="Open the menu to find unlock options">
+          <div class="small">Example screen: menu/navigation.</div>
+        </div>
+
+        <div>
+          <ol class="steps">
+            <li>Open <b>Caffeine Tracker</b> on your watch.</li>
+            <li>Go to <b>Menu</b> → <b>Unlock</b> (or <b>License</b>).</li>
+            <li>Copy the displayed <b>App Code</b>.</li>
+            <li>Click <b>Buy unlock</b> and paste it into Stripe checkout.</li>
+          </ol>
+
+          <div class="callout" style="margin-top:12px">
+            <b>Tip:</b> Make sure you paste the App Code exactly (no extra spaces).
+            <div class="small">If you entered a wrong App Code, email support with your receipt and the correct App Code.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>Screenshots</h2>
+
+      <div class="shots">
+        <img class="shot" src="assets/WidgetDetail.png" alt="Caffeine Tracker widget overview">
+        <img class="shot" src="assets/AddDrink.png" alt="Add caffeine intake">
+        <img class="shot" src="assets/GraphDetail.png" alt="Caffeine level graph">
+        <img class="shot" src="assets/HistoryDetail.png" alt="Caffeine history">
+        <img class="shot" src="assets/MenuDetail.png" alt="App menu">
+        <img class="shot" src="assets/Settings.png" alt="Settings and customization">
+      </div>
+
+      <div class="muted" style="margin-top:10px">
+        Real screenshots from the Garmin Connect IQ app.
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>Support</h2>
+      <div class="muted">
+        Email: <a href="mailto:support@caffeinetracker.app">support@caffeinetracker.app</a><br/>
+        Privacy: <a href="privacy.html">privacy.html</a> • Refunds/Terms: <a href="refund.html">refund.html</a>
+      </div>
+    </div>
 
     <footer>
-      <div>© <span id="y"></span> CaffeineTracker</div>
-      <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
+      <div>© <span id="y"></span> Caffeine Tracker</div>
+      <div>Not affiliated with Garmin.</div>
     </footer>
   </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
-
