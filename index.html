@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CaffeineTracker – Garmin widget</title>
+  <meta name="description" content="CaffeineTracker – Garmin Connect IQ widget pro sledování příjmu kofeinu a lepší spánek. Koupě unlocku přes Stripe, unlock kód dorazí automaticky." />
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; line-height: 1.5; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px; }
+    header { padding: 28px 0 10px; }
+    .badge { display:inline-block; padding:6px 10px; border:1px solid rgba(127,127,127,.35); border-radius:999px; font-size: 13px; opacity: .9; }
+    h1 { font-size: 40px; margin: 10px 0 6px; }
+    p.lead { font-size: 18px; opacity:.9; max-width: 70ch; }
+    .grid { display:grid; grid-template-columns: 1.2fr .8fr; gap: 18px; margin-top: 18px; }
+    @media (max-width: 880px){ .grid { grid-template-columns: 1fr; } }
+    .card { border:1px solid rgba(127,127,127,.25); border-radius: 16px; padding: 18px; background: rgba(127,127,127,.05); }
+    .btn { display:inline-flex; align-items:center; justify-content:center; padding: 12px 16px; border-radius: 12px;
+           border: 1px solid rgba(127,127,127,.35); text-decoration:none; font-weight: 650; }
+    .btn.primary { background: #635bff; color: white; border-color: transparent; }
+    .btnrow { display:flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    ul { margin: 10px 0 0 18px; }
+    .muted { opacity:.85; font-size: 14px; }
+    .steps ol { margin: 10px 0 0 18px; }
+    footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid rgba(127,127,127,.25); font-size: 13px; opacity: .9; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.95em; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="badge">Garmin Connect IQ • CaffeineTracker</span>
+      <h1>Sleduj kofein. Spi líp.</h1>
+      <p class="lead">
+        CaffeineTracker je widget pro Garmin hodinky, který ti pomůže mít přehled o příjmu kofeinu a nezasahovat si do spánku.
+      </p>
+      <div class="btnrow">
+        <!-- TODO: sem vlož svůj Stripe Payment Link -->
+        <a class="btn primary" href="https://buy.stripe.com/REPLACE_ME" target="_blank" rel="noopener">Koupit unlock</a>
+        <a class="btn" href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714" target="_blank" rel="noopener">
+          Otevřít v Connect IQ Store
+        </a>
+      </div>
+      <p class="muted">Po zaplacení ti přijde unlock kód automaticky e-mailem. Na checkoutu vyplníš svůj <b>App code</b>.</p>
+    </header>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Jak to funguje</h2>
+        <ul>
+          <li>Nainstaluješ widget z Connect IQ Store</li>
+          <li>V aplikaci si zobrazíš <b>App code</b></li>
+          <li>Klikneš na <b>Koupit unlock</b> a na Stripe checkoutu vložíš App code</li>
+          <li>Po úspěšné platbě ti přijde e-mailem <b>unlock kód</b></li>
+        </ul>
+      </div>
+
+      <div class="card steps">
+        <h2>FAQ</h2>
+        <p><b>Kde najdu App code?</b><br/>V aplikaci v sekci Unlock / License (doplň dle UI).</p>
+        <p><b>Kdy přijde unlock kód?</b><br/>Typicky do pár minut po platbě (automatizace přes webhook).</p>
+        <p><b>Nechci zadávat App code do Stripe</b><br/>Můžeš použít kontakt/support a poslat ho ručně – ale automatika je rychlejší.</p>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:18px">
+      <h2>Kontakt</h2>
+      <p class="muted">
+        Support: <a href="mailto:Ondrej.Bozek@gmail.com">Ondrej.Bozek@gmail.com</a>
+        • <span class="muted">Refund policy / privacy policy můžeš doplnit sem</span>
+      </p>
+    </section>
+
+    <footer>
+      <div>© <span id="y"></span> CaffeineTracker</div>
+      <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
+    </footer>
+  </div>
+</body>
+</html>
+
