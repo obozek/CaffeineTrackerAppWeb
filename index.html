@@ -3,105 +3,276 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <title>Caffeine Tracker for Garmin — Track caffeine, sleep better</title>
-  <meta name="description" content="Caffeine Tracker is a Garmin Connect IQ widget to log caffeine and understand its impact on your day and sleep. Buy unlock via Stripe and receive your code automatically." />
+  <meta name="description" content="Track your real-time caffeine level on Garmin. Avoid sleep disruption, see when caffeine is still active, and unlock Premium insights with a one-time purchase." />
+
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/brown-coffee-cup-icon.png">
   <link rel="apple-touch-icon" href="assets/brown-coffee-cup-icon.png">
 
   <style>
     :root { color-scheme: light dark; --max: 1040px; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.5; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height: 1.55;
+    }
     a { color: inherit; }
-    .wrap { max-width: var(--max); margin: 0 auto; padding: 26px 18px; }
-    .top { display:flex; gap:14px; align-items:center; padding: 10px 0 18px; }
-    .icon { width: 64px; height: 64px; border-radius: 14px; border: 1px solid rgba(127,127,127,.25); background: rgba(127,127,127,.08); object-fit: cover; }
-    .badge { display:inline-block; padding:6px 10px; border:1px solid rgba(127,127,127,.35); border-radius: 999px; font-size: 13px; opacity:.9; }
-    h1 { margin: 8px 0 6px; font-size: 40px; letter-spacing: -0.02em; }
-    .lead { font-size: 18px; opacity: .9; max-width: 75ch; margin: 0; }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 28px 18px; }
+
+    /* Header */
+    .top { display:flex; gap:16px; align-items:center; }
+    .icon {
+      width: 64px; height: 64px; border-radius: 14px;
+      border: 1px solid rgba(127,127,127,.25);
+      background: rgba(127,127,127,.08);
+    }
+    .badge {
+      display:inline-block; padding:6px 10px;
+      border:1px solid rgba(127,127,127,.35);
+      border-radius: 999px; font-size: 13px; opacity:.9;
+    }
+    h1 { margin: 8px 0 6px; font-size: 40px; letter-spacing:-0.02em; }
+    .lead { font-size: 18px; opacity:.9; max-width: 75ch; }
+
     .cta { display:flex; gap:10px; flex-wrap: wrap; margin-top: 14px; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(127,127,127,.35); text-decoration:none; font-weight: 650; }
-    .btn.primary { background: #635bff; color: #fff; border-color: transparent; }
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: 12px 16px; border-radius: 12px;
+      border: 1px solid rgba(127,127,127,.35);
+      text-decoration:none; font-weight: 650;
+    }
+    .btn.primary { background:#635bff; color:white; border-color:transparent; }
+
     .muted { opacity:.85; font-size: 14px; margin-top: 10px; }
 
-    .grid { display:grid; grid-template-columns: 1.15fr .85fr; gap: 16px; margin-top: 18px; }
-    @media (max-width: 900px){ .grid { grid-template-columns: 1fr; } }
-
-    .card { border:1px solid rgba(127,127,127,.25); border-radius: 16px; padding: 18px; background: rgba(127,127,127,.05); }
+    /* Cards */
+    .card {
+      border:1px solid rgba(127,127,127,.25);
+      border-radius: 16px;
+      padding: 18px;
+      background: rgba(127,127,127,.05);
+      margin-top: 18px;
+    }
     h2 { margin: 0 0 10px; font-size: 18px; }
+
     ul { margin: 0; padding-left: 18px; }
     li { margin: 6px 0; }
 
-    .shots { display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    @media (max-width: 900px){ .shots { grid-template-columns: repeat(2, 1fr); } }
-    .shot { width: 100%; border-radius: 14px; border: 1px solid rgba(127,127,127,.25); background: rgba(127,127,127,.06); object-fit: cover; }
+    /* Layout */
+    .grid {
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+    }
+    @media (max-width: 900px){
+      .grid { grid-template-columns: 1fr; }
+    }
 
-    .codegrid { display:grid; grid-template-columns: .95fr 1.05fr; gap: 14px; align-items: start; }
-    @media (max-width: 900px){ .codegrid { grid-template-columns: 1fr; } }
-    .steps { margin: 0; padding-left: 18px; }
-    .callout { border: 1px dashed rgba(127,127,127,.35); border-radius: 14px; padding: 12px 14px; background: rgba(127,127,127,.04); }
-    .callout b { font-weight: 750; }
-    .small { font-size: 13px; opacity: .85; margin-top: 8px; }
+    /* Device code */
+    .codegrid {
+      display:grid;
+      grid-template-columns: .95fr 1.05fr;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 900px){
+      .codegrid { grid-template-columns: 1fr; }
+    }
+    .steps { padding-left: 18px; }
+    .callout {
+      border:1px dashed rgba(127,127,127,.35);
+      border-radius:14px;
+      padding:12px 14px;
+      background: rgba(127,127,127,.04);
+      margin-top:12px;
+    }
 
-    footer { margin-top: 22px; padding-top: 14px; border-top: 1px solid rgba(127,127,127,.25); font-size: 13px; opacity: .9; display:flex; gap: 12px; flex-wrap: wrap; }
+    /* Screenshots */
+    .shots {
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 900px){
+      .shots { grid-template-columns: repeat(2, 1fr); }
+    }
+    .shot {
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(127,127,127,.25);
+      background: rgba(127,127,127,.06);
+    }
+
+    /* Daily stats */
+    .daygrid {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 12px;
+    }
+    @media (max-width: 900px){
+      .daygrid { grid-template-columns: 1fr; }
+    }
+    .daylabel {
+      font-weight: 650;
+      margin-bottom: 6px;
+      font-size: 14px;
+      opacity: .9;
+    }
+
+    footer {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top:1px solid rgba(127,127,127,.25);
+      font-size: 13px;
+      opacity:.9;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    /* Hero screens */
+    .heroscreens {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 22px;
+    }
+    @media (max-width: 900px) {
+      .heroscreens {
+        grid-template-columns: 1fr;
+      }
+    }
+    .herocard {
+      border: 1px solid rgba(127,127,127,.25);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(127,127,127,.05);
+    }
+    .herolabel {
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 14px;
+      opacity: .9;
+    }
+    .heroscreen {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(127,127,127,.25);
+    }
+    .herodesc {
+      font-size: 14px;
+      opacity: .85;
+      margin-top: 8px;
+    }
+
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="top">
-      <img class="icon" src="assets/brown-coffee-cup-icon.png" alt="Caffeine Tracker app icon">
-      <div>
-        <span class="badge">Garmin Connect IQ • Widget</span>
-        <h1>Caffeine Tracker</h1>
-        <p class="lead">
-          Log caffeine in seconds and see what’s still “in your system”.
-          Make smarter cut-off decisions — and protect your sleep.
-        </p>
+<div class="wrap">
 
-        <div class="cta">
-          <!-- TODO: replace with your Stripe Payment Link -->
-          <a class="btn primary" href="https://buy.stripe.com/8x200cga46x56FP3MC28801" target="_blank" rel="noopener">Unlock Premium</a>
+  <!-- HERO -->
+  <div class="top">
+    <img class="icon" src="assets/brown-coffee-cup-icon.png" alt="Caffeine Tracker icon">
+    <div>
+      <span class="badge">Garmin Connect IQ • Widget</span>
+      <h1>Caffeine Tracker</h1>
+      <p class="lead">
+        Track your real-time caffeine level and avoid sleep disruption.
+        See when caffeine is still active in your body — and when it’s safe to drink.
+      </p>
 
-          <a class="btn" href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714"
-             target="_blank" rel="noopener">View in Connect IQ Store</a>
-        </div>
+      <div class="cta">
+        <a class="btn primary"
+           href="https://buy.stripe.com/8x200cga46x56FP3MC28801"
+           target="_blank" rel="noopener">
+          Buy Premium
+        </a>
 
-        <div class="muted">
-          After purchase, you’ll receive your unlock code automatically by email. During checkout, paste your <b>App Code</b>.
-        </div>
+        <a class="btn"
+           href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714"
+           target="_blank" rel="noopener">
+          View in Garmin Store
+        </a>
+      </div>
+
+      <div class="muted">
+        One-time purchase. No subscription.
+        Unlock code is delivered automatically by email.
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO SCREENS -->
+  <div class="heroscreens">
+    <div class="herocard">
+      <div class="herolabel">Real-time caffeine status</div>
+      <img class="heroscreen"
+           src="assets/WidgetDetail.png"
+           alt="Caffeine Tracker widget showing real-time caffeine level">
+      <div class="herodesc">
+        Instantly see how much caffeine is still active in your body — always visible at a glance.
       </div>
     </div>
 
-    <div class="grid">
-      <div class="card">
-        <h2>How it works</h2>
-        <ul>
-          <li>Install the widget from the Connect IQ Store.</li>
-          <li>Open the app and copy your <b>App Code</b>.</li>
-          <li>Click <b>Buy unlock</b> and paste the App Code during Stripe checkout.</li>
-          <li>After successful payment, the <b>unlock code is emailed to your email address provided during checkout</b>.</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h2>Why you’ll like it</h2>
-        <ul>
-          <li>Quick caffeine logging directly on your watch</li>
-          <li>Clear graph of remaining caffeine level</li>
-          <li>History view of past drinks</li>
-          <li>Designed for fast, one-handed use</li>
-          <li>One-time unlock — no subscription</li>
-        </ul>
+    <div class="herocard">
+      <div class="herolabel">Caffeine decay & sleep timing</div>
+      <img class="heroscreen"
+           src="assets/GraphDetail.png"
+           alt="Caffeine decay graph with sleep-safe threshold">
+      <div class="herodesc">
+        Understand how caffeine decays over time and see exactly when it drops below your sleep-safe threshold.
       </div>
     </div>
+  </div>
 
-    <div class="card" style="margin-top:16px">
+  <!-- WHAT IT DOES -->
+  <div class="card">
+    <h2>What Caffeine Tracker does</h2>
+    <p>
+      Caffeine Tracker is a simple yet powerful Garmin widget that helps you understand
+      how caffeine behaves in your body — in real time.
+    </p>
+    <p>
+      Log drinks in seconds directly on your watch and see how much caffeine is still active
+      based on your <b>body weight</b> and <b>customizable metabolism</b>.
+    </p>
+  </div>
+
+  <!-- FREE VS PREMIUM -->
+  <div class="grid">
+    <div class="card">
+      <h2>Core features (Free)</h2>
+      <ul>
+        <li>Real-time caffeine level based on body weight</li>
+        <li>Automatic background updates every 5 minutes</li>
+        <li>Quick drink logging on the watch</li>
+        <li>Glance view & watch-face complications</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Premium features</h2>
+      <ul>
+        <li><b>Sleep-safe prediction</b></li>
+        <li><b>Adjustable caffeine half-life</b></li>
+        <li><b>Custom sleep-impact threshold</b></li>
+        <li><b>Advanced daily statistics</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- DEVICE CODE -->
+  <div class="card">
     <h2>How to find your Device Code</h2>
 
     <div class="codegrid">
       <div>
-        <img class="shot" src="assets/Settings.png" alt="Open settings in Caffeine Tracker">
-        <div class="small">Open Settings in the app.</div>
+        <img class="shot" src="assets/Settings.png" alt="Settings screen">
       </div>
 
       <div>
@@ -109,54 +280,79 @@
           <li>Open <b>Caffeine Tracker</b> on your watch.</li>
           <li>Go to <b>Settings</b>.</li>
           <li>Select <b>Enter premium code</b>.</li>
-          <li>On the next screen, copy your <b>Device Code</b>.</li>
-          <li>Click <b>Buy unlock</b> and paste the Device Code into the Stripe checkout.</li>
+          <li>Copy your <b>Device Code</b>.</li>
+          <li>Paste it during Stripe checkout.</li>
         </ol>
 
-        <div class="callout" style="margin-top:12px">
-          <b>Important:</b> The Device Code is unique to your watch.
-          <div class="small">
-            Please copy it exactly (no extra spaces).  
-            If you enter a wrong Device Code, contact support with your receipt.
-          </div>
+        <div class="callout">
+          <b>Important:</b> Device Code is unique to your watch.
+          Please copy it exactly.
         </div>
       </div>
     </div>
   </div>
 
-    <div class="card" style="margin-top:16px">
-      <h2>Screenshots</h2>
+  <!-- DAILY STATS -->
+  <div class="card">
+    <h2>Daily statistics (Premium)</h2>
 
-      <div class="shots">
-        <img class="shot" src="assets/WidgetDetail.png" alt="Caffeine Tracker widget overview">
-        <img class="shot" src="assets/AddDrink.png" alt="Add caffeine intake">
-        <img class="shot" src="assets/GraphDetail.png" alt="Caffeine level graph">
-        <img class="shot" src="assets/HistoryDetail.png" alt="Caffeine history">
-        <img class="shot" src="assets/MenuDetail.png" alt="App menu">
-        <img class="shot" src="assets/Settings.png" alt="Settings and customization">
+    <p>
+      Get clear, comparable insights for each day.
+      Instantly see how today differs from yesterday and how caffeine impacts your sleep window.
+    </p>
+
+    <ul>
+      <li>Total caffeine intake per day</li>
+      <li>Time under stimulation (above 1 mg/L)</li>
+      <li>Time of last caffeine intake</li>
+      <li>Time when caffeine dropped below sleep threshold</li>
+      <li>Today vs. yesterday comparison</li>
+    </ul>
+
+    <div class="daygrid">
+      <div>
+        <div class="daylabel">Today</div>
+        <img class="shot" src="assets/Today.png" alt="Today statistics">
       </div>
-
-      <div class="muted" style="margin-top:10px">
-        Real screenshots from the Garmin Connect IQ app.
+      <div>
+        <div class="daylabel">Yesterday</div>
+        <img class="shot" src="assets/Yesterday.png" alt="Yesterday statistics">
       </div>
     </div>
 
-    <div class="card" style="margin-top:16px">
-      <h2>Support</h2>
-      <div class="muted">
-        Email: <a href="mailto:support@caffeinetracker.app">support@caffeinetracker.app</a><br/>
-        Privacy: <a href="privacy.html">privacy.html</a> • Refunds/Terms: <a href="refund.html">refund.html</a>
-      </div>
+    <div class="muted">
+      Designed for quick understanding — no charts, no guesswork.
     </div>
-
-    <footer>
-      <div>© <span id="y"></span> Caffeine Tracker</div>
-      <div>Not affiliated with Garmin.</div>
-    </footer>
   </div>
 
-  <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
+  <!-- SCREENSHOTS -->
+  <div class="card">
+    <h2>Screenshots</h2>
+    <div class="shots">
+      <img class="shot" src="assets/WidgetDetail.png">
+      <img class="shot" src="assets/AddDrink.png">
+      <img class="shot" src="assets/GraphDetail.png">
+      <img class="shot" src="assets/HistoryDetail.png">
+      <img class="shot" src="assets/MenuDetail.png">
+      <img class="shot" src="assets/Settings.png">
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>© <span id="y"></span> Caffeine Tracker</div>
+    <div>
+      <a href="privacy.html">Privacy</a> •
+      <a href="refund.html">Refunds & Terms</a> •
+      <a href="mailto:support@caffeinetracker.app">Support</a>
+    </div>
+    <div>Not affiliated with Garmin.</div>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('y').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
