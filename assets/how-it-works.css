@@ -1,0 +1,65 @@
+/* how-it-works.css
+   Only page-specific styles for how-it-works.html.
+   Shared styles (layout, hero, cards, buttons, footer, etc.) belong in site.css.
+*/
+
+/* Two-column content blocks used in how-it-works */
+.hw-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+}
+@media (max-width: 900px) {
+    .hw-grid { grid-template-columns: 1fr; }
+}
+
+/* Threshold blocks (0.3 / 1.0 / 5.0 / 10.0) */
+.thresholds {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+@media (max-width: 900px) {
+    .thresholds { grid-template-columns: 1fr; }
+}
+.tbox {
+    border: 1px solid rgba(127,127,127,.25);
+    border-radius: 14px;
+    padding: 12px 14px;
+    background: rgba(127,127,127,.04);
+}
+.tvalue { font-weight: 800; font-size: 16px; }
+.tname { font-weight: 700; margin-top: 2px; }
+.tdesc { opacity: .9; font-size: 14px; margin-top: 6px; }
+
+/* Screenshot pair grid used in "mg/L" and Premium sections */
+.shotgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+@media (max-width: 900px) {
+    .shotgrid { grid-template-columns: 1fr; }
+}
+
+/* Captions under screenshots on how-it-works */
+.caption {
+    font-size: 13px;
+    opacity: .85;
+    margin-top: 6px;
+}
+
+/* Optional: smaller max width for "explain" shots
+   (use class="shot explain" if you want this behavior)
+*/
+.shot.explain {
+    max-width: 520px;
+}
+
+/* Optional: slightly more spacing for long-form text sections */
+.hw-section p {
+    margin: 10px 0;
+}

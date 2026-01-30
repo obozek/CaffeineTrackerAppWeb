@@ -11,165 +11,8 @@
   <link rel="icon" type="image/png" href="assets/brown-coffee-cup-icon.png">
   <link rel="apple-touch-icon" href="assets/brown-coffee-cup-icon.png">
 
-  <style>
-    :root { color-scheme: light dark; --max: 1040px; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      line-height: 1.55;
-    }
-    a { color: inherit; }
+  <link rel="stylesheet" href="assets/site.css">
 
-    .wrap { max-width: var(--max); margin: 0 auto; padding: 28px 18px; }
-
-    /* Header */
-    .top { display:flex; gap:16px; align-items:center; }
-    .icon {
-      width: 64px; height: 64px; border-radius: 14px;
-      border: 1px solid rgba(127,127,127,.25);
-      background: rgba(127,127,127,.08);
-    }
-    .badge {
-      display:inline-block; padding:6px 10px;
-      border:1px solid rgba(127,127,127,.35);
-      border-radius: 999px; font-size: 13px; opacity:.9;
-    }
-    h1 { margin: 8px 0 6px; font-size: 40px; letter-spacing:-0.02em; }
-    .lead { font-size: 18px; opacity:.9; max-width: 75ch; }
-
-    .cta { display:flex; gap:10px; flex-wrap: wrap; margin-top: 14px; }
-    .btn {
-      display:inline-flex; align-items:center; justify-content:center;
-      padding: 12px 16px; border-radius: 12px;
-      border: 1px solid rgba(127,127,127,.35);
-      text-decoration:none; font-weight: 650;
-    }
-    .btn.primary { background:#635bff; color:white; border-color:transparent; }
-
-    .muted { opacity:.85; font-size: 14px; margin-top: 10px; }
-
-    /* Cards */
-    .card {
-      border:1px solid rgba(127,127,127,.25);
-      border-radius: 16px;
-      padding: 18px;
-      background: rgba(127,127,127,.05);
-      margin-top: 18px;
-    }
-    h2 { margin: 0 0 10px; font-size: 18px; }
-
-    ul { margin: 0; padding-left: 18px; }
-    li { margin: 6px 0; }
-
-    /* Layout */
-    .grid {
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 16px;
-    }
-    @media (max-width: 900px){
-      .grid { grid-template-columns: 1fr; }
-    }
-
-    /* Device code */
-    .codegrid {
-      display:grid;
-      grid-template-columns: .95fr 1.05fr;
-      gap: 14px;
-      align-items:start;
-    }
-    @media (max-width: 900px){
-      .codegrid { grid-template-columns: 1fr; }
-    }
-    .steps { padding-left: 18px; }
-    .callout {
-      border:1px dashed rgba(127,127,127,.35);
-      border-radius:14px;
-      padding:12px 14px;
-      background: rgba(127,127,127,.04);
-      margin-top:12px;
-    }
-
-    /* Screenshots */
-    .shots {
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-    @media (max-width: 900px){
-      .shots { grid-template-columns: repeat(2, 1fr); }
-    }
-    .shot {
-      width:100%;
-      border-radius:14px;
-      border:1px solid rgba(127,127,127,.25);
-      background: rgba(127,127,127,.06);
-    }
-
-    /* Daily stats */
-    .daygrid {
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 12px;
-    }
-    @media (max-width: 900px){
-      .daygrid { grid-template-columns: 1fr; }
-    }
-    .daylabel {
-      font-weight: 650;
-      margin-bottom: 6px;
-      font-size: 14px;
-      opacity: .9;
-    }
-
-    footer {
-      margin-top: 28px;
-      padding-top: 16px;
-      border-top:1px solid rgba(127,127,127,.25);
-      font-size: 13px;
-      opacity:.9;
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    /* Hero screens */
-    .heroscreens {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 22px;
-    }
-    @media (max-width: 900px) {
-      .heroscreens {
-        grid-template-columns: 1fr;
-      }
-    }
-    .herocard {
-      border: 1px solid rgba(127,127,127,.25);
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(127,127,127,.05);
-    }
-    .herolabel {
-      font-weight: 700;
-      margin-bottom: 8px;
-      font-size: 14px;
-      opacity: .9;
-    }
-    .heroscreen {
-      width: 100%;
-      border-radius: 16px;
-      border: 1px solid rgba(127,127,127,.25);
-    }
-    .herodesc {
-      font-size: 14px;
-      opacity: .85;
-      margin-top: 8px;
-    }
-
-  </style>
 </head>
 
 <body>
@@ -191,6 +34,10 @@
            href="https://buy.stripe.com/8x200cga46x56FP3MC28801"
            target="_blank" rel="noopener">
           Buy Premium
+        </a>
+
+        <a class="btn" href="how-it-works.html">
+          How it works
         </a>
 
         <a class="btn"
@@ -243,6 +90,18 @@
     </p>
   </div>
 
+  <!-- LEVELS TEASER -->
+  <div class="card">
+    <h2>What the levels mean</h2>
+    <p>
+      Caffeine Tracker shows your estimated caffeine level in <b>mg/L</b> and highlights useful guideposts:
+      <b>0.3</b> (sleep-safe), <b>1.0</b> (stimulation), <b>5.0</b> (high), <b>10.0</b> (very high).
+    </p>
+    <p class="muted">
+      Want the details? <a href="how-it-works.html"><b>Read how it works →</b></a>
+    </p>
+  </div>
+
   <!-- FREE VS PREMIUM -->
   <div class="grid">
     <div class="card">
@@ -260,11 +119,11 @@
       <ul>
         <li><b>Sleep-safe prediction</b></li>
         <li><b>Adjustable caffeine half-life</b></li>
+        <li><b>Custom sleep-impact threshold</b></li>
         <li>
           <b>Custom drinks & caffeine amounts</b><br>
           <span class="muted">Example: Energy Drink 500 ml — 160 mg</span>
         </li>
-        <li><b>Custom drinks & caffeine amounts</b></li>
         <li><b>Advanced daily statistics</b></li>
       </ul>
     </div>
@@ -354,6 +213,7 @@
   <footer>
     <div>© <span id="y"></span> Caffeine Tracker</div>
     <div>
+      <a href="how-it-works.html">How it works</a> •
       <a href="privacy.html">Privacy</a> •
       <a href="refund.html">Refunds & Terms</a> •
       <a href="mailto:support@caffeinetracker.app">Support</a>
