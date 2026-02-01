@@ -154,3 +154,40 @@ footer {
     opacity: .85;
     margin-top: 8px;
 }
+/* =========================================================
+   Caffeine levels – shared color definitions
+   ========================================================= */
+
+:root {
+    --lvl-stm: #00AA00;   /* Garmin green */
+    --lvl-high: #FF5500;  /* Garmin orange */
+    --lvl-max: #FF0000;   /* Garmin red */
+}
+
+/* Inline level highlights (text) */
+.lvl.sleep {
+    color: inherit;
+    opacity: .85;
+}
+.lvl.stm { color: var(--lvl-stm); }
+.lvl.high { color: var(--lvl-high); }
+.lvl.max { color: var(--lvl-max); }
+
+/* Threshold badges (used on how-it-works) */
+.tbadge.stm {
+    color: var(--lvl-stm);
+    background: rgba(0,170,0,.14);
+    border-color: rgba(0,170,0,.45);
+}
+
+.tbadge.high {
+    color: var(--lvl-high);
+    background: rgba(255,85,0,.16);
+    border-color: rgba(255,85,0,.45);
+}
+
+.tbadge.max {
+    color: var(--lvl-max);
+    background: rgba(255,0,0,.18);
+    border-color: rgba(255,0,0,.50);
+}
