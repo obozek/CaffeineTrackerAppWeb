@@ -139,7 +139,85 @@
         </div>
 
         <div class="callout">
-            <b>Tip:</b> If you’re primarily optimizing sleep, treat 0.3 mg/L as your main target and use the “when will I drop below it?” time as your guardrail.
+            <b>Tip:</b> If you’re very sleep-focused or sensitive, a lower sleep target (e.g., <b>0.6 mg/L</b>) can be a useful goal.
+            In <b>Premium</b>, you can set your own Caffeine threshold to match your tolerance.
+        </div>
+    </div>
+    <!-- =========================================================
+     PREMIUM SLEEP RECOMMENDATIONS & SETTINGS
+     ========================================================= -->
+    <div class="card" id="settings">
+        <h2>Premium sleep recommendations & settings</h2>
+
+        <p>
+            The <b>Last drink time</b> recommendation is available in <b>Premium</b>.
+            It helps you decide when you can take a specific drink and still keep your caffeine low enough for sleep.
+        </p>
+
+        <div class="callout">
+            <b>Premium-only features in this section:</b><br>
+            Last drink time • Caffeine threshold setting • Bed time buffer setting • Half-life presets • Custom drinks
+        </div>
+
+        <h3>Bed time</h3>
+        <p>
+            Your usual sleep time. By default, it’s taken from your Garmin settings.
+            Premium uses <b>Bed time</b> as the reference point for sleep recommendations.
+        </p>
+
+        <h3>Bed time buffer <span class="muted">(Premium)</span></h3>
+        <p>
+            A simple safety window before your Bed time. It exists for one reason:
+            to prevent the app from recommending a small caffeinated drink too close to sleep.
+        </p>
+        <p>
+            Even if a tiny drink would <i>technically</i> keep you below your Caffeine threshold by Bed time,
+            having caffeine right before sleep can still worsen sleep quality or make it harder to fall asleep.
+        </p>
+
+        <div class="callout">
+            <b>In short:</b><br>
+            Bed time buffer adds a “no-caffeine too close to bedtime” guardrail.
+            It does not affect anything else in the model.
+        </div>
+
+        <h3>Caffeine threshold <span class="muted">(Premium, default: 0.6 mg/L)</span></h3>
+        <p>
+            The sleep-safe limit Premium uses for recommendations.
+            The app tries to ensure your predicted caffeine level at <b>Bed time</b> stays
+            <b>at or below</b> this threshold.
+        </p>
+
+        <ul>
+            <li>If you’re sensitive or sleep gets worse → consider <b>lowering</b> the threshold</li>
+            <li>If you tolerate caffeine well and sleep is unaffected → you can <b>slightly increase</b> it</li>
+        </ul>
+
+        <h3>Caffeine half-life <span class="muted">(Premium presets, default: 5.5 hours)</span></h3>
+        <p>
+            Half-life controls how fast caffeine decays (exponential decay). A <b>shorter</b> half-life clears faster;
+            a <b>longer</b> half-life stays longer and pushes Last drink time earlier.
+        </p>
+
+        <div class="callout">
+            <b>Premium half-life presets:</b><br>
+            4 hours • 5.5 hours • 7.5 hours • 10 hours
+        </div>
+
+        <h3>Last drink time <span class="muted">(Premium)</span></h3>
+        <p>
+            For each drink, Premium computes the latest time you can take it so that your predicted caffeine level
+            at <b>Bed time</b> stays <b>≤ Caffeine threshold</b>.
+            Then it applies the Bed time buffer as a final guardrail, so the recommendation is never “too close” to sleep.
+        </p>
+
+        <ul>
+            <li>Depends on your <b>current level</b>, <b>half-life</b>, <b>threshold</b>, and <b>Bed time</b></li>
+            <li>Also depends on the drink’s caffeine amount (especially for <b>custom drinks</b>)</li>
+        </ul>
+
+        <div class="callout">
+            <b>Reminder:</b> This is a model-based estimate — not a medical measurement.
         </div>
     </div>
 
@@ -154,7 +232,10 @@
         </p>
 
         <ul>
+            <li><b>Last drink time recommendation</b> (Premium) — see the latest time for a drink so you stay below your sleep-safe threshold by bedtime.</li>
             <li><b>Custom drinks & caffeine amounts</b> (Premium) — add your own drinks with exact mg (e.g., Energy Drink 500 ml — 160 mg).</li>
+            <li><b>Adjustable caffeine threshold</b> (Premium) — choose your sleep-safe limit (default 0.6 mg/L).</li>
+            <li><b>Bed time buffer</b> (Premium) — avoid caffeine too close to bedtime (even if a tiny dose would still be below the threshold).</li>
             <li><b>Adjustable caffeine half-life</b> (Premium) — choose one of the supported presets below.</li>
         </ul>
 
