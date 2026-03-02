@@ -27,7 +27,689 @@
             <span class="badge">Garmin Connect IQ • Widget</span>
             <h1>Caffeine Tracker</h1>
             <p class="lead">
-                How it works: the widget estimates your current caffeine level (mg/L), applies half-life decay over time,
+                How it works: the widget estimates your current caffeine level (mg/L), applies half-li<!doctype html>
+                <html lang="en">
+                <head>
+                    <meta charset="utf-8" />
+                    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+                    <title>How Caffeine Tracker Works — levels, thresholds, and settings</title>
+                    <meta name="description" content="Learn how Caffeine Tracker estimates caffeine (mg/L), what thresholds mean, and how Premium personalization (custom drinks + half-life presets) works." />
+
+                    <link rel="icon" type="image/png" href="assets/brown-coffee-cup-icon.png">
+                    <link rel="apple-touch-icon" href="assets/brown-coffee-cup-icon.png">
+
+                    <link rel="stylesheet" href="assets/site.css">
+                    <link rel="stylesheet" href="assets/how-it-works.css">
+                </head>
+
+                <body>
+                <div class="wrap">
+
+                    <!-- =========================================================
+                         HEADER
+                         ========================================================= -->
+                    <!-- HERO (match index.html structure) -->
+                    <div class="top">
+                        <img class="icon" src="assets/brown-coffee-cup-icon.png" alt="Caffeine Tracker icon">
+                        <div>
+                            <span class="badge">Garmin Connect IQ • Widget</span>
+                            <h1>Caffeine Tracker</h1>
+                            <p class="lead">
+                                How it works: the widget estimates your current caffeine level (mg/L), applies half-life decay over time,
+                                and predicts when you’ll drop below your sleep-safe threshold.
+                            </p>
+
+                            <div class="cta">
+                                <a class="btn" href="index.html">← Back to homepage</a>
+
+                                <a class="btn"
+                                   href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714"
+                                   target="_blank" rel="noopener">
+                                    View in Garmin Store
+                                </a>
+                            </div>
+
+                            <div class="muted">
+                                Note: the watch cannot measure blood caffeine. This is a model-based estimate using what you log, your body weight, and metabolism settings.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- =========================================================
+                         WHAT “mg/L” MEANS
+                         ========================================================= -->
+                    <div class="card" id="units">
+                        <h2>What does “mg/L” mean?</h2>
+
+                        <p>
+                            <b>mg/L</b> means <b>milligrams of caffeine per liter</b>.
+                            The app uses mg/L as a practical “concentration-like” score:
+                            it’s easier to interpret than total mg alone, because body weight influences how strong caffeine feels.
+                        </p>
+
+                        <ul>
+                            <li>The same drink affects people differently</li>
+                            <li>Body weight changes concentration</li>
+                            <li>Concentration makes thresholds easier to understand</li>
+                        </ul>
+
+                        <div class="shotgrid">
+                            <div>
+                                <img class="shot" src="assets/WidgetDetail.png" alt="Widget showing current caffeine level in mg/L">
+                                <div class="caption">The widget shows your current estimated caffeine level in mg/L.</div>
+                            </div>
+                            <div>
+                                <img class="shot" src="assets/GraphDetail.png" alt="Graph showing caffeine decay and thresholds">
+                                <div class="caption">The graph shows how caffeine decays over time and when you drop below your sleep-safe threshold.</div>
+                            </div>
+                        </div>
+
+                        <div class="callout">
+                            <b>Important:</b> This is an estimate. Garmin watches can’t measure caffeine in blood.
+                            The model is designed to be practical and useful, not medical-grade.
+                        </div>
+                    </div>
+
+                    <!-- =========================================================
+                         THRESHOLDS
+                         ========================================================= -->
+                    <div class="card" id="thresholds">
+                        <h2>What the levels mean (thresholds)</h2>
+
+                        <p>
+                            Everyone reacts differently, but these thresholds work well as practical guideposts:
+                        </p>
+
+                        <div class="thresholds">
+                            <div class="tbox sleep">
+                                <div class="trow">
+                                    <div class="tvalue">0.6 mg/L</div>
+                                    <div class="tbadge green">Sleep</div>
+                                </div>
+                                <div class="tname">Sleep-safe target</div>
+                                <div class="tdesc">
+                                    A practical “aim to be below” level before sleep. Most people can fall asleep without issues at this level, while keeping sleep disruption minimal — even if you’re sensitive to caffeine.
+                                </div>
+                            </div>
+
+                            <div class="tbox stim">
+                                <div class="trow">
+                                    <div class="tvalue">1.0 mg/L</div>
+                                    <div class="tbadge stm">Stm</div>
+                                </div>
+                                <div class="tname">Stimulation starts</div>
+                                <div class="tdesc">
+                                    Around this level, many people begin to feel noticeable stimulation, such as increased alertness or reduced sleepiness.
+                                </div>
+                            </div>
+
+                            <div class="tbox high">
+                                <div class="trow">
+                                    <div class="tvalue">5.0 mg/L</div>
+                                    <div class="tbadge high">High</div>
+                                </div>
+                                <div class="tname">High level</div>
+                                <div class="tdesc">
+                                    A high caffeine level where side effects become more likely, including jitters, nervousness, or an elevated heart rate.
+                                </div>
+                            </div>
+
+                            <div class="tbox max">
+                                <div class="trow">
+                                    <div class="tvalue">10.0 mg/L</div>
+                                    <div class="tbadge max">Max</div>
+                                </div>
+                                <div class="tname">Very high level</div>
+                                <div class="tdesc">
+                                    Very high caffeine level associated with strong stimulation and a high risk of adverse health effects, including anxiety, tremor, and heart palpitations. Additional caffeine is likely to worsen symptoms.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="callout">
+                            <b>Tip:</b> If you’re very sleep-focused or sensitive, a lower sleep target (e.g., <b>0.6 mg/L</b>) can be a useful goal.
+                            In <b>Premium</b>, you can set your own Caffeine threshold to match your tolerance.
+                        </div>
+                    </div>
+                    <!-- =========================================================
+                     PREMIUM SLEEP RECOMMENDATIONS & SETTINGS
+                     ========================================================= -->
+                    <div class="card" id="settings">
+                        <h2>Premium sleep recommendations & settings</h2>
+
+                        <p>
+                            The <b>Last drink time</b> recommendation is available in <b>Premium</b>.
+                            It helps you decide when you can take a specific drink and still keep your caffeine low enough for sleep.
+                        </p>
+
+                        <div class="callout">
+                            <b>Premium-only features in this section:</b><br>
+                            Last drink time • Caffeine threshold setting • Bed time buffer setting • Half-life presets • Custom drinks
+                        </div>
+
+                        <h3>Bed time</h3>
+                        <p>
+                            Your usual sleep time. By default, it’s taken from your Garmin settings.
+                            Premium uses <b>Bed time</b> as the reference point for sleep recommendations.
+                        </p>
+
+                        <h3>Bed time buffer <span class="muted">(Premium)</span></h3>
+                        <p>
+                            A simple safety window before your Bed time. It exists for one reason:
+                            to prevent the app from recommending a small caffeinated drink too close to sleep.
+                        </p>
+                        <p>
+                            Even if a tiny drink would <i>technically</i> keep you below your Caffeine threshold by Bed time,
+                            having caffeine right before sleep can still worsen sleep quality or make it harder to fall asleep.
+                        </p>
+
+                        <div class="callout">
+                            <b>In short:</b><br>
+                            Bed time buffer adds a “no-caffeine too close to bedtime” guardrail.
+                            It does not affect anything else in the model.
+                        </div>
+
+                        <h3>Caffeine threshold <span class="muted">(Premium, default: 0.6 mg/L)</span></h3>
+                        <p>
+                            The sleep-safe limit Premium uses for recommendations.
+                            The app tries to ensure your predicted caffeine level at <b>Bed time</b> stays
+                            <b>at or below</b> this threshold.
+                        </p>
+
+                        <ul>
+                            <li>If you’re sensitive or sleep gets worse → consider <b>lowering</b> the threshold</li>
+                            <li>If you tolerate caffeine well and sleep is unaffected → you can <b>slightly increase</b> it</li>
+                        </ul>
+
+                        <h3>Caffeine half-life <span class="muted">(Premium presets, default: 5.5 hours)</span></h3>
+                        <p>
+                            Half-life controls how fast caffeine decays (exponential decay). A <b>shorter</b> half-life clears faster;
+                            a <b>longer</b> half-life stays longer and pushes Last drink time earlier.
+                        </p>
+
+                        <div class="callout">
+                            <b>Premium half-life presets:</b><br>
+                            4 hours • 5.5 hours • 7.5 hours • 10 hours
+                        </div>
+
+                        <h3>Last drink time <span class="muted">(Premium)</span></h3>
+                        <p>
+                            For each drink, Premium computes the latest time you can take it so that your predicted caffeine level
+                            at <b>Bed time</b> stays <b>≤ Caffeine threshold</b>.
+                            Then it applies the Bed time buffer as a final guardrail, so the recommendation is never “too close” to sleep.
+                        </p>
+
+                        <ul>
+                            <li>Depends on your <b>current level</b>, <b>half-life</b>, <b>threshold</b>, and <b>Bed time</b></li>
+                            <li>Also depends on the drink’s caffeine amount (especially for <b>custom drinks</b>)</li>
+                        </ul>
+
+                        <div class="callout">
+                            <b>Reminder:</b> This is a model-based estimate — not a medical measurement.
+                        </div>
+                    </div>
+
+                    <!-- =========================================================
+                         PREMIUM PERSONALIZATION
+                         ========================================================= -->
+                    <div class="card" id="premium">
+                        <h2>Premium personalization</h2>
+
+                        <p>
+                            Premium unlocks advanced personalization so the model matches <b>your</b> habits and metabolism better:
+                        </p>
+
+                        <ul>
+                            <li><b>Last drink time recommendation</b> (Premium) — see the latest time for a drink so you stay below your sleep-safe threshold by bedtime.</li>
+                            <li><b>Custom drinks & caffeine amounts</b> (Premium) — add your own drinks with exact mg (e.g., Energy Drink 500 ml — 160 mg).</li>
+                            <li><b>Adjustable caffeine threshold</b> (Premium) — choose your sleep-safe limit (default 0.6 mg/L).</li>
+                            <li><b>Bed time buffer</b> (Premium) — avoid caffeine too close to bedtime (even if a tiny dose would still be below the threshold).</li>
+                            <li><b>Adjustable caffeine half-life</b> (Premium) — choose one of the supported presets below.</li>
+                        </ul>
+
+                        <div class="callout">
+                            <b>Supported half-life settings (Premium):</b><br>
+                            4 hours • 5.5 hours • 7.5 hours • 10 hours
+                        </div>
+
+                        <div class="shotgrid">
+                            <div>
+                                <img class="shot" src="assets/AddDrink.png" alt="Add drink screen">
+                                <div class="caption">Premium: add custom drinks so your logged caffeine matches what you actually drink.</div>
+                            </div>
+                            <div>
+                                <img class="shot" src="assets/Settings.png" alt="Settings screen">
+                                <div class="caption">Premium: choose a half-life preset to better match how fast you metabolize caffeine.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- =========================================================
+                        ALGORITHM (STEP-BY-STEP)
+                        ========================================================= -->
+                    <div class="card" id="algorithm">
+                        <h2>Computation algorithm (simplified)</h2>
+
+                        <!-- COMMENT:
+                             Be transparent, but keep it understandable.
+                             Users care about "is this reasonable?" more than exact equations.
+                             Avoid claiming absorption/peak timing.
+                        -->
+                        <p>
+                            Internally, the app keeps a running estimate of your current caffeine level and updates it whenever time passes or you log a drink.
+                            The model is based on exponential decay (half-life).
+                        </p>
+
+                        <h3>Step 1: Start with the last known level</h3>
+                        <p class="muted">
+                            The app stores your last computed caffeine level and its timestamp.
+                        </p>
+
+                        <h3>Step 2: Let it decay over time (half-life)</h3>
+                        <p>
+                            When the widget updates, the level is reduced based on how much time has passed since the last update:
+                        </p>
+
+                        <div class="callout">
+                            <b>Decay formula:</b><br>
+                            <code>levelNow = levelPrev × 0.5^(Δt / halfLife)</code><br>
+                            <span class="muted">Where Δt is time elapsed (in the same units as halfLife).</span>
+                        </div>
+
+                        <h3>Step 3: Add newly logged drinks</h3>
+                        <p>
+                            When you log a drink, its caffeine amount (mg) is converted into a level increase using your body weight,
+                            and added on top of the current decayed level:
+                        </p><!doctype html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="utf-8" />
+                            <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+                            <title>How Caffeine Tracker Works — levels, thresholds, and settings</title>
+                            <meta name="description" content="Learn how Caffeine Tracker estimates caffeine (mg/L), what thresholds mean, and how Premium personalization (custom drinks + half-life presets) works." />
+
+                            <link rel="icon" type="image/png" href="assets/brown-coffee-cup-icon.png">
+                            <link rel="apple-touch-icon" href="assets/brown-coffee-cup-icon.png">
+
+                            <link rel="stylesheet" href="assets/site.css">
+                            <link rel="stylesheet" href="assets/how-it-works.css">
+                        </head>
+
+                        <body>
+                        <div class="wrap">
+
+                            <!-- =========================================================
+                                 HEADER
+                                 ========================================================= -->
+                            <!-- HERO (match index.html structure) -->
+                            <div class="top">
+                                <img class="icon" src="assets/brown-coffee-cup-icon.png" alt="Caffeine Tracker icon">
+                                <div>
+                                    <span class="badge">Garmin Connect IQ • Widget</span>
+                                    <h1>Caffeine Tracker</h1>
+                                    <p class="lead">
+                                        How it works: the widget estimates your current caffeine level (mg/L), applies half-life decay over time,
+                                        and predicts when you’ll drop below your sleep-safe threshold.
+                                    </p>
+
+                                    <div class="cta">
+                                        <a class="btn" href="index.html">← Back to homepage</a>
+
+                                        <a class="btn"
+                                           href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714"
+                                           target="_blank" rel="noopener">
+                                            View in Garmin Store
+                                        </a>
+                                    </div>
+
+                                    <div class="muted">
+                                        Note: the watch cannot measure blood caffeine. This is a model-based estimate using what you log, your body weight, and metabolism settings.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- =========================================================
+                                 WHAT “mg/L” MEANS
+                                 ========================================================= -->
+                            <div class="card" id="units">
+                                <h2>What does “mg/L” mean?</h2>
+
+                                <p>
+                                    <b>mg/L</b> means <b>milligrams of caffeine per liter</b>.
+                                    The app uses mg/L as a practical “concentration-like” score:
+                                    it’s easier to interpret than total mg alone, because body weight influences how strong caffeine feels.
+                                </p>
+
+                                <ul>
+                                    <li>The same drink affects people differently</li>
+                                    <li>Body weight changes concentration</li>
+                                    <li>Concentration makes thresholds easier to understand</li>
+                                </ul>
+
+                                <div class="shotgrid">
+                                    <div>
+                                        <img class="shot" src="assets/WidgetDetail.png" alt="Widget showing current caffeine level in mg/L">
+                                        <div class="caption">The widget shows your current estimated caffeine level in mg/L.</div>
+                                    </div>
+                                    <div>
+                                        <img class="shot" src="assets/GraphDetail.png" alt="Graph showing caffeine decay and thresholds">
+                                        <div class="caption">The graph shows how caffeine decays over time and when you drop below your sleep-safe threshold.</div>
+                                    </div>
+                                </div>
+
+                                <div class="callout">
+                                    <b>Important:</b> This is an estimate. Garmin watches can’t measure caffeine in blood.
+                                    The model is designed to be practical and useful, not medical-grade.
+                                </div>
+                            </div>
+
+                            <!-- =========================================================
+                                 THRESHOLDS
+                                 ========================================================= -->
+                            <div class="card" id="thresholds">
+                                <h2>What the levels mean (thresholds)</h2>
+
+                                <p>
+                                    Everyone reacts differently, but these thresholds work well as practical guideposts:
+                                </p>
+
+                                <div class="thresholds">
+                                    <div class="tbox sleep">
+                                        <div class="trow">
+                                            <div class="tvalue">0.6 mg/L</div>
+                                            <div class="tbadge green">Sleep</div>
+                                        </div>
+                                        <div class="tname">Sleep-safe target</div>
+                                        <div class="tdesc">
+                                            A practical “aim to be below” level before sleep. Most people can fall asleep without issues at this level, while keeping sleep disruption minimal — even if you’re sensitive to caffeine.
+                                        </div>
+                                    </div>
+
+                                    <div class="tbox stim">
+                                        <div class="trow">
+                                            <div class="tvalue">1.0 mg/L</div>
+                                            <div class="tbadge stm">Stm</div>
+                                        </div>
+                                        <div class="tname">Stimulation starts</div>
+                                        <div class="tdesc">
+                                            Around this level, many people begin to feel noticeable stimulation, such as increased alertness or reduced sleepiness.
+                                        </div>
+                                    </div>
+
+                                    <div class="tbox high">
+                                        <div class="trow">
+                                            <div class="tvalue">5.0 mg/L</div>
+                                            <div class="tbadge high">High</div>
+                                        </div>
+                                        <div class="tname">High level</div>
+                                        <div class="tdesc">
+                                            A high caffeine level where side effects become more likely, including jitters, nervousness, or an elevated heart rate.
+                                        </div>
+                                    </div>
+
+                                    <div class="tbox max">
+                                        <div class="trow">
+                                            <div class="tvalue">10.0 mg/L</div>
+                                            <div class="tbadge max">Max</div>
+                                        </div>
+                                        <div class="tname">Very high level</div>
+                                        <div class="tdesc">
+                                            Very high caffeine level associated with strong stimulation and a high risk of adverse health effects, including anxiety, tremor, and heart palpitations. Additional caffeine is likely to worsen symptoms.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="callout">
+                                    <b>Tip:</b> If you’re very sleep-focused or sensitive, a lower sleep target (e.g., <b>0.6 mg/L</b>) can be a useful goal.
+                                    In <b>Premium</b>, you can set your own Caffeine threshold to match your tolerance.
+                                </div>
+                            </div>
+                            <!-- =========================================================
+                             PREMIUM SLEEP RECOMMENDATIONS & SETTINGS
+                             ========================================================= -->
+                            <div class="card" id="settings">
+                                <h2>Premium sleep recommendations & settings</h2>
+
+                                <p>
+                                    The <b>Last drink time</b> recommendation is available in <b>Premium</b>.
+                                    It helps you decide when you can take a specific drink and still keep your caffeine low enough for sleep.
+                                </p>
+
+                                <div class="callout">
+                                    <b>Premium-only features in this section:</b><br>
+                                    Last drink time • Caffeine threshold setting • Bed time buffer setting • Half-life presets • Custom drinks
+                                </div>
+
+                                <h3>Bed time</h3>
+                                <p>
+                                    Your usual sleep time. By default, it’s taken from your Garmin settings.
+                                    Premium uses <b>Bed time</b> as the reference point for sleep recommendations.
+                                </p>
+
+                                <h3>Bed time buffer <span class="muted">(Premium)</span></h3>
+                                <p>
+                                    A simple safety window before your Bed time. It exists for one reason:
+                                    to prevent the app from recommending a small caffeinated drink too close to sleep.
+                                </p>
+                                <p>
+                                    Even if a tiny drink would <i>technically</i> keep you below your Caffeine threshold by Bed time,
+                                    having caffeine right before sleep can still worsen sleep quality or make it harder to fall asleep.
+                                </p>
+
+                                <div class="callout">
+                                    <b>In short:</b><br>
+                                    Bed time buffer adds a “no-caffeine too close to bedtime” guardrail.
+                                    It does not affect anything else in the model.
+                                </div>
+
+                                <h3>Caffeine threshold <span class="muted">(Premium, default: 0.6 mg/L)</span></h3>
+                                <p>
+                                    The sleep-safe limit Premium uses for recommendations.
+                                    The app tries to ensure your predicted caffeine level at <b>Bed time</b> stays
+                                    <b>at or below</b> this threshold.
+                                </p>
+
+                                <ul>
+                                    <li>If you’re sensitive or sleep gets worse → consider <b>lowering</b> the threshold</li>
+                                    <li>If you tolerate caffeine well and sleep is unaffected → you can <b>slightly increase</b> it</li>
+                                </ul>
+
+                                <h3>Caffeine half-life <span class="muted">(Premium presets, default: 5.5 hours)</span></h3>
+                                <p>
+                                    Half-life controls how fast caffeine decays (exponential decay). A <b>shorter</b> half-life clears faster;
+                                    a <b>longer</b> half-life stays longer and pushes Last drink time earlier.
+                                </p>
+
+                                <div class="callout">
+                                    <b>Premium half-life presets:</b><br>
+                                    4 hours • 5.5 hours • 7.5 hours • 10 hours
+                                </div>
+
+                                <h3>Last drink time <span class="muted">(Premium)</span></h3>
+                                <p>
+                                    For each drink, Premium computes the latest time you can take it so that your predicted caffeine level
+                                    at <b>Bed time</b> stays <b>≤ Caffeine threshold</b>.
+                                    Then it applies the Bed time buffer as a final guardrail, so the recommendation is never “too close” to sleep.
+                                </p>
+
+                                <ul>
+                                    <li>Depends on your <b>current level</b>, <b>half-life</b>, <b>threshold</b>, and <b>Bed time</b></li>
+                                    <li>Also depends on the drink’s caffeine amount (especially for <b>custom drinks</b>)</li>
+                                </ul>
+
+                                <div class="callout">
+                                    <b>Reminder:</b> This is a model-based estimate — not a medical measurement.
+                                </div>
+                            </div>
+
+                            <!-- =========================================================
+                                 PREMIUM PERSONALIZATION
+                                 ========================================================= -->
+                            <div class="card" id="premium">
+                                <h2>Premium personalization</h2>
+
+                                <p>
+                                    Premium unlocks advanced personalization so the model matches <b>your</b> habits and metabolism better:
+                                </p>
+
+                                <ul>
+                                    <li><b>Last drink time recommendation</b> (Premium) — see the latest time for a drink so you stay below your sleep-safe threshold by bedtime.</li>
+                                    <li><b>Custom drinks & caffeine amounts</b> (Premium) — add your own drinks with exact mg (e.g., Energy Drink 500 ml — 160 mg).</li>
+                                    <li><b>Adjustable caffeine threshold</b> (Premium) — choose your sleep-safe limit (default 0.6 mg/L).</li>
+                                    <li><b>Bed time buffer</b> (Premium) — avoid caffeine too close to bedtime (even if a tiny dose would still be below the threshold).</li>
+                                    <li><b>Adjustable caffeine half-life</b> (Premium) — choose one of the supported presets below.</li>
+                                </ul>
+
+                                <div class="callout">
+                                    <b>Supported half-life settings (Premium):</b><br>
+                                    4 hours • 5.5 hours • 7.5 hours • 10 hours
+                                </div>
+
+                                <div class="shotgrid">
+                                    <div>
+                                        <img class="shot" src="assets/AddDrink.png" alt="Add drink screen">
+                                        <div class="caption">Premium: add custom drinks so your logged caffeine matches what you actually drink.</div>
+                                    </div>
+                                    <div>
+                                        <img class="shot" src="assets/Settings.png" alt="Settings screen">
+                                        <div class="caption">Premium: choose a half-life preset to better match how fast you metabolize caffeine.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- =========================================================
+                                ALGORITHM (STEP-BY-STEP)
+                                ========================================================= -->
+                            <div class="card" id="algorithm">
+                                <h2>Computation algorithm (simplified)</h2>
+
+                                <!-- COMMENT:
+                                     Be transparent, but keep it understandable.
+                                     Users care about "is this reasonable?" more than exact equations.
+                                     Avoid claiming absorption/peak timing.
+                                -->
+                                <p>
+                                    Internally, the app keeps a running estimate of your current caffeine level and updates it whenever time passes or you log a drink.
+                                    The model is based on exponential decay (half-life).
+                                </p>
+
+                                <h3>Step 1: Start with the last known level</h3>
+                                <p class="muted">
+                                    The app stores your last computed caffeine level and its timestamp.
+                                </p>
+
+                                <h3>Step 2: Let it decay over time (half-life)</h3>
+                                <p>
+                                    When the widget updates, the level is reduced based on how much time has passed since the last update:
+                                </p>
+
+                                <div class="callout">
+                                    <b>Decay formula:</b><br>
+                                    <code>levelNow = levelPrev × 0.5^(Δt / halfLife)</code><br>
+                                    <span class="muted">Where Δt is time elapsed (in the same units as halfLife).</span>
+                                </div>
+
+                                <h3>Step 3: Add newly logged drinks</h3>
+                                <p>
+                                    When you log a drink, its caffeine amount (mg) is converted into a level increase using your body weight,
+                                    and added on top of the current decayed level:
+                                </p>
+
+                                <div class="callout">
+                                    <b>Update rule:</b><br>
+                                    <code>levelNow = levelNow + drinkDelta</code><br>
+                                    <span class="muted">
+        drinkDelta is derived from the drink’s caffeine (mg) and your configured weight-based normalization.
+      </span>
+                                </div>
+
+                                <h3>Step 4: Predict “sleep-safe time”</h3>
+                                <p>
+                                    To estimate when you’ll fall below a chosen threshold, the app solves the decay equation for time:
+                                </p>
+
+                                <div class="callout">
+                                    <b>Sleep-safe prediction:</b><br>
+                                    <code>timeToThreshold = halfLife × log2(levelNow / threshold)</code><br>
+                                    <span class="muted">If levelNow ≤ threshold, timeToThreshold is 0 (already below).</span>
+                                </div>
+
+                                <div class="callout">
+                                    <b>Background updates:</b><br>
+                                    The app refreshes your estimate automatically (e.g., every 5 minutes), so your current level stays accurate without manual refresh.
+                                </div>
+                            </div>
+
+                            <!-- =========================================================
+                                 FOOTER
+                                 ========================================================= -->
+                            <footer>
+                                <div>© <span id="y"></span> Caffeine Tracker</div>
+                                <div>
+                                    <a href="index.html">Home</a> •
+                                    <a href="privacy.html">Privacy</a> •
+                                    <a href="refund.html">Refunds & Terms</a> •
+                                    <a href="mailto:support@caffeinetracker.app">Support</a>
+                                </div>
+                            </footer>
+
+                        </div>
+
+                        <script>
+                            document.getElementById('y').textContent = new Date().getFullYear();
+                        </script>
+                        </body>
+                        </html>
+
+
+                        <div class="callout">
+                            <b>Update rule:</b><br>
+                            <code>levelNow = levelNow + drinkDelta</code><br>
+                            <span class="muted">
+        drinkDelta is derived from the drink’s caffeine (mg) and your configured weight-based normalization.
+      </span>
+                        </div>
+
+                        <h3>Step 4: Predict “sleep-safe time”</h3>
+                        <p>
+                            To estimate when you’ll fall below a chosen threshold, the app solves the decay equation for time:
+                        </p>
+
+                        <div class="callout">
+                            <b>Sleep-safe prediction:</b><br>
+                            <code>timeToThreshold = halfLife × log2(levelNow / threshold)</code><br>
+                            <span class="muted">If levelNow ≤ threshold, timeToThreshold is 0 (already below).</span>
+                        </div>
+
+                        <div class="callout">
+                            <b>Background updates:</b><br>
+                            The app refreshes your estimate automatically (e.g., every 5 minutes), so your current level stays accurate without manual refresh.
+                        </div>
+                    </div>
+
+                    <!-- =========================================================
+                         FOOTER
+                         ========================================================= -->
+                    <footer>
+                        <div>© <span id="y"></span> Caffeine Tracker</div>
+                        <div>
+                            <a href="index.html">Home</a> •
+                            <a href="privacy.html">Privacy</a> •
+                            <a href="refund.html">Refunds & Terms</a> •
+                            <a href="mailto:support@caffeinetracker.app">Support</a>
+                        </div>
+                    </footer>
+
+                </div>
+
+                <script>
+                    document.getElementById('y').textContent = new Date().getFullYear();
+                </script>
+                </body>
+                </html>
+                fe decay over time,
                 and predicts when you’ll drop below your sleep-safe threshold.
             </p>
 
@@ -139,7 +821,7 @@
         </div>
 
         <div class="callout">
-            <b>Tip:</b> If you’re very sleep-focused or sensitive, a lower sleep target (e.g., <b>0.6 mg/L</b>) can be a useful goal.
+            <b>Tip:</b> If you’re very sleep-focused or sensitive, a lower sleep target (e.g., <b>0.4 mg/L</b>) can be a useful goal.
             In <b>Premium</b>, you can set your own Caffeine threshold to match your tolerance.
         </div>
     </div>
