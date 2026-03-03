@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+    <title>Find Your Caffeine Half-Life — Caffeine Tracker</title>
+    <meta name="description"
+          content="Answer a few quick questions to estimate your personal caffeine half-life and pick the right Garmin widget preset."/>
+
+    <link rel="icon" type="image/png" href="assets/brown-coffee-cup-icon.png">
+    <link rel="apple-touch-icon" href="assets/brown-coffee-cup-icon.png">
+
+    <link rel="stylesheet" href="assets/site.css">
+    <link rel="stylesheet" href="assets/halflife-wizard.css">
+</head>
+
+<body>
+<div class="wrap">
+
+    <!-- HERO -->
+    <div class="top">
+        <img class="icon" src="assets/brown-coffee-cup-icon.png" alt="Caffeine Tracker icon">
+        <div>
+            <span class="badge">Garmin Connect IQ • Widget</span>
+            <h1>Caffeine Tracker</h1>
+            <p class="lead">
+                Find out which caffeine half-life preset fits you best.
+                Answer a few quick questions — it takes about 30 seconds.
+            </p>
+
+            <div class="cta">
+                <a class="btn" href="index.html">← Back to homepage</a>
+
+                <a class="btn"
+                   href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714"
+                   target="_blank" rel="noopener">
+                    View in Garmin Store
+                </a>
+            </div>
+
+            <div class="muted">
+                Based on published pharmacokinetic research. This is not medical advice.
+            </div>
+        </div>
+    </div>
+
+    <!-- WIZARD CARD -->
+    <div class="card" id="wizard">
+        <!-- progress bar — filled dynamically -->
+        <div class="wizard-progress" id="wizardProgress"></div>
+
+        <!-- question steps — rendered by JS -->
+        <div id="wizardSteps"></div>
+
+        <!-- result step (hidden until done) -->
+        <div class="wizard-step" id="wizardResult">
+            <h2 class="wizard-title">Your recommended preset</h2>
+            <p class="wizard-subtitle">Based on your answers, the best half-life setting for you is:</p>
+
+            <div class="result-value">
+                <span id="resultPreset"></span>
+                <span class="result-unit">hours</span>
+            </div>
+
+            <p class="result-detail" id="resultRaw"></p>
+
+            <div class="callout" id="resultWarning" style="display:none">
+                <b>⚠ Important:</b>
+                <span id="resultWarningText"></span>
+            </div>
+
+            <div class="callout">
+                <b>How to apply this:</b><br>
+                Open Caffeine Tracker on your watch → Settings → Half-life → choose
+                <b><span id="resultPresetRepeat"></span> hours</b>.
+            </div>
+
+            <div class="wizard-nav">
+                <button class="btn" id="btnRestart">Start over</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div>© <span id="y"></span> Caffeine Tracker</div>
+        <div>
+            <a href="index.html">Home</a> •
+            <a href="how-it-works.html">How it works</a> •
+            <a href="privacy.html">Privacy</a> •
+            <a href="refund.html">Refunds & Terms</a> •
+            <a href="mailto:support@caffeinetracker.app">Support</a>
+        </div>
+        <div>Not affiliated with Garmin.</div>
+    </footer>
+
+</div>
+
+<script src="assets/halflife-wizard.js"></script>
+<script>
+(function () {
+    /* ── DOM refs ─────────────────────────────────────────────── */
+    var stepsEl   = document.getElementById("wizardSteps");
+    var progressEl= document.getElementById("wizardProgress");
+    var resultEl  = document.getElementById("wizardResult");
+    var presetEl  = document.getElementById("resultPreset");
+    var rawEl     = document.getElementById("resultRaw");
+    var repeatEl  = document.getElementById("resultPresetRepeat");
+    var warningEl = document.getElementById("resultWarning");
+    var warningTxt= document.getElementById("resultWarningText");
+    var restartBtn= document.getElementById("btnRestart");
+
+    var answers  = {};
+    var current  = 0;
+    var total    = QUESTIONS.length;
+
+    /* ── Build progress pips ──────────────────────────────────── */
+    function buildProgress() {
+        progressEl.innerHTML = "";
+        for (var i = 0; i < total; i++) {
+            var pip = document.createElement("div");
+            pip.className = "pip" + (i < current ? " done" : "") + (i === current ? " current" : "");
+            progressEl.appendChild(pip);
+        }
+    }
+
+    /* ── Render one question step ─────────────────────────────── */
+    function renderStep() {
+        stepsEl.innerHTML = "";
+        resultEl.classList.remove("active");
+
+        if (current >= total) { showResult(); return; }
+
+        var q = QUESTIONS[current];
+        var step = document.createElement("div");
+        step.className = "wizard-step active";
+
+        var h = document.createElement("h2");
+        h.className = "wizard-title";
+        h.textContent = q.title;
+        step.appendChild(h);
+
+        if (q.subtitle) {
+            var sub = document.createElement("p");
+            sub.className = "wizard-subtitle";
+            sub.textContent = q.subtitle;
+            step.appendChild(sub);
+        }
+
+        var opts = document.createElement("div");
+        opts.className = "wizard-options";
+
+        q.options.forEach(function (opt) {
+            var btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "wizard-option" + (answers[q.id] === opt.value ? " selected" : "");
+            btn.textContent = opt.label;
+            btn.addEventListener("click", function () {
+                answers[q.id] = opt.value;
+                current++;
+                buildProgress();
+                renderStep();
+            });
+            opts.appendChild(btn);
+        });
+        step.appendChild(opts);
+
+        /* Sources */
+        if (q.sources && q.sources.length) {
+            var details = document.createElement("details");
+            details.className = "wizard-sources";
+            var summary = document.createElement("summary");
+            summary.textContent = "Research backing this question";
+            details.appendChild(summary);
+            var list = document.createElement("ul");
+            q.sources.forEach(function (src) {
+                var li = document.createElement("li");
+                if (src.url) {
+                    var a = document.createElement("a");
+                    a.href = src.url;
+                    a.target = "_blank";
+                    a.rel = "noopener";
+                    a.textContent = src.text;
+                    li.appendChild(a);
+                } else {
+                    li.textContent = src.text;
+                }
+                list.appendChild(li);
+            });
+            details.appendChild(list);
+            step.appendChild(details);
+        }
+
+        /* Back button */
+        if (current > 0) {
+            var nav = document.createElement("div");
+            nav.className = "wizard-nav";
+            var back = document.createElement("button");
+            back.type = "button";
+            back.className = "btn";
+            back.textContent = "← Back";
+            back.addEventListener("click", function () {
+                current--;
+                buildProgress();
+                renderStep();
+            });
+            nav.appendChild(back);
+            step.appendChild(nav);
+        }
+
+        stepsEl.appendChild(step);
+        buildProgress();
+    }
+
+    /* ── Show result ──────────────────────────────────────────── */
+    function showResult() {
+        stepsEl.innerHTML = "";
+        var result = computeHalfLife(answers);
+        presetEl.textContent = result.preset;
+        repeatEl.textContent = result.preset;
+        rawEl.textContent = "Computed estimate: " + result.raw + " h (snapped to nearest preset).";
+
+        /* Warnings for extreme states */
+        var warnings = [];
+        if (answers.pregnancy && answers.pregnancy !== "no") {
+            warnings.push("Caffeine clearance is greatly reduced during pregnancy. Consider limiting intake to ≤ 200 mg/day.");
+        }
+        if (answers.liver === "severe") {
+            warnings.push("Severe liver disease can push half-life to 20+ hours. Consult your physician about caffeine intake.");
+        }
+        if (answers.medication === "fluvoxamine") {
+            warnings.push("Fluvoxamine can increase caffeine half-life dramatically. Monitor for caffeine accumulation.");
+        }
+
+        if (warnings.length) {
+            warningEl.style.display = "";
+            warningTxt.innerHTML = warnings.join("<br>");
+        } else {
+            warningEl.style.display = "none";
+        }
+
+        resultEl.classList.add("active");
+        progressEl.innerHTML = "";
+        for (var i = 0; i < total; i++) {
+            var pip = document.createElement("div");
+            pip.className = "pip done";
+            progressEl.appendChild(pip);
+        }
+    }
+
+    /* ── Restart ──────────────────────────────────────────────── */
+    restartBtn.addEventListener("click", function () {
+        answers = {};
+        current = 0;
+        buildProgress();
+        renderStep();
+    });
+
+    /* ── Boot ─────────────────────────────────────────────────── */
+    buildProgress();
+    renderStep();
+
+    document.getElementById("y").textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

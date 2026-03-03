@@ -1,0 +1,138 @@
+/* halflife-wizard.css
+   Page-specific styles for the half-life wizard.
+   Shared styles (layout, hero, cards, buttons, footer, etc.) belong in site.css.
+*/
+
+/* ── Wizard step container ───────────────────────────────────── */
+
+.wizard-step {
+    display: none;
+}
+.wizard-step.active {
+    display: block;
+}
+
+/* ── Progress bar ────────────────────────────────────────────── */
+
+.wizard-progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+.wizard-progress .pip {
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(127,127,127,.18);
+    transition: background .2s;
+}
+.wizard-progress .pip.done {
+    background: #635bff;
+}
+.wizard-progress .pip.current {
+    background: #635bff;
+    opacity: .55;
+}
+
+/* ── Question title ──────────────────────────────────────────── */
+
+.wizard-title {
+    font-size: 20px;
+    font-weight: 750;
+    margin: 0 0 4px;
+}
+.wizard-subtitle {
+    font-size: 14px;
+    opacity: .8;
+    margin: 0 0 16px;
+}
+
+/* ── Option buttons (radio-style cards) ──────────────────────── */
+
+.wizard-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.wizard-option {
+    display: block;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(127,127,127,.30);
+    border-radius: 12px;
+    background: rgba(127,127,127,.04);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+}
+.wizard-option:hover {
+    border-color: rgba(99,91,255,.5);
+    background: rgba(99,91,255,.06);
+}
+.wizard-option.selected {
+    border-color: #635bff;
+    background: rgba(99,91,255,.10);
+}
+
+/* ── Navigation buttons ──────────────────────────────────────── */
+
+.wizard-nav {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+.wizard-nav .btn {
+    min-width: 100px;
+}
+.wizard-nav .btn:disabled {
+    opacity: .4;
+    pointer-events: none;
+}
+
+/* ── Result card ─────────────────────────────────────────────── */
+
+.result-value {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 8px 0;
+}
+.result-unit {
+    font-size: 20px;
+    font-weight: 600;
+    opacity: .7;
+}
+/* ── Research sources (collapsible) ───────────────────────────── */
+
+.wizard-sources {
+    margin-top: 14px;
+    font-size: 13px;
+    opacity: .85;
+}
+.wizard-sources summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+}
+.wizard-sources ul {
+    margin: 6px 0 0;
+    padding-left: 18px;
+}
+.wizard-sources li {
+    margin: 4px 0;
+    line-height: 1.45;
+}
+.wizard-sources a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.result-detail {
+    font-size: 14px;
+    opacity: .85;
+    margin-top: 6px;
+}
