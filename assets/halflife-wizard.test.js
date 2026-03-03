@@ -138,11 +138,15 @@ assert(result6.preset === 4, "Preset = 4 (raw " + result6.raw + ")");
 
 section("computeRawHalfLife — single factor: CYP1A2 fast metabolizer (A/A)");
 var rawAA = computeRawHalfLife({ cyp1a2: "AA" });
-assert(approx(rawAA, 5 * 0.85, 0.01), "CYP1A2 A/A → 4.25 h (" + rawAA + ")");
+assert(approx(rawAA, 5 * 0.9, 0.01), "CYP1A2 A/A → 4.5 h (" + rawAA + ")")
 
-section("computeRawHalfLife — single factor: CYP1A2 slow metabolizer (A/C or C/C)");
-var rawAC = computeRawHalfLife({ cyp1a2: "AC_CC" });
-assert(approx(rawAC, 5 * 1.15, 0.01), "CYP1A2 A/C or C/C → 5.75 h (" + rawAC + ")");
+section("computeRawHalfLife — single factor: CYP1A2 intermediate metabolizer (A/C)");
+var rawAC = computeRawHalfLife({ cyp1a2: "AC" });
+assert(rawAC === BASE_HALFLIFE, "CYP1A2 A/C → neutral 5 h (" + rawAC + ")")
+
+section("computeRawHalfLife — single factor: CYP1A2 slow metabolizer (C/C)");
+var rawCC = computeRawHalfLife({ cyp1a2: "CC" });
+assert(approx(rawCC, 5 * 1.1, 0.01), "CYP1A2 C/C → 5.5 h (" + rawCC + ")")
 
 section("computeRawHalfLife — single factor: CYP1A2 unknown (neutral)");
 var rawCypUnknown = computeRawHalfLife({ cyp1a2: "unknown" });
@@ -150,13 +154,26 @@ assert(rawCypUnknown === BASE_HALFLIFE, "CYP1A2 unknown → base (" + rawCypUnkn
 
 section("computeHalfLife — combined: smoker 10-19 + CYP1A2 A/A (fast)");
 var resultSmokeAA = computeHalfLife({ smoking: "10-19", cyp1a2: "AA" });
-assert(approx(resultSmokeAA.raw, 5 * 0.7 * 0.85, 0.01), "Raw ≈ 2.975 (" + resultSmokeAA.raw + ")");
+assert(approx(resultSmokeAA.raw, 5 * 0.7 * 0.9, 0.01), "Raw ≈ 3.15 (" + resultSmokeAA.raw + ")");
 assert(resultSmokeAA.preset === 4, "Preset = 4");
 
-section("computeHalfLife — combined: CYP1A2 slow + mild liver");
-var resultCypLiver = computeHalfLife({ cyp1a2: "AC_CC", liver: "mild" });
-assert(approx(resultCypLiver.raw, 5 * 1.15 * 1.3, 0.01), "Raw ≈ 7.475 (" + resultCypLiver.raw + ")");
+section("computeHalfLife — combined: CYP1A2 C/C slow + mild liver");
+var resultCypLiver = computeHalfLife({ cyp1a2: "CC", liver: "mild" });
+assert(approx(resultCypLiver.raw, 5 * 1.1 * 1.3, 0.01), "Raw ≈ 7.15 (" + resultCypLiver.raw + ")");
 assert(resultCypLiver.preset === 7.5, "Preset = 7.5");
+
+section("computeHalfLife — combined: CYP1A2 A/C intermediate + mild liver");
+var resultCypACLiver = computeHalfLife({ cyp1a2: "AC", liver: "mild" });
+assert(approx(resultCypACLiver.raw, 5 * 1.0 * 1.3, 0.01), "Raw ≈ 6.5 (" + resultCypACLiver.raw + ")");
+assert(resultCypACLiver.preset === 5.5 || resultCypACLiver.preset === 7.5, "Preset = 5.5 or 7.5");
+
+section("computeRawHalfLife — single factor: Rifampicin");
+var rawRif = computeRawHalfLife({ medication: "rifampicin" });
+assert(approx(rawRif, 5 * 0.75, 0.01), "Rifampicin → 3.75 h (" + rawRif + ")");
+
+section("computeHalfLife — full pipeline: Rifampicin");
+var resultRif = computeHalfLife({ medication: "rifampicin" });
+assert(resultRif.preset === 4, "Rifampicin → 4 h preset (raw " + resultRif.raw + ")");
 
 section("computeRawHalfLife — unknown question id is ignored");
 var rawUnknown = computeRawHalfLife({ nonexistent: "foo" });

@@ -79,7 +79,7 @@ const QUESTIONS = [
         title: "Do you smoke combustible cigarettes?",
         subtitle: "Smoking induces the liver enzyme that clears caffeine.",
         sources: [
-            { text: "Parsons WD & Neims AH – Effect of smoking on caffeine clearance (t½ 190 min vs 276 min in non-smokers).", url: "https://pubmed.ncbi.nlm.nih.gov/front/front" },
+            { text: "Parsons WD & Neims AH – Effect of smoking on caffeine clearance (t½ 190 min vs 276 min in non-smokers).", url: "https://pubmed.ncbi.nlm.nih.gov/6812584/" },
             { text: "Abernethy DR & Todd EL – Caffeine disposition in smokers vs non-smokers (t½ ~3.5 h vs ~6.0 h).", url: "https://pubmed.ncbi.nlm.nih.gov/4075070/" },
         ],
         options: [
@@ -111,12 +111,15 @@ const QUESTIONS = [
             { text: "Jeppesen U et al. – Fluvoxamine inhibits caffeine metabolism (t½ from ~5 h to ~56 h).", url: "https://pubmed.ncbi.nlm.nih.gov/8841157/" },
             { text: "Healy DP et al. – Ciprofloxacin and caffeine interaction (t½ from 5.2 h to 8.2 h).", url: "https://pubmed.ncbi.nlm.nih.gov/2643614/" },
             { text: "Parsons WD & Neims AH – Cimetidine inhibition of caffeine elimination (t½ +45–96%).", url: "https://pubmed.ncbi.nlm.nih.gov/6812584/" },
+            { text: "Backman JT et al. (1995) – Rifampin reduced caffeine t½ from 6.2 to 3.5 h (p<0.004).", url: "https://pubmed.ncbi.nlm.nih.gov/7751591/" },
+            { text: "Backman JT et al. (2006) – Rifampicin is only a weak inducer of CYP1A2 (caffeine ratio ∙23%, NS).", url: "https://pubmed.ncbi.nlm.nih.gov/16758262/" },
         ],
         options: [
             { label: "None of these",  value: "none",          multiplier: 1.0 },
             { label: "Fluvoxamine",    value: "fluvoxamine",   multiplier: 10.0 },
             { label: "Ciprofloxacin",  value: "ciprofloxacin", multiplier: 1.6 },
             { label: "Cimetidine",     value: "cimetidine",    multiplier: 1.7 },
+            { label: "Rifampicin",     value: "rifampicin",    multiplier: 0.75 },
         ],
     },
     {
@@ -134,15 +137,16 @@ const QUESTIONS = [
     {
         id: "cyp1a2",
         title: "Do you know your CYP1A2 genotype (e.g. from 23andMe)?",
-        subtitle: "The CYP1A2 gene (rs762551) determines how fast your liver breaks down caffeine. A/A = fast metabolizer, A/C or C/C = slow metabolizer.",
+        subtitle: "The CYP1A2 gene (rs762551) affects how inducible your caffeine metabolism is. The effect is strongest in smokers; in non-smokers the difference is smaller.",
         sources: [
             { text: "Sachse C et al. – Functional significance of a C→A polymorphism in intron 1 of the CYP1A2 gene (A/A shows higher inducibility).", url: "https://pubmed.ncbi.nlm.nih.gov/10325023/" },
             { text: "Palatini P et al. – CYP1A2 genotype modifies the association between coffee intake and the risk of hypertension.", url: "https://pubmed.ncbi.nlm.nih.gov/19451835/" },
         ],
         options: [
-            { label: "I don't know",                   value: "unknown", multiplier: 1.0 },
-            { label: "A/A — fast metabolizer",         value: "AA",      multiplier: 0.85 },
-            { label: "A/C or C/C — slow metabolizer",  value: "AC_CC",   multiplier: 1.15 },
+            { label: "I don't know",                    value: "unknown", multiplier: 1.0 },
+            { label: "A/A — fast metabolizer",          value: "AA",      multiplier: 0.9 },
+            { label: "A/C — intermediate metabolizer",  value: "AC",      multiplier: 1.0 },
+            { label: "C/C — slow metabolizer",          value: "CC",      multiplier: 1.1 },
         ],
     },
 ];
