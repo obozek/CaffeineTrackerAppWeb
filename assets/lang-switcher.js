@@ -6,6 +6,9 @@
         { code: "pl", label: "PL", prefix: "pl" },
     ];
 
+    // Pages that have translated versions (filename only)
+    var TRANSLATED_PAGES = ["/", "/index.html", "/how-it-works.html", "/halflife-wizard.html", "/404.html"];
+
     function detectCurrent() {
         var path = window.location.pathname;
         for (var i = 1; i < LANGS.length; i++) {
@@ -29,6 +32,11 @@
             pagePath = path.substring(("/" + currentPrefix).length);
         } else {
             pagePath = path;
+        }
+
+        // Fall back to homepage if page doesn't have a translation
+        if (TRANSLATED_PAGES.indexOf(pagePath) === -1) {
+            pagePath = "/";
         }
 
         if (targetPrefix) {
