@@ -27,10 +27,10 @@
     transition: background .2s;
 }
 .wizard-progress .pip.done {
-    background: #635bff;
+    background: #8B5E3C;
 }
 .wizard-progress .pip.current {
-    background: #635bff;
+    background: #8B5E3C;
     opacity: .55;
 }
 
@@ -70,12 +70,12 @@
     transition: border-color .15s, background .15s;
 }
 .wizard-option:hover {
-    border-color: rgba(99,91,255,.5);
-    background: rgba(99,91,255,.06);
+    border-color: rgba(139,94,60,.5);
+    background: rgba(139,94,60,.06);
 }
 .wizard-option.selected {
-    border-color: #635bff;
-    background: rgba(99,91,255,.10);
+    border-color: #8B5E3C;
+    background: rgba(139,94,60,.10);
 }
 
 /* ── Navigation buttons ──────────────────────────────────────── */
