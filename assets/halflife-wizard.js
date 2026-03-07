@@ -18,7 +18,7 @@ const BASE_HALFLIFE = 5;                     // hours (healthy adult, no modifie
 
 /* ── Questions & weights ─────────────────────────────────────── */
 
-const QUESTIONS = [
+var QUESTIONS = [
     {
         id: "age",
         title: "How old are you?",

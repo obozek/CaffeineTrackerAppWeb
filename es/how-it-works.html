@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="theme-color" content="#53311C">
+
+    <title>Cómo funciona Caffeine Tracker — niveles, umbrales y ajustes</title>
+    <meta name="description"
+          content="Aprende cómo Caffeine Tracker estima la cafeína (mg/L), qué significan los umbrales y cómo funciona la personalización Premium (bebidas personalizadas + preajustes de vida media)."/>
+
+    <link rel="canonical" href="https://www.caffeinetracker.app/es/how-it-works.html">
+    <link rel="alternate" hreflang="en" href="https://www.caffeinetracker.app/how-it-works.html">
+    <link rel="alternate" hreflang="de" href="https://www.caffeinetracker.app/de/how-it-works.html">
+    <link rel="alternate" hreflang="es" href="https://www.caffeinetracker.app/es/how-it-works.html">
+    <link rel="alternate" hreflang="pl" href="https://www.caffeinetracker.app/pl/how-it-works.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.caffeinetracker.app/how-it-works.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.caffeinetracker.app/es/how-it-works.html">
+    <meta property="og:title" content="Cómo funciona Caffeine Tracker — niveles, umbrales y ajustes">
+    <meta property="og:description" content="Aprende cómo Caffeine Tracker estima la cafeína (mg/L), qué significan los umbrales y cómo funciona la personalización Premium.">
+    <meta property="og:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+    <meta property="og:site_name" content="Caffeine Tracker">
+    <meta property="og:locale" content="es_ES">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Cómo funciona Caffeine Tracker — niveles, umbrales y ajustes">
+    <meta name="twitter:description" content="Aprende cómo Caffeine Tracker estima la cafeína (mg/L), qué significan los umbrales y cómo funciona la personalización Premium.">
+    <meta name="twitter:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+
+    <link rel="icon" type="image/png" href="../assets/brown-coffee-cup-icon.png">
+    <link rel="apple-touch-icon" href="../assets/brown-coffee-cup-icon.png">
+
+    <link rel="stylesheet" href="../assets/site.css">
+    <link rel="stylesheet" href="../assets/how-it-works.css">
+    <script src="../assets/theme-toggle.js"></script>
+    <script src="../assets/lang-switcher.js"></script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+<div class="wrap">
+<main id="main">
+
+    <!-- HEADER -->
+    <div class="top">
+        <img class="icon" src="../assets/brown-coffee-cup-icon.png" alt="Icono de Caffeine Tracker" width="240" height="242">
+        <div>
+            <span class="badge">Garmin Connect IQ • Widget</span>
+            <h1>Caffeine Tracker</h1>
+            <p class="lead">
+                Cómo funciona: el widget estima tu nivel actual de cafeína (mg/L), aplica la degradación por vida media
+                y predice cuándo caerás por debajo de tu umbral de sueño seguro.
+            </p>
+
+            <div class="cta">
+                <a class="btn" href="index.html">← Volver al inicio</a>
+
+                <a class="btn" href="halflife-wizard.html">
+                    Encuentra tu vida media de cafeína
+                </a>
+
+                <a class="btn"
+                   href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714"
+                   target="_blank" rel="noopener">
+                    Ver en Garmin Store
+                </a>
+            </div>
+
+            <div class="muted">
+                Nota: el reloj no puede medir la cafeína en sangre. Esta es una estimación basada en un modelo usando lo que
+                registras, tu peso corporal y los ajustes de metabolismo.
+            </div>
+        </div>
+    </div>
+
+    <!-- WHAT "mg/L" MEANS -->
+    <div class="card" id="units">
+        <h2>¿Qué significa "mg/L"?</h2>
+
+        <p>
+            <b>mg/L</b> significa <b>miligramos de cafeína por litro</b>.
+            La app usa mg/L como una puntuación práctica similar a la concentración:
+            es más fácil de interpretar que los mg totales, porque el peso corporal influye en cómo se siente
+            la cafeína.
+        </p>
+
+        <ul>
+            <li>La misma bebida afecta a las personas de forma diferente</li>
+            <li>El peso corporal cambia la concentración</li>
+            <li>La concentración hace los umbrales más fáciles de entender</li>
+        </ul>
+
+        <div class="shotgrid">
+            <div>
+                <img class="shot" src="../assets/WidgetDetail.png"
+                     alt="Widget mostrando nivel actual de cafeína en mg/L"
+                     loading="lazy" width="1182" height="1194">
+                <div class="caption">El widget muestra tu nivel estimado actual de cafeína en mg/L.</div>
+            </div>
+            <div>
+                <img class="shot" src="../assets/GraphDetail.png"
+                     alt="Gráfico mostrando degradación de cafeína y umbrales"
+                     loading="lazy" width="1184" height="1172">
+                <div class="caption">El gráfico muestra cómo la cafeína se degrada con el tiempo y cuándo caes por debajo de tu umbral de sueño seguro.</div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <b>Importante:</b> Esta es una estimación. Los relojes Garmin no pueden medir la cafeína en sangre.
+            El modelo está diseñado para ser práctico y útil, no de grado médico.
+        </div>
+    </div>
+
+    <!-- THRESHOLDS -->
+    <div class="card" id="thresholds">
+        <h2>Qué significan los niveles (umbrales)</h2>
+
+        <p>
+            Cada persona reacciona de forma diferente, pero estos umbrales funcionan bien como referencias prácticas:
+        </p>
+
+        <div class="thresholds">
+            <div class="tbox sleep">
+                <div class="trow">
+                    <div class="tvalue">0,6 mg/L</div>
+                    <div class="tbadge green">Sueño</div>
+                </div>
+                <div class="tname">Objetivo de sueño seguro</div>
+                <div class="tdesc">
+                    Un nivel práctico de "estar por debajo" antes de dormir. La mayoría puede dormirse
+                    sin problemas a este nivel, manteniendo las alteraciones del sueño al mínimo — incluso si
+                    eres sensible a la cafeína.
+                </div>
+            </div>
+
+            <div class="tbox stim">
+                <div class="trow">
+                    <div class="tvalue">1,0 mg/L</div>
+                    <div class="tbadge stm">Stm</div>
+                </div>
+                <div class="tname">Comienza la estimulación</div>
+                <div class="tdesc">
+                    Alrededor de este nivel, muchas personas comienzan a sentir estimulación notable, como
+                    mayor alerta o menor somnolencia.
+                </div>
+            </div>
+
+            <div class="tbox high">
+                <div class="trow">
+                    <div class="tvalue">5,0 mg/L</div>
+                    <div class="tbadge high">Alto</div>
+                </div>
+                <div class="tname">Nivel alto</div>
+                <div class="tdesc">
+                    Un nivel alto de cafeína donde los efectos secundarios son más probables, incluyendo temblores,
+                    nerviosismo o frecuencia cardíaca elevada.
+                </div>
+            </div>
+
+            <div class="tbox max">
+                <div class="trow">
+                    <div class="tvalue">10,0 mg/L</div>
+                    <div class="tbadge max">Máx</div>
+                </div>
+                <div class="tname">Nivel muy alto</div>
+                <div class="tdesc">
+                    Nivel muy alto de cafeína asociado con estimulación fuerte y alto riesgo de
+                    efectos adversos para la salud, incluyendo ansiedad, temblor y palpitaciones.
+                    La cafeína adicional probablemente empeorará los síntomas.
+                </div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <b>Consejo:</b> Si te preocupa mucho el sueño o eres sensible, un objetivo de sueño más bajo (ej. <b>0,6
+            mg/L</b>) puede ser útil.
+            En <b>Premium</b>, puedes establecer tu propio umbral de cafeína según tu tolerancia.
+        </div>
+    </div>
+
+    <!-- PREMIUM SLEEP RECOMMENDATIONS & SETTINGS -->
+    <div class="card" id="settings">
+        <h2>Recomendaciones de sueño y ajustes Premium</h2>
+
+        <p>
+            La recomendación de <b>Hora de última bebida</b> está disponible en <b>Premium</b>.
+            Te ayuda a decidir cuándo puedes tomar una bebida específica y mantener tu cafeína lo
+            suficientemente baja para dormir.
+        </p>
+
+        <div class="callout">
+            <b>Funciones solo Premium en esta sección:</b><br>
+            Hora de última bebida • Umbral de cafeína • Buffer de hora de dormir • Preajustes de vida media •
+            Bebidas personalizadas
+        </div>
+
+        <h3>Hora de dormir</h3>
+        <p>
+            Tu hora habitual de dormir. Por defecto, se toma de tus ajustes de Garmin.
+            Premium usa <b>Hora de dormir</b> como punto de referencia para las recomendaciones de sueño.
+        </p>
+
+        <h3>Buffer de hora de dormir <span class="muted">(Premium)</span></h3>
+        <p>
+            Una ventana de seguridad simple antes de tu hora de dormir. Existe por una razón:
+            para evitar que la app recomiende una pequeña bebida con cafeína demasiado cerca de dormir.
+        </p>
+        <p>
+            Incluso si una bebida pequeña <i>técnicamente</i> te mantendría bajo tu umbral de cafeína a la hora de dormir,
+            tomar cafeína justo antes de dormir puede empeorar la calidad del sueño o dificultar conciliar el sueño.
+        </p>
+
+        <div class="callout">
+            <b>En resumen:</b><br>
+            El buffer de hora de dormir añade una protección de "no cafeína demasiado cerca de dormir".
+            No afecta nada más en el modelo.
+        </div>
+
+        <h3>Umbral de cafeína <span class="muted">(Premium, por defecto: 0,6 mg/L)</span></h3>
+        <p>
+            El límite de sueño seguro que Premium usa para las recomendaciones.
+            La app intenta asegurar que tu nivel predicho de cafeína a la <b>Hora de dormir</b> se mantenga
+            <b>en o por debajo</b> de este umbral.
+        </p>
+
+        <ul>
+            <li>Si eres sensible o el sueño empeora → considera <b>bajar</b> el umbral</li>
+            <li>Si toleras bien la cafeína y el sueño no se ve afectado → puedes <b>subirlo ligeramente</b></li>
+        </ul>
+
+        <h3>Vida media de cafeína <span class="muted">(Premium preajustes, por defecto: 5,5 horas)</span></h3>
+        <p>
+            La vida media controla qué tan rápido se degrada la cafeína (degradación exponencial). Una vida media <b>más corta</b>
+            elimina más rápido; una vida media <b>más larga</b> permanece más tiempo y adelanta la hora de última bebida.
+        </p>
+
+        <div class="callout">
+            <b>Preajustes de vida media Premium:</b><br>
+            4 horas • 5,5 horas • 7,5 horas • 10 horas
+        </div>
+
+        <h3>Hora de última bebida <span class="muted">(Premium)</span></h3>
+        <p>
+            Para cada bebida, Premium calcula la hora más tardía a la que puedes tomarla para que tu nivel predicho
+            de cafeína a la <b>Hora de dormir</b> se mantenga <b>≤ Umbral de cafeína</b>.
+            Luego aplica el buffer de hora de dormir como protección final, para que la recomendación nunca sea
+            "demasiado cerca" de dormir.
+        </p>
+
+        <ul>
+            <li>Depende de tu <b>nivel actual</b>, <b>vida media</b>, <b>umbral</b> y <b>hora de dormir</b></li>
+            <li>También depende de la cantidad de cafeína de la bebida (especialmente para <b>bebidas personalizadas</b>)</li>
+        </ul>
+
+        <div class="callout">
+            <b>Recordatorio:</b> Esta es una estimación basada en un modelo — no una medición médica.
+        </div>
+    </div>
+
+    <!-- PREMIUM PERSONALIZATION -->
+    <div class="card" id="premium">
+        <h2>Personalización Premium</h2>
+
+        <p>
+            Premium desbloquea personalización avanzada para que el modelo se ajuste mejor a <b>tus</b> hábitos y
+            metabolismo:
+        </p>
+
+        <ul>
+            <li><b>Recomendación de hora de última bebida</b> (Premium) — ve la hora más tardía para una bebida y
+                mantente bajo tu umbral de sueño seguro a la hora de dormir.
+            </li>
+            <li><b>Bebidas y cantidades de cafeína personalizadas</b> (Premium) — añade tus propias bebidas con mg exactos
+                (ej. Bebida energética 500 ml — 160 mg).
+            </li>
+            <li><b>Umbral de cafeína ajustable</b> (Premium) — elige tu límite de sueño seguro (por defecto 0,6 mg/L).
+            </li>
+            <li><b>Buffer de hora de dormir</b> (Premium) — evita cafeína demasiado cerca de dormir (incluso si una dosis
+                pequeña aún estaría bajo el umbral).
+            </li>
+            <li><b>Vida media de cafeína ajustable</b> (Premium) — elige uno de los preajustes soportados.
+            </li>
+        </ul>
+
+        <div class="callout">
+            <b>Ajustes de vida media soportados (Premium):</b><br>
+            4 horas • 5,5 horas • 7,5 horas • 10 horas
+        </div>
+
+        <div class="shotgrid">
+            <div>
+                <img class="shot" src="../assets/AddDrink.png" alt="Pantalla de añadir bebida"
+                     loading="lazy" width="1190" height="1182">
+                <div class="caption">Premium: añade bebidas personalizadas para que tu cafeína registrada coincida con lo que realmente bebes.</div>
+            </div>
+            <div>
+                <img class="shot" src="../assets/Settings.png" alt="Pantalla de ajustes"
+                     loading="lazy" width="1176" height="1166">
+                <div class="caption">Premium: elige un preajuste de vida media que se adapte mejor a cómo metabolizas la cafeína.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALGORITHM -->
+    <div class="card" id="algorithm">
+        <h2>Algoritmo de cálculo (simplificado)</h2>
+
+        <p>
+            Internamente, la app mantiene una estimación continua de tu nivel actual de cafeína y la actualiza
+            cuando pasa el tiempo o registras una bebida.
+            El modelo se basa en la degradación exponencial (vida media).
+        </p>
+
+        <h3>Paso 1: Empezar con el último nivel conocido</h3>
+        <p class="muted">
+            La app almacena tu último nivel de cafeína calculado y su marca de tiempo.
+        </p>
+
+        <h3>Paso 2: Dejar que se degrade con el tiempo (vida media)</h3>
+        <p>
+            Cuando el widget se actualiza, el nivel se reduce según cuánto tiempo ha pasado desde la
+            última actualización:
+        </p>
+
+        <div class="callout">
+            <b>Fórmula de degradación:</b><br>
+            <code>nivelAhora = nivelAnterior × 0,5^(Δt / vidaMedia)</code><br>
+            <span class="muted">Donde Δt es el tiempo transcurrido (en las mismas unidades que vidaMedia).</span>
+        </div>
+
+        <h3>Paso 3: Añadir bebidas recién registradas</h3>
+        <p>
+            Cuando registras una bebida, su cantidad de cafeína (mg) se convierte en un aumento de nivel usando tu
+            peso corporal, y se suma al nivel actual degradado:
+        </p>
+
+        <div class="callout">
+            <b>Regla de actualización:</b><br>
+            <code>nivelAhora = nivelAhora + deltaBebida</code><br>
+            <span class="muted">
+                deltaBebida se deriva de la cafeína de la bebida (mg) y tu normalización basada en peso configurada.
+            </span>
+        </div>
+
+        <h3>Paso 4: Predecir "hora segura para dormir"</h3>
+        <p>
+            Para estimar cuándo caerás por debajo de un umbral elegido, la app resuelve la ecuación de degradación para el tiempo:
+        </p>
+
+        <div class="callout">
+            <b>Predicción de sueño seguro:</b><br>
+            <code>tiempoHastaUmbral = vidaMedia × log2(nivelAhora / umbral)</code><br>
+            <span class="muted">Si nivelAhora ≤ umbral, tiempoHastaUmbral es 0 (ya está por debajo).</span>
+        </div>
+
+        <div class="callout">
+            <b>Actualizaciones en segundo plano:</b><br>
+            La app actualiza tu estimación automáticamente (ej. cada 5 minutos), para que tu nivel actual
+            se mantenga preciso sin actualización manual.
+        </div>
+    </div>
+
+</main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div>© <span id="y"></span> Caffeine Tracker</div>
+        <nav aria-label="Navegación del pie de página">
+            <a href="index.html">Inicio</a> •
+            <a href="halflife-wizard.html">Encuentra tu vida media de cafeína</a> •
+            <a href="../privacy.html">Privacidad</a> •
+            <a href="../refund.html">Reembolsos y Términos</a> •
+            <a href="mailto:support@caffeinetracker.app">Soporte</a>
+        </nav>
+        <div>No afiliado con Garmin.</div>
+    </footer>
+
+</div>
+
+<script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

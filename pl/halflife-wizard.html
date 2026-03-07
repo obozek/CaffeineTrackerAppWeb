@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="theme-color" content="#53311C">
 
-    <title>Find Your Caffeine Half-Life — Caffeine Tracker</title>
+    <title>Znajdź swój okres półtrwania kofeiny — Caffeine Tracker</title>
     <meta name="description"
-          content="Answer a few quick questions to estimate your personal caffeine half-life and pick the right Garmin widget preset."/>
+          content="Odpowiedz na kilka szybkich pytań, aby oszacować swój osobisty okres półtrwania kofeiny i wybrać odpowiednie ustawienie widgetu Garmin."/>
 
-    <link rel="canonical" href="https://www.caffeinetracker.app/halflife-wizard.html">
+    <link rel="canonical" href="https://www.caffeinetracker.app/pl/halflife-wizard.html">
     <link rel="alternate" hreflang="en" href="https://www.caffeinetracker.app/halflife-wizard.html">
     <link rel="alternate" hreflang="de" href="https://www.caffeinetracker.app/de/halflife-wizard.html">
     <link rel="alternate" hreflang="es" href="https://www.caffeinetracker.app/es/halflife-wizard.html">
@@ -18,97 +18,93 @@
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.caffeinetracker.app/halflife-wizard.html">
-    <meta property="og:title" content="Find Your Caffeine Half-Life — Caffeine Tracker">
-    <meta property="og:description" content="Answer a few quick questions to estimate your personal caffeine half-life and pick the right Garmin widget preset.">
+    <meta property="og:url" content="https://www.caffeinetracker.app/pl/halflife-wizard.html">
+    <meta property="og:title" content="Znajdź swój okres półtrwania kofeiny — Caffeine Tracker">
+    <meta property="og:description" content="Odpowiedz na kilka szybkich pytań, aby oszacować swój osobisty okres półtrwania kofeiny i wybrać odpowiednie ustawienie widgetu Garmin.">
     <meta property="og:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
     <meta property="og:site_name" content="Caffeine Tracker">
-    <meta property="og:locale" content="en_US">
+    <meta property="og:locale" content="pl_PL">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Find Your Caffeine Half-Life — Caffeine Tracker">
-    <meta name="twitter:description" content="Answer a few quick questions to estimate your personal caffeine half-life and pick the right Garmin widget preset.">
+    <meta name="twitter:title" content="Znajdź swój okres półtrwania kofeiny — Caffeine Tracker">
+    <meta name="twitter:description" content="Odpowiedz na kilka szybkich pytań, aby oszacować swój osobisty okres półtrwania kofeiny i wybrać odpowiednie ustawienie widgetu Garmin.">
     <meta name="twitter:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
 
-    <link rel="icon" type="image/png" href="assets/brown-coffee-cup-icon.png">
-    <link rel="apple-touch-icon" href="assets/brown-coffee-cup-icon.png">
+    <link rel="icon" type="image/png" href="../assets/brown-coffee-cup-icon.png">
+    <link rel="apple-touch-icon" href="../assets/brown-coffee-cup-icon.png">
 
-    <link rel="stylesheet" href="assets/site.css">
-    <link rel="stylesheet" href="assets/halflife-wizard.css">
-    <script src="assets/theme-toggle.js"></script>
-    <script src="assets/lang-switcher.js"></script>
+    <link rel="stylesheet" href="../assets/site.css">
+    <link rel="stylesheet" href="../assets/halflife-wizard.css">
+    <script src="../assets/theme-toggle.js"></script>
+    <script src="../assets/lang-switcher.js"></script>
 </head>
 
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">Przejdź do treści</a>
 <div class="wrap">
 <main id="main">
 
     <!-- HERO -->
     <div class="top">
-        <img class="icon" src="assets/brown-coffee-cup-icon.png" alt="Caffeine Tracker icon" width="240" height="242">
+        <img class="icon" src="../assets/brown-coffee-cup-icon.png" alt="Ikona Caffeine Tracker" width="240" height="242">
         <div>
             <span class="badge">Garmin Connect IQ • Widget</span>
             <h1>Caffeine Tracker</h1>
             <p class="lead">
-                Find out which caffeine half-life preset fits you best.
-                Answer a few quick questions — it takes about 30 seconds.
+                Sprawdź, które ustawienie okresu półtrwania kofeiny najlepiej do Ciebie pasuje.
+                Odpowiedz na kilka szybkich pytań — zajmie to około 30 sekund.
             </p>
 
             <div class="cta">
-                <a class="btn" href="index.html">← Back to homepage</a>
+                <a class="btn" href="index.html">← Powrót na stronę główną</a>
 
                 <a class="btn" href="how-it-works.html">
-                    How it works
+                    Jak to działa
                 </a>
 
                 <a class="btn"
                    href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714"
                    target="_blank" rel="noopener">
-                    View in Garmin Store
+                    Zobacz w Garmin Store
                 </a>
             </div>
 
             <div class="muted">
-                Based on published pharmacokinetic research. This is not medical advice.
+                Oparte na opublikowanych badaniach farmakokinetycznych. To nie jest porada medyczna.
             </div>
         </div>
     </div>
 
     <!-- WIZARD CARD -->
     <div class="card" id="wizard">
-        <!-- progress bar — filled dynamically -->
         <div class="wizard-progress" id="wizardProgress"></div>
-
-        <!-- question steps — rendered by JS -->
         <div id="wizardSteps"></div>
 
-        <!-- result step (hidden until done) -->
         <div class="wizard-step" id="wizardResult">
-            <h2 class="wizard-title">Your recommended preset</h2>
-            <p class="wizard-subtitle">Based on your answers, the best half-life setting for you is:</p>
+            <h2 class="wizard-title">Twoje zalecane ustawienie</h2>
+            <p class="wizard-subtitle">Na podstawie Twoich odpowiedzi, najlepsze ustawienie okresu półtrwania to:</p>
 
             <div class="result-value">
                 <span id="resultPreset"></span>
-                <span class="result-unit">hours</span>
+                <span class="result-unit">godzin</span>
             </div>
 
             <p class="result-detail" id="resultRaw"></p>
 
             <div class="callout" id="resultWarning" style="display:none">
-                <b>⚠ Important:</b>
+                <b>⚠ Ważne:</b>
                 <span id="resultWarningText"></span>
             </div>
 
             <div class="callout">
-                <b>How to apply this:</b><br>
-                Open Caffeine Tracker on your watch → Settings → Half-life → choose
-                <b><span id="resultPresetRepeat"></span> hours</b>.
+                <b>Jak to zastosować:</b><br>
+                Otwórz Caffeine Tracker na zegarku → Ustawienia → Okres półtrwania → wybierz
+                <b><span id="resultPresetRepeat"></span> godzin</b>.
             </div>
 
             <div class="wizard-nav">
-                <button class="btn" id="btnRestart">Start over</button>
+                <button class="btn" id="btnRestart">Zacznij od nowa</button>
             </div>
         </div>
     </div>
@@ -118,22 +114,22 @@
     <!-- FOOTER -->
     <footer>
         <div>© <span id="y"></span> Caffeine Tracker</div>
-        <nav aria-label="Footer navigation">
-            <a href="index.html">Home</a> •
-            <a href="how-it-works.html">How it works</a> •
-            <a href="privacy.html">Privacy</a> •
-            <a href="refund.html">Refunds & Terms</a> •
-            <a href="mailto:support@caffeinetracker.app">Support</a>
+        <nav aria-label="Nawigacja stopki">
+            <a href="index.html">Strona główna</a> •
+            <a href="how-it-works.html">Jak to działa</a> •
+            <a href="../privacy.html">Prywatność</a> •
+            <a href="../refund.html">Zwroty i Warunki</a> •
+            <a href="mailto:support@caffeinetracker.app">Wsparcie</a>
         </nav>
-        <div>Not affiliated with Garmin.</div>
+        <div>Niezwiązane z Garmin.</div>
     </footer>
 
 </div>
 
-<script src="assets/halflife-wizard.js"></script>
+<script src="../assets/halflife-wizard.js"></script>
+<script src="../assets/halflife-wizard.pl.js"></script>
 <script>
 (function () {
-    /* ── DOM refs ─────────────────────────────────────────────── */
     var stepsEl   = document.getElementById("wizardSteps");
     var progressEl= document.getElementById("wizardProgress");
     var resultEl  = document.getElementById("wizardResult");
@@ -148,7 +144,6 @@
     var current  = 0;
     var total    = QUESTIONS.length;
 
-    /* ── Build progress pips ──────────────────────────────────── */
     function buildProgress() {
         progressEl.innerHTML = "";
         for (var i = 0; i < total; i++) {
@@ -158,11 +153,9 @@
         }
     }
 
-    /* ── Render one question step ─────────────────────────────── */
     function renderStep() {
         stepsEl.innerHTML = "";
         resultEl.classList.remove("active");
-
         if (current >= total) { showResult(); return; }
 
         var q = QUESTIONS[current];
@@ -183,7 +176,6 @@
 
         var opts = document.createElement("div");
         opts.className = "wizard-options";
-
         q.options.forEach(function (opt) {
             var btn = document.createElement("button");
             btn.type = "button";
@@ -199,45 +191,32 @@
         });
         step.appendChild(opts);
 
-        /* Sources */
         if (q.sources && q.sources.length) {
             var details = document.createElement("details");
             details.className = "wizard-sources";
             var summary = document.createElement("summary");
-            summary.textContent = "Research backing this question";
+            summary.textContent = "Badania stojące za tym pytaniem";
             details.appendChild(summary);
             var list = document.createElement("ul");
             q.sources.forEach(function (src) {
                 var li = document.createElement("li");
                 if (src.url) {
                     var a = document.createElement("a");
-                    a.href = src.url;
-                    a.target = "_blank";
-                    a.rel = "noopener";
-                    a.textContent = src.text;
-                    li.appendChild(a);
-                } else {
-                    li.textContent = src.text;
-                }
+                    a.href = src.url; a.target = "_blank"; a.rel = "noopener";
+                    a.textContent = src.text; li.appendChild(a);
+                } else { li.textContent = src.text; }
                 list.appendChild(li);
             });
             details.appendChild(list);
             step.appendChild(details);
         }
 
-        /* Back button */
         if (current > 0) {
             var nav = document.createElement("div");
             nav.className = "wizard-nav";
             var back = document.createElement("button");
-            back.type = "button";
-            back.className = "btn";
-            back.textContent = "← Back";
-            back.addEventListener("click", function () {
-                current--;
-                buildProgress();
-                renderStep();
-            });
+            back.type = "button"; back.className = "btn"; back.textContent = "← Wstecz";
+            back.addEventListener("click", function () { current--; buildProgress(); renderStep(); });
             nav.appendChild(back);
             step.appendChild(nav);
         }
@@ -246,32 +225,28 @@
         buildProgress();
     }
 
-    /* ── Show result ──────────────────────────────────────────── */
     function showResult() {
         stepsEl.innerHTML = "";
         var result = computeHalfLife(answers);
         presetEl.textContent = result.preset;
         repeatEl.textContent = result.preset;
-        rawEl.textContent = "Computed estimate: " + result.raw + " h (snapped to nearest preset).";
+        rawEl.textContent = "Obliczony szacunek: " + result.raw + " h (zaokrąglony do najbliższego ustawienia).";
 
-        /* Warnings for extreme states */
         var warnings = [];
         if (answers.pregnancy && answers.pregnancy !== "no") {
-            warnings.push("Caffeine clearance is greatly reduced during pregnancy. Consider limiting intake to ≤ 200 mg/day.");
+            warnings.push("Eliminacja kofeiny jest znacząco spowolniona w ciąży. Rozważ ograniczenie spożycia do ≤ 200 mg/dzień.");
         }
         if (answers.liver === "severe") {
-            warnings.push("Severe liver disease can push half-life to 20+ hours. Consult your physician about caffeine intake.");
+            warnings.push("Ciężka choroba wątroby może wydłużyć okres półtrwania do ponad 20 godzin. Skonsultuj się z lekarzem w sprawie spożycia kofeiny.");
         }
         if (answers.medication === "fluvoxamine") {
-            warnings.push("Fluvoxamine can increase caffeine half-life dramatically. Monitor for caffeine accumulation.");
+            warnings.push("Fluwoksamina może drastycznie wydłużyć okres półtrwania kofeiny. Uważaj na kumulację kofeiny.");
         }
 
         if (warnings.length) {
             warningEl.style.display = "";
             warningTxt.innerHTML = warnings.join("<br>");
-        } else {
-            warningEl.style.display = "none";
-        }
+        } else { warningEl.style.display = "none"; }
 
         resultEl.classList.add("active");
         progressEl.innerHTML = "";
@@ -282,18 +257,12 @@
         }
     }
 
-    /* ── Restart ──────────────────────────────────────────────── */
     restartBtn.addEventListener("click", function () {
-        answers = {};
-        current = 0;
-        buildProgress();
-        renderStep();
+        answers = {}; current = 0; buildProgress(); renderStep();
     });
 
-    /* ── Boot ─────────────────────────────────────────────────── */
     buildProgress();
     renderStep();
-
     document.getElementById("y").textContent = new Date().getFullYear();
 })();
 </script>

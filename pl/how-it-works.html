@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="theme-color" content="#53311C">
+
+    <title>Jak działa Caffeine Tracker — poziomy, progi i ustawienia</title>
+    <meta name="description"
+          content="Dowiedz się, jak Caffeine Tracker szacuje kofeinę (mg/L), co oznaczają progi i jak działa personalizacja Premium (własne napoje + predefiniowane okresy półtrwania)."/>
+
+    <link rel="canonical" href="https://www.caffeinetracker.app/pl/how-it-works.html">
+    <link rel="alternate" hreflang="en" href="https://www.caffeinetracker.app/how-it-works.html">
+    <link rel="alternate" hreflang="de" href="https://www.caffeinetracker.app/de/how-it-works.html">
+    <link rel="alternate" hreflang="es" href="https://www.caffeinetracker.app/es/how-it-works.html">
+    <link rel="alternate" hreflang="pl" href="https://www.caffeinetracker.app/pl/how-it-works.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.caffeinetracker.app/how-it-works.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.caffeinetracker.app/pl/how-it-works.html">
+    <meta property="og:title" content="Jak działa Caffeine Tracker — poziomy, progi i ustawienia">
+    <meta property="og:description" content="Dowiedz się, jak Caffeine Tracker szacuje kofeinę (mg/L), co oznaczają progi i jak działa personalizacja Premium.">
+    <meta property="og:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+    <meta property="og:site_name" content="Caffeine Tracker">
+    <meta property="og:locale" content="pl_PL">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Jak działa Caffeine Tracker — poziomy, progi i ustawienia">
+    <meta name="twitter:description" content="Dowiedz się, jak Caffeine Tracker szacuje kofeinę (mg/L), co oznaczają progi i jak działa personalizacja Premium.">
+    <meta name="twitter:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+
+    <link rel="icon" type="image/png" href="../assets/brown-coffee-cup-icon.png">
+    <link rel="apple-touch-icon" href="../assets/brown-coffee-cup-icon.png">
+
+    <link rel="stylesheet" href="../assets/site.css">
+    <link rel="stylesheet" href="../assets/how-it-works.css">
+    <script src="../assets/theme-toggle.js"></script>
+    <script src="../assets/lang-switcher.js"></script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Przejdź do treści</a>
+<div class="wrap">
+<main id="main">
+
+    <!-- HEADER -->
+    <div class="top">
+        <img class="icon" src="../assets/brown-coffee-cup-icon.png" alt="Ikona Caffeine Tracker" width="240" height="242">
+        <div>
+            <span class="badge">Garmin Connect IQ • Widget</span>
+            <h1>Caffeine Tracker</h1>
+            <p class="lead">
+                Jak to działa: widget szacuje Twój aktualny poziom kofeiny (mg/L), stosuje rozkład półtrwania
+                i przewiduje, kiedy spadniesz poniżej progu bezpieczeństwa snu.
+            </p>
+
+            <div class="cta">
+                <a class="btn" href="index.html">← Powrót na stronę główną</a>
+
+                <a class="btn" href="halflife-wizard.html">
+                    Znajdź swój okres półtrwania kofeiny
+                </a>
+
+                <a class="btn"
+                   href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714"
+                   target="_blank" rel="noopener">
+                    Zobacz w Garmin Store
+                </a>
+            </div>
+
+            <div class="muted">
+                Uwaga: zegarek nie może mierzyć kofeiny we krwi. To szacunek oparty na modelu, wykorzystujący to,
+                co logujesz, Twoją masę ciała i ustawienia metabolizmu.
+            </div>
+        </div>
+    </div>
+
+    <!-- WHAT "mg/L" MEANS -->
+    <div class="card" id="units">
+        <h2>Co oznacza „mg/L"?</h2>
+
+        <p>
+            <b>mg/L</b> oznacza <b>miligramy kofeiny na litr</b>.
+            Aplikacja używa mg/L jako praktycznego wskaźnika zbliżonego do stężenia:
+            jest łatwiejszy do interpretacji niż same mg, ponieważ masa ciała wpływa na to, jak silnie
+            odczuwasz kofeinę.
+        </p>
+
+        <ul>
+            <li>Ten sam napój działa na różnych ludzi inaczej</li>
+            <li>Masa ciała zmienia stężenie</li>
+            <li>Stężenie ułatwia zrozumienie progów</li>
+        </ul>
+
+        <div class="shotgrid">
+            <div>
+                <img class="shot" src="../assets/WidgetDetail.png"
+                     alt="Widget pokazujący aktualny poziom kofeiny w mg/L"
+                     loading="lazy" width="1182" height="1194">
+                <div class="caption">Widget pokazuje Twój aktualny szacunkowy poziom kofeiny w mg/L.</div>
+            </div>
+            <div>
+                <img class="shot" src="../assets/GraphDetail.png"
+                     alt="Wykres pokazujący rozkład kofeiny i progi"
+                     loading="lazy" width="1184" height="1172">
+                <div class="caption">Wykres pokazuje, jak kofeina rozkłada się w czasie i kiedy spadasz poniżej progu bezpieczeństwa snu.</div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <b>Ważne:</b> To jest szacunek. Zegarki Garmin nie mogą mierzyć kofeiny we krwi.
+            Model jest zaprojektowany, aby być praktyczny i użyteczny, nie o jakości medycznej.
+        </div>
+    </div>
+
+    <!-- THRESHOLDS -->
+    <div class="card" id="thresholds">
+        <h2>Co oznaczają poziomy (progi)</h2>
+
+        <p>
+            Każdy reaguje inaczej, ale te progi dobrze sprawdzają się jako praktyczne wskaźniki:
+        </p>
+
+        <div class="thresholds">
+            <div class="tbox sleep">
+                <div class="trow">
+                    <div class="tvalue">0,6 mg/L</div>
+                    <div class="tbadge green">Sen</div>
+                </div>
+                <div class="tname">Cel bezpieczeństwa snu</div>
+                <div class="tdesc">
+                    Praktyczny poziom „być poniżej" przed snem. Większość ludzi może zasnąć
+                    bez problemów na tym poziomie, utrzymując zaburzenia snu na minimum — nawet jeśli
+                    jesteś wrażliwy na kofeinę.
+                </div>
+            </div>
+
+            <div class="tbox stim">
+                <div class="trow">
+                    <div class="tvalue">1,0 mg/L</div>
+                    <div class="tbadge stm">Stm</div>
+                </div>
+                <div class="tname">Stymulacja zaczyna się</div>
+                <div class="tdesc">
+                    Wokół tego poziomu wiele osób zaczyna odczuwać zauważalną stymulację, taką jak
+                    zwiększona czujność lub zmniejszona senność.
+                </div>
+            </div>
+
+            <div class="tbox high">
+                <div class="trow">
+                    <div class="tvalue">5,0 mg/L</div>
+                    <div class="tbadge high">Wysoki</div>
+                </div>
+                <div class="tname">Wysoki poziom</div>
+                <div class="tdesc">
+                    Wysoki poziom kofeiny, przy którym efekty uboczne stają się bardziej prawdopodobne, w tym drżenie,
+                    nerwowość lub przyspieszone tętno.
+                </div>
+            </div>
+
+            <div class="tbox max">
+                <div class="trow">
+                    <div class="tvalue">10,0 mg/L</div>
+                    <div class="tbadge max">Maks</div>
+                </div>
+                <div class="tname">Bardzo wysoki poziom</div>
+                <div class="tdesc">
+                    Bardzo wysoki poziom kofeiny związany z silną stymulacją i wysokim ryzykiem
+                    niekorzystnych skutków zdrowotnych, w tym lęku, drżenia i kołatania serca.
+                    Dodatkowa kofeina prawdopodobnie pogorszy objawy.
+                </div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <b>Wskazówka:</b> Jeśli bardzo dbasz o sen lub jesteś wrażliwy, niższy cel snu (np. <b>0,6
+            mg/L</b>) może być przydatny.
+            W <b>Premium</b> możesz ustawić własny próg kofeiny dopasowany do Twojej tolerancji.
+        </div>
+    </div>
+
+    <!-- PREMIUM SLEEP RECOMMENDATIONS & SETTINGS -->
+    <div class="card" id="settings">
+        <h2>Rekomendacje snu i ustawienia Premium</h2>
+
+        <p>
+            Rekomendacja <b>Pora ostatniego napoju</b> jest dostępna w <b>Premium</b>.
+            Pomaga zdecydować, kiedy możesz wypić określony napój i nadal utrzymać poziom kofeiny
+            wystarczająco niski do snu.
+        </p>
+
+        <div class="callout">
+            <b>Funkcje tylko Premium w tej sekcji:</b><br>
+            Pora ostatniego napoju • Próg kofeiny • Bufor pory snu • Predefiniowane okresy półtrwania •
+            Własne napoje
+        </div>
+
+        <h3>Pora snu</h3>
+        <p>
+            Twoja zwykła pora snu. Domyślnie pobierana z ustawień Garmin.
+            Premium używa <b>Pory snu</b> jako punktu odniesienia dla rekomendacji snu.
+        </p>
+
+        <h3>Bufor pory snu <span class="muted">(Premium)</span></h3>
+        <p>
+            Proste okno bezpieczeństwa przed porą snu. Istnieje z jednego powodu:
+            aby zapobiec rekomendowaniu małego napoju z kofeiną zbyt blisko snu.
+        </p>
+        <p>
+            Nawet jeśli mały napój <i>technicznie</i> utrzymałby Cię poniżej progu kofeiny o porze snu,
+            kofeina tuż przed snem może nadal pogorszyć jakość snu lub utrudnić zasypianie.
+        </p>
+
+        <div class="callout">
+            <b>W skrócie:</b><br>
+            Bufor pory snu dodaje zabezpieczenie „bez kofeiny zbyt blisko snu".
+            Nie wpływa na nic innego w modelu.
+        </div>
+
+        <h3>Próg kofeiny <span class="muted">(Premium, domyślnie: 0,6 mg/L)</span></h3>
+        <p>
+            Limit bezpieczeństwa snu, którego Premium używa do rekomendacji.
+            Aplikacja stara się zapewnić, że Twój przewidywany poziom kofeiny o <b>porze snu</b> pozostanie
+            <b>na lub poniżej</b> tego progu.
+        </p>
+
+        <ul>
+            <li>Jeśli jesteś wrażliwy lub sen się pogarsza → rozważ <b>obniżenie</b> progu</li>
+            <li>Jeśli dobrze tolerujesz kofeinę i sen nie jest zaburzony → możesz go <b>lekko podnieść</b></li>
+        </ul>
+
+        <h3>Okres półtrwania kofeiny <span class="muted">(Predefiniowane Premium, domyślnie: 5,5 godz.)</span></h3>
+        <p>
+            Okres półtrwania kontroluje, jak szybko kofeina się rozkłada (rozkład wykładniczy). <b>Krótszy</b> okres półtrwania
+            eliminuje szybciej; <b>dłuższy</b> okres półtrwania utrzymuje się dłużej i przesuwa porę ostatniego napoju wcześniej.
+        </p>
+
+        <div class="callout">
+            <b>Predefiniowane okresy półtrwania Premium:</b><br>
+            4 godziny • 5,5 godziny • 7,5 godziny • 10 godzin
+        </div>
+
+        <h3>Pora ostatniego napoju <span class="muted">(Premium)</span></h3>
+        <p>
+            Dla każdego napoju Premium oblicza najpóźniejszą porę, o której możesz go wypić, aby Twój przewidywany
+            poziom kofeiny o <b>porze snu</b> pozostał <b>≤ próg kofeiny</b>.
+            Następnie stosuje bufor pory snu jako ostatnie zabezpieczenie, aby rekomendacja nigdy nie była
+            „zbyt blisko" snu.
+        </p>
+
+        <ul>
+            <li>Zależy od Twojego <b>aktualnego poziomu</b>, <b>okresu półtrwania</b>, <b>progu</b> i <b>pory snu</b></li>
+            <li>Zależy też od ilości kofeiny w napoju (szczególnie przy <b>własnych napojach</b>)</li>
+        </ul>
+
+        <div class="callout">
+            <b>Przypomnienie:</b> To szacunek oparty na modelu — nie pomiar medyczny.
+        </div>
+    </div>
+
+    <!-- PREMIUM PERSONALIZATION -->
+    <div class="card" id="premium">
+        <h2>Personalizacja Premium</h2>
+
+        <p>
+            Premium odblokowuje zaawansowaną personalizację, aby model lepiej odpowiadał <b>Twoim</b> nawykom i
+            metabolizmowi:
+        </p>
+
+        <ul>
+            <li><b>Rekomendacja pory ostatniego napoju</b> (Premium) — zobacz najpóźniejszą porę na napój, aby
+                pozostać pod progiem bezpieczeństwa snu o porze snu.
+            </li>
+            <li><b>Własne napoje i ilości kofeiny</b> (Premium) — dodaj własne napoje z dokładnymi mg
+                (np. Napój energetyczny 500 ml — 160 mg).
+            </li>
+            <li><b>Regulowany próg kofeiny</b> (Premium) — wybierz swój limit bezpieczeństwa snu (domyślnie
+                0,6 mg/L).
+            </li>
+            <li><b>Bufor pory snu</b> (Premium) — unikaj kofeiny zbyt blisko snu (nawet jeśli mała dawka
+                byłaby pod progiem).
+            </li>
+            <li><b>Regulowany okres półtrwania kofeiny</b> (Premium) — wybierz jedno z obsługiwanych ustawień.
+            </li>
+        </ul>
+
+        <div class="callout">
+            <b>Obsługiwane ustawienia okresu półtrwania (Premium):</b><br>
+            4 godziny • 5,5 godziny • 7,5 godziny • 10 godzin
+        </div>
+
+        <div class="shotgrid">
+            <div>
+                <img class="shot" src="../assets/AddDrink.png" alt="Ekran dodawania napoju"
+                     loading="lazy" width="1190" height="1182">
+                <div class="caption">Premium: dodaj własne napoje, aby zalogowana kofeina odpowiadała temu, co faktycznie pijesz.</div>
+            </div>
+            <div>
+                <img class="shot" src="../assets/Settings.png" alt="Ekran ustawień"
+                     loading="lazy" width="1176" height="1166">
+                <div class="caption">Premium: wybierz predefiniowany okres półtrwania, który lepiej odpowiada Twojemu metabolizmowi kofeiny.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALGORITHM -->
+    <div class="card" id="algorithm">
+        <h2>Algorytm obliczeniowy (uproszczony)</h2>
+
+        <p>
+            Wewnętrznie aplikacja utrzymuje bieżący szacunek Twojego aktualnego poziomu kofeiny i aktualizuje go,
+            gdy upływa czas lub logujesz napój.
+            Model oparty jest na rozkładzie wykładniczym (okres półtrwania).
+        </p>
+
+        <h3>Krok 1: Zacznij od ostatniego znanego poziomu</h3>
+        <p class="muted">
+            Aplikacja przechowuje Twój ostatni obliczony poziom kofeiny i jego znacznik czasu.
+        </p>
+
+        <h3>Krok 2: Pozwól mu się rozkładać w czasie (okres półtrwania)</h3>
+        <p>
+            Gdy widget się aktualizuje, poziom jest redukowany na podstawie tego, ile czasu minęło od
+            ostatniej aktualizacji:
+        </p>
+
+        <div class="callout">
+            <b>Formuła rozkładu:</b><br>
+            <code>poziomTeraz = poziomPoprzedni × 0,5^(Δt / okresPółtrwania)</code><br>
+            <span class="muted">Gdzie Δt to czas, który upłynął (w tych samych jednostkach co okresPółtrwania).</span>
+        </div>
+
+        <h3>Krok 3: Dodaj nowo zalogowane napoje</h3>
+        <p>
+            Gdy logujesz napój, jego ilość kofeiny (mg) jest przeliczana na wzrost poziomu na podstawie Twojej
+            masy ciała i dodawana do aktualnego poziomu po rozkładzie:
+        </p>
+
+        <div class="callout">
+            <b>Reguła aktualizacji:</b><br>
+            <code>poziomTeraz = poziomTeraz + deltaNapoju</code><br>
+            <span class="muted">
+                deltaNapoju jest obliczana z kofeiny napoju (mg) i Twojej skonfigurowanej normalizacji opartej na wadze.
+            </span>
+        </div>
+
+        <h3>Krok 4: Przewiduj „bezpieczną porę snu"</h3>
+        <p>
+            Aby oszacować, kiedy spadniesz poniżej wybranego progu, aplikacja rozwiązuje równanie rozkładu dla czasu:
+        </p>
+
+        <div class="callout">
+            <b>Prognoza bezpieczeństwa snu:</b><br>
+            <code>czasDoProgu = okresPółtrwania × log2(poziomTeraz / próg)</code><br>
+            <span class="muted">Jeśli poziomTeraz ≤ próg, czasDoProgu wynosi 0 (już poniżej).</span>
+        </div>
+
+        <div class="callout">
+            <b>Aktualizacje w tle:</b><br>
+            Aplikacja automatycznie odświeża Twój szacunek (np. co 5 minut), więc Twój aktualny poziom
+            pozostaje dokładny bez ręcznego odświeżania.
+        </div>
+    </div>
+
+</main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div>© <span id="y"></span> Caffeine Tracker</div>
+        <nav aria-label="Nawigacja stopki">
+            <a href="index.html">Strona główna</a> •
+            <a href="halflife-wizard.html">Znajdź swój okres półtrwania kofeiny</a> •
+            <a href="../privacy.html">Prywatność</a> •
+            <a href="../refund.html">Zwroty i Warunki</a> •
+            <a href="mailto:support@caffeinetracker.app">Wsparcie</a>
+        </nav>
+        <div>Niezwiązane z Garmin.</div>
+    </footer>
+
+</div>
+
+<script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

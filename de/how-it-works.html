@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="theme-color" content="#53311C">
+
+    <title>Wie Caffeine Tracker funktioniert — Werte, Schwellenwerte und Einstellungen</title>
+    <meta name="description"
+          content="Erfahre, wie Caffeine Tracker Koffein (mg/L) schätzt, was die Schwellenwerte bedeuten und wie die Premium-Personalisierung (individuelle Getränke + Halbwertszeit-Voreinstellungen) funktioniert."/>
+
+    <link rel="canonical" href="https://www.caffeinetracker.app/de/how-it-works.html">
+    <link rel="alternate" hreflang="en" href="https://www.caffeinetracker.app/how-it-works.html">
+    <link rel="alternate" hreflang="de" href="https://www.caffeinetracker.app/de/how-it-works.html">
+    <link rel="alternate" hreflang="es" href="https://www.caffeinetracker.app/es/how-it-works.html">
+    <link rel="alternate" hreflang="pl" href="https://www.caffeinetracker.app/pl/how-it-works.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.caffeinetracker.app/how-it-works.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.caffeinetracker.app/de/how-it-works.html">
+    <meta property="og:title" content="Wie Caffeine Tracker funktioniert — Werte, Schwellenwerte und Einstellungen">
+    <meta property="og:description" content="Erfahre, wie Caffeine Tracker Koffein (mg/L) schätzt, was die Schwellenwerte bedeuten und wie die Premium-Personalisierung funktioniert.">
+    <meta property="og:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+    <meta property="og:site_name" content="Caffeine Tracker">
+    <meta property="og:locale" content="de_DE">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Wie Caffeine Tracker funktioniert — Werte, Schwellenwerte und Einstellungen">
+    <meta name="twitter:description" content="Erfahre, wie Caffeine Tracker Koffein (mg/L) schätzt, was die Schwellenwerte bedeuten und wie die Premium-Personalisierung funktioniert.">
+    <meta name="twitter:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+
+    <link rel="icon" type="image/png" href="../assets/brown-coffee-cup-icon.png">
+    <link rel="apple-touch-icon" href="../assets/brown-coffee-cup-icon.png">
+
+    <link rel="stylesheet" href="../assets/site.css">
+    <link rel="stylesheet" href="../assets/how-it-works.css">
+    <script src="../assets/theme-toggle.js"></script>
+    <script src="../assets/lang-switcher.js"></script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+<div class="wrap">
+<main id="main">
+
+    <!-- HEADER -->
+    <div class="top">
+        <img class="icon" src="../assets/brown-coffee-cup-icon.png" alt="Caffeine Tracker Symbol" width="240" height="242">
+        <div>
+            <span class="badge">Garmin Connect IQ • Widget</span>
+            <h1>Caffeine Tracker</h1>
+            <p class="lead">
+                So funktioniert's: Das Widget schätzt deinen aktuellen Koffeinspiegel (mg/L), wendet den Halbwertszeit-Abbau an
+                und sagt vorher, wann du unter deine Schlaf-sicher-Schwelle fällst.
+            </p>
+
+            <div class="cta">
+                <a class="btn" href="index.html">← Zurück zur Startseite</a>
+
+                <a class="btn" href="halflife-wizard.html">
+                    Finde deine Koffein-Halbwertszeit
+                </a>
+
+                <a class="btn"
+                   href="https://apps.garmin.com/en-US/apps/b9325e27-582a-4aeb-a3a5-963097915714"
+                   target="_blank" rel="noopener">
+                    Im Garmin Store ansehen
+                </a>
+            </div>
+
+            <div class="muted">
+                Hinweis: Die Uhr kann kein Koffein im Blut messen. Dies ist eine modellbasierte Schätzung basierend auf
+                dem, was du loggst, deinem Körpergewicht und den Stoffwechseleinstellungen.
+            </div>
+        </div>
+    </div>
+
+    <!-- WHAT "mg/L" MEANS -->
+    <div class="card" id="units">
+        <h2>Was bedeutet „mg/L"?</h2>
+
+        <p>
+            <b>mg/L</b> bedeutet <b>Milligramm Koffein pro Liter</b>.
+            Die App verwendet mg/L als praktischen „konzentrationsähnlichen" Wert:
+            er ist einfacher zu interpretieren als mg allein, weil das Körpergewicht beeinflusst, wie stark
+            Koffein wirkt.
+        </p>
+
+        <ul>
+            <li>Dasselbe Getränk wirkt bei verschiedenen Menschen unterschiedlich</li>
+            <li>Körpergewicht verändert die Konzentration</li>
+            <li>Konzentration macht Schwellenwerte leichter verständlich</li>
+        </ul>
+
+        <div class="shotgrid">
+            <div>
+                <img class="shot" src="../assets/WidgetDetail.png"
+                     alt="Widget zeigt aktuellen Koffeinspiegel in mg/L"
+                     loading="lazy" width="1182" height="1194">
+                <div class="caption">Das Widget zeigt deinen aktuellen geschätzten Koffeinspiegel in mg/L.</div>
+            </div>
+            <div>
+                <img class="shot" src="../assets/GraphDetail.png"
+                     alt="Grafik zeigt Koffeinabbau und Schwellenwerte"
+                     loading="lazy" width="1184" height="1172">
+                <div class="caption">Die Grafik zeigt, wie Koffein über die Zeit abgebaut wird und wann du unter deine Schlaf-sicher-Schwelle fällst.</div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <b>Wichtig:</b> Dies ist eine Schätzung. Garmin-Uhren können kein Koffein im Blut messen.
+            Das Modell ist darauf ausgelegt, praktisch und nützlich zu sein, nicht medizinisch genau.
+        </div>
+    </div>
+
+    <!-- THRESHOLDS -->
+    <div class="card" id="thresholds">
+        <h2>Was die Werte bedeuten (Schwellenwerte)</h2>
+
+        <p>
+            Jeder reagiert anders, aber diese Schwellenwerte funktionieren gut als praktische Richtwerte:
+        </p>
+
+        <div class="thresholds">
+            <div class="tbox sleep">
+                <div class="trow">
+                    <div class="tvalue">0,6 mg/L</div>
+                    <div class="tbadge green">Schlaf</div>
+                </div>
+                <div class="tname">Schlaf-sicher-Ziel</div>
+                <div class="tdesc">
+                    Ein praktisches „darunter sein"-Ziel vor dem Schlafen. Die meisten Menschen können bei diesem Wert
+                    problemlos einschlafen, während Schlafstörungen minimal bleiben — auch wenn du empfindlich auf Koffein reagierst.
+                </div>
+            </div>
+
+            <div class="tbox stim">
+                <div class="trow">
+                    <div class="tvalue">1,0 mg/L</div>
+                    <div class="tbadge stm">Stm</div>
+                </div>
+                <div class="tname">Stimulation beginnt</div>
+                <div class="tdesc">
+                    Um diesen Wert herum beginnen viele Menschen eine spürbare Stimulation zu empfinden, wie
+                    erhöhte Wachsamkeit oder verringerte Müdigkeit.
+                </div>
+            </div>
+
+            <div class="tbox high">
+                <div class="trow">
+                    <div class="tvalue">5,0 mg/L</div>
+                    <div class="tbadge high">Hoch</div>
+                </div>
+                <div class="tname">Hoher Wert</div>
+                <div class="tdesc">
+                    Ein hoher Koffeinspiegel, bei dem Nebenwirkungen wahrscheinlicher werden, einschließlich Zittern,
+                    Nervosität oder erhöhter Herzfrequenz.
+                </div>
+            </div>
+
+            <div class="tbox max">
+                <div class="trow">
+                    <div class="tvalue">10,0 mg/L</div>
+                    <div class="tbadge max">Max</div>
+                </div>
+                <div class="tname">Sehr hoher Wert</div>
+                <div class="tdesc">
+                    Sehr hoher Koffeinspiegel, verbunden mit starker Stimulation und hohem Risiko für
+                    gesundheitliche Nebenwirkungen, einschließlich Angst, Zittern und Herzklopfen.
+                    Zusätzliches Koffein wird die Symptome wahrscheinlich verschlimmern.
+                </div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <b>Tipp:</b> Wenn du sehr schlafbewusst oder empfindlich bist, kann ein niedrigeres Schlaf-Ziel (z.B. <b>0,6
+            mg/L</b>) ein nützliches Ziel sein.
+            In <b>Premium</b> kannst du deinen eigenen Koffein-Schwellenwert an deine Toleranz anpassen.
+        </div>
+    </div>
+
+    <!-- PREMIUM SLEEP RECOMMENDATIONS & SETTINGS -->
+    <div class="card" id="settings">
+        <h2>Premium Schlafempfehlungen & Einstellungen</h2>
+
+        <p>
+            Die <b>Letzte Getränkezeit</b>-Empfehlung ist in <b>Premium</b> verfügbar.
+            Sie hilft dir zu entscheiden, wann du ein bestimmtes Getränk noch trinken kannst und trotzdem
+            deinen Koffeinspiegel niedrig genug für den Schlaf hältst.
+        </p>
+
+        <div class="callout">
+            <b>Nur-Premium-Funktionen in diesem Abschnitt:</b><br>
+            Letzte Getränkezeit • Koffein-Schwellenwert • Schlafenszeit-Puffer • Halbwertszeit-Voreinstellungen •
+            Individuelle Getränke
+        </div>
+
+        <h3>Schlafenszeit</h3>
+        <p>
+            Deine übliche Schlafenszeit. Standardmäßig wird sie aus deinen Garmin-Einstellungen übernommen.
+            Premium verwendet <b>Schlafenszeit</b> als Bezugspunkt für Schlafempfehlungen.
+        </p>
+
+        <h3>Schlafenszeit-Puffer <span class="muted">(Premium)</span></h3>
+        <p>
+            Ein einfaches Sicherheitsfenster vor deiner Schlafenszeit. Es existiert aus einem Grund:
+            um zu verhindern, dass die App ein kleines koffeinhaltiges Getränk zu kurz vor dem Schlaf empfiehlt.
+        </p>
+        <p>
+            Selbst wenn ein winziges Getränk dich <i>technisch</i> unter deinem Koffein-Schwellenwert zur Schlafenszeit halten würde,
+            kann Koffein kurz vor dem Schlaf trotzdem die Schlafqualität verschlechtern oder das Einschlafen erschweren.
+        </p>
+
+        <div class="callout">
+            <b>Kurz gesagt:</b><br>
+            Der Schlafenszeit-Puffer fügt eine „kein Koffein zu kurz vor dem Schlaf"-Absicherung hinzu.
+            Er beeinflusst nichts anderes im Modell.
+        </div>
+
+        <h3>Koffein-Schwellenwert <span class="muted">(Premium, Standard: 0,6 mg/L)</span></h3>
+        <p>
+            Das Schlaf-sicher-Limit, das Premium für Empfehlungen verwendet.
+            Die App versucht sicherzustellen, dass dein vorhergesagter Koffeinspiegel zur <b>Schlafenszeit</b>
+            <b>auf oder unter</b> diesem Schwellenwert liegt.
+        </p>
+
+        <ul>
+            <li>Wenn du empfindlich bist oder der Schlaf schlechter wird → erwäge den Schwellenwert zu <b>senken</b></li>
+            <li>Wenn du Koffein gut verträgst und der Schlaf unbeeinträchtigt ist → kannst du ihn <b>leicht erhöhen</b></li>
+        </ul>
+
+        <h3>Koffein-Halbwertszeit <span class="muted">(Premium-Voreinstellungen, Standard: 5,5 Stunden)</span></h3>
+        <p>
+            Die Halbwertszeit steuert, wie schnell Koffein abgebaut wird (exponentieller Zerfall). Eine <b>kürzere</b> Halbwertszeit
+            baut schneller ab; eine <b>längere</b> Halbwertszeit bleibt länger und verschiebt die letzte Getränkezeit nach vorne.
+        </p>
+
+        <div class="callout">
+            <b>Premium Halbwertszeit-Voreinstellungen:</b><br>
+            4 Stunden • 5,5 Stunden • 7,5 Stunden • 10 Stunden
+        </div>
+
+        <h3>Letzte Getränkezeit <span class="muted">(Premium)</span></h3>
+        <p>
+            Für jedes Getränk berechnet Premium die späteste Zeit, zu der du es trinken kannst, damit dein vorhergesagter
+            Koffeinspiegel zur <b>Schlafenszeit</b> <b>≤ Koffein-Schwellenwert</b> bleibt.
+            Dann wird der Schlafenszeit-Puffer als letzte Absicherung angewendet, damit die Empfehlung nie
+            „zu kurz" vor dem Schlaf liegt.
+        </p>
+
+        <ul>
+            <li>Hängt ab von deinem <b>aktuellen Spiegel</b>, <b>Halbwertszeit</b>, <b>Schwellenwert</b> und <b>Schlafenszeit</b></li>
+            <li>Hängt auch von der Koffeinmenge des Getränks ab (besonders bei <b>individuellen Getränken</b>)</li>
+        </ul>
+
+        <div class="callout">
+            <b>Erinnerung:</b> Dies ist eine modellbasierte Schätzung — keine medizinische Messung.
+        </div>
+    </div>
+
+    <!-- PREMIUM PERSONALIZATION -->
+    <div class="card" id="premium">
+        <h2>Premium-Personalisierung</h2>
+
+        <p>
+            Premium schaltet erweiterte Personalisierung frei, damit das Modell besser zu <b>deinen</b> Gewohnheiten und
+            deinem Stoffwechsel passt:
+        </p>
+
+        <ul>
+            <li><b>Letzte Getränkezeit-Empfehlung</b> (Premium) — sieh die späteste Zeit für ein Getränk, damit du
+                bis zur Schlafenszeit unter deinem Schlaf-sicher-Schwellenwert bleibst.
+            </li>
+            <li><b>Individuelle Getränke & Koffeinmengen</b> (Premium) — füge eigene Getränke mit exakten mg hinzu
+                (z.B. Energy Drink 500 ml — 160 mg).
+            </li>
+            <li><b>Einstellbarer Koffein-Schwellenwert</b> (Premium) — wähle dein Schlaf-sicher-Limit (Standard
+                0,6 mg/L).
+            </li>
+            <li><b>Schlafenszeit-Puffer</b> (Premium) — vermeide Koffein zu kurz vor dem Schlaf (auch wenn eine kleine
+                Dosis noch unter dem Schwellenwert wäre).
+            </li>
+            <li><b>Einstellbare Koffein-Halbwertszeit</b> (Premium) — wähle eine der unterstützten Voreinstellungen.
+            </li>
+        </ul>
+
+        <div class="callout">
+            <b>Unterstützte Halbwertszeit-Einstellungen (Premium):</b><br>
+            4 Stunden • 5,5 Stunden • 7,5 Stunden • 10 Stunden
+        </div>
+
+        <div class="shotgrid">
+            <div>
+                <img class="shot" src="../assets/AddDrink.png" alt="Getränk hinzufügen"
+                     loading="lazy" width="1190" height="1182">
+                <div class="caption">Premium: Füge individuelle Getränke hinzu, damit dein geloggtes Koffein dem entspricht, was du tatsächlich trinkst.</div>
+            </div>
+            <div>
+                <img class="shot" src="../assets/Settings.png" alt="Einstellungen"
+                     loading="lazy" width="1176" height="1166">
+                <div class="caption">Premium: Wähle eine Halbwertszeit-Voreinstellung, die besser zu deinem Koffeinstoffwechsel passt.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALGORITHM -->
+    <div class="card" id="algorithm">
+        <h2>Berechnungsalgorithmus (vereinfacht)</h2>
+
+        <p>
+            Intern führt die App eine laufende Schätzung deines aktuellen Koffeinspiegels und aktualisiert sie,
+            wenn Zeit vergeht oder du ein Getränk loggst.
+            Das Modell basiert auf exponentiellem Zerfall (Halbwertszeit).
+        </p>
+
+        <h3>Schritt 1: Mit dem letzten bekannten Wert starten</h3>
+        <p class="muted">
+            Die App speichert deinen zuletzt berechneten Koffeinspiegel und seinen Zeitstempel.
+        </p>
+
+        <h3>Schritt 2: Über die Zeit abbauen lassen (Halbwertszeit)</h3>
+        <p>
+            Wenn das Widget aktualisiert, wird der Spiegel basierend auf der vergangenen Zeit seit dem
+            letzten Update reduziert:
+        </p>
+
+        <div class="callout">
+            <b>Abbauformel:</b><br>
+            <code>spiegelJetzt = spiegelVorher × 0,5^(Δt / halbwertszeit)</code><br>
+            <span class="muted">Wobei Δt die verstrichene Zeit ist (in denselben Einheiten wie die Halbwertszeit).</span>
+        </div>
+
+        <h3>Schritt 3: Neu geloggte Getränke hinzufügen</h3>
+        <p>
+            Wenn du ein Getränk loggst, wird seine Koffeinmenge (mg) mittels deines Körpergewichts in einen Spiegelanstieg umgerechnet
+            und auf den aktuellen abgebauten Spiegel aufaddiert:
+        </p>
+
+        <div class="callout">
+            <b>Aktualisierungsregel:</b><br>
+            <code>spiegelJetzt = spiegelJetzt + getränkDelta</code><br>
+            <span class="muted">
+                getränkDelta wird aus dem Koffein des Getränks (mg) und deiner konfigurierten gewichtsbasierten Normalisierung abgeleitet.
+            </span>
+        </div>
+
+        <h3>Schritt 4: „Schlaf-sicher-Zeit" vorhersagen</h3>
+        <p>
+            Um abzuschätzen, wann du unter einen gewählten Schwellenwert fällst, löst die App die Abbaugleichung nach der Zeit auf:
+        </p>
+
+        <div class="callout">
+            <b>Schlaf-sicher-Vorhersage:</b><br>
+            <code>zeitBisSchwelle = halbwertszeit × log2(spiegelJetzt / schwelle)</code><br>
+            <span class="muted">Wenn spiegelJetzt ≤ schwelle, ist zeitBisSchwelle 0 (bereits darunter).</span>
+        </div>
+
+        <div class="callout">
+            <b>Hintergrund-Updates:</b><br>
+            Die App aktualisiert deine Schätzung automatisch (z.B. alle 5 Minuten), damit dein aktueller Spiegel
+            ohne manuelles Aktualisieren genau bleibt.
+        </div>
+    </div>
+
+</main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div>© <span id="y"></span> Caffeine Tracker</div>
+        <nav aria-label="Footer-Navigation">
+            <a href="index.html">Startseite</a> •
+            <a href="halflife-wizard.html">Finde deine Koffein-Halbwertszeit</a> •
+            <a href="../privacy.html">Datenschutz</a> •
+            <a href="../refund.html">Rückerstattung & AGB</a> •
+            <a href="mailto:support@caffeinetracker.app">Support</a>
+        </nav>
+        <div>Nicht mit Garmin verbunden.</div>
+    </footer>
+
+</div>
+
+<script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
