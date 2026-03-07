@@ -7,6 +7,42 @@ body {
     line-height: 1.55;
 }
 a { color: inherit; }
+img { height: auto; }
+
+/* Skip link (accessibility) */
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    z-index: 100;
+    padding: 10px 16px;
+    background: #635bff;
+    color: #fff;
+    font-weight: 650;
+    border-radius: 0 0 10px 10px;
+    text-decoration: none;
+}
+.skip-link:focus {
+    position: fixed;
+    top: 0;
+    left: 16px;
+    width: auto;
+    height: auto;
+    overflow: visible;
+}
+
+/* Focus-visible (keyboard accessibility) */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+.wizard-option:focus-visible {
+    outline: 2px solid #635bff;
+    outline-offset: 2px;
+    border-radius: 8px;
+}
 
 .wrap { max-width: var(--max); margin: 0 auto; padding: 28px 18px; }
 
@@ -42,6 +78,39 @@ h1 { margin: 8px 0 6px; font-size: 40px; letter-spacing:-0.02em; }
 }
 
 .muted { opacity:.85; font-size: 14px; margin-top: 10px; }
+
+/* Legal pages (privacy, refund) — restore original sizing */
+.legal h1 {
+    font-size: 34px;
+    margin: 0 0 6px;
+}
+.legal h2 {
+    margin: 18px 0 8px;
+}
+.legal p {
+    margin: 8px 0;
+}
+.legal ul {
+    margin: 8px 0;
+}
+.legal .muted {
+    font-size: inherit;
+    margin-top: 0;
+}
+
+/* Topbar (privacy, refund pages) */
+.topbar {
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.95em;
+}
 
 /* Cards */
 .card {
