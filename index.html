@@ -8,16 +8,61 @@
     <meta name="description"
           content="Track your real-time caffeine level on Garmin. Avoid sleep disruption, see when caffeine is still active, and unlock Premium insights with a one-time purchase."/>
 
+    <link rel="canonical" href="https://www.caffeinetracker.app/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.caffeinetracker.app/">
+    <meta property="og:title" content="Caffeine Tracker for Garmin — Track caffeine, sleep better">
+    <meta property="og:description" content="Track your real-time caffeine level on Garmin. Avoid sleep disruption, see when caffeine is still active, and unlock Premium insights with a one-time purchase.">
+    <meta property="og:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Caffeine Tracker for Garmin — Track caffeine, sleep better">
+    <meta name="twitter:description" content="Track your real-time caffeine level on Garmin. Avoid sleep disruption, see when caffeine is still active, and unlock Premium insights with a one-time purchase.">
+    <meta name="twitter:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/brown-coffee-cup-icon.png">
     <link rel="apple-touch-icon" href="assets/brown-coffee-cup-icon.png">
 
     <link rel="stylesheet" href="assets/site.css">
 
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Caffeine Tracker",
+      "operatingSystem": "Garmin Connect IQ",
+      "applicationCategory": "HealthApplication",
+      "description": "Track your real-time caffeine level on Garmin. Avoid sleep disruption, see when caffeine is still active, and unlock Premium insights with a one-time purchase.",
+      "url": "https://www.caffeinetracker.app/",
+      "image": "https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free core features with optional one-time Premium purchase"
+      },
+      "featureList": [
+        "Real-time caffeine level based on body weight",
+        "Automatic background updates every 5 minutes",
+        "Quick drink logging on the watch",
+        "Glance view and watch-face complications",
+        "Sleep-safe prediction (Premium)",
+        "Adjustable caffeine half-life (Premium)",
+        "Custom drinks and caffeine amounts (Premium)"
+      ]
+    }
+    </script>
+
 </head>
 
 <body>
 <div class="wrap">
+<main>
 
     <!-- HERO -->
     <div class="top">
@@ -185,25 +230,27 @@
     <div class="card">
         <h2>Screenshots</h2>
         <div class="shots">
-            <img class="shot" src="assets/WidgetDetail.png">
-            <img class="shot" src="assets/AddDrink.png">
-            <img class="shot" src="assets/GraphDetail.png">
-            <img class="shot" src="assets/HistoryDetail.png">
-            <img class="shot" src="assets/MenuDetail.png">
-            <img class="shot" src="assets/Settings.png">
+            <img class="shot" src="assets/WidgetDetail.png" alt="Caffeine Tracker widget detail screen">
+            <img class="shot" src="assets/AddDrink.png" alt="Add caffeine drink screen">
+            <img class="shot" src="assets/GraphDetail.png" alt="Caffeine decay graph screen">
+            <img class="shot" src="assets/HistoryDetail.png" alt="Caffeine intake history screen">
+            <img class="shot" src="assets/MenuDetail.png" alt="Widget menu screen">
+            <img class="shot" src="assets/Settings.png" alt="Settings screen">
         </div>
     </div>
+
+</main>
 
     <!-- FOOTER -->
     <footer>
         <div>© <span id="y"></span> Caffeine Tracker</div>
-        <div>
+        <nav aria-label="Footer navigation">
             <a href="how-it-works.html">How it works</a> •
             <a href="halflife-wizard.html">Find your caffeine half-life</a> •
             <a href="privacy.html">Privacy</a> •
             <a href="refund.html">Refunds & Terms</a> •
             <a href="mailto:support@caffeinetracker.app">Support</a>
-        </div>
+        </nav>
         <div>Not affiliated with Garmin.</div>
     </footer>
 
