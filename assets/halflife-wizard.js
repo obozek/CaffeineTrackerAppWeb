@@ -8,9 +8,9 @@
  * Each question has an `id`, display strings, and `options` with a `multiplier`.
  */
 
-/* ── Presets (the four values the widget supports) ───────────── */
+/* ── Presets (the six values the widget supports) ───────────── */
 
-const PRESETS = [4, 5.5, 7.5, 10];          // hours
+const PRESETS = [3, 4, 5, 6, 8, 10];          // hours
 
 /* ── Baseline ────────────────────────────────────────────────── */
 
