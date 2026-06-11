@@ -7,7 +7,7 @@
     ];
 
     // Pages that have translated versions (filename only)
-    var TRANSLATED_PAGES = ["/", "/index.html", "/how-it-works.html", "/halflife-wizard.html", "/404.html"];
+    var TRANSLATED_PAGES = ["/", "/index.html", "/how-it-works.html", "/halflife-wizard.html", "/tracker.html", "/404.html"];
 
     function detectCurrent() {
         var path = window.location.pathname;
