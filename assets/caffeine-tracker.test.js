@@ -194,6 +194,12 @@ test("lowerThanTime returns null without usable events", function () {
     assert.equal(core.lowerThanTime([{ name: "A", mg: 0, time: 1 }], 0.6, 300, 70), null);
 });
 
+test("lowerThanTime returns null when the peak level never reaches the threshold", function () {
+    const event = { name: "Green Tea", mg: 30, time: 1_000 };
+
+    assert.equal(core.lowerThanTime([event], 0.6, 300, 70), null);
+});
+
 test("pruneEvents removes events older than 48 hours", function () {
     const now = 200_000;
     const events = [

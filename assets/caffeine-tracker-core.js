@@ -314,7 +314,7 @@
             return Math.max(latest, event.time + absorptionSeconds);
         }, sorted[0].time + absorptionSeconds);
         const totalLevelAtReferenceTime = levelAtTime(sorted, referenceTime, halfLife, weightKg, absorption);
-        if (totalLevelAtReferenceTime <= 0) return null;
+        if (totalLevelAtReferenceTime <= threshold) return null;
 
         const k = LN2 / halfLife;
         const minutes = Math.round(-Math.log(threshold / totalLevelAtReferenceTime) / k);
