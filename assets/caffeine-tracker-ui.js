@@ -1,12 +1,48 @@
 /**
  * DOM controller for the static Caffeine Tracker Web page.
  */
-(function () {
+(function (env) {
     "use strict";
 
-    const core = window.CaffeineTrackerCore;
-    const storageFactory = window.CaffeineTrackerStorage;
-    const i18n = window.CaffeineTrackerI18n;
+    function resolveTimeLocale(lang, rootLangOverride, browserLanguageOverride) {
+        const defaults = {
+            de: "de-DE",
+            es: "es-ES",
+            pl: "pl-PL",
+        };
+        const normalizedLang = (lang || "").slice(0, 2);
+        let rootLang = "";
+        let browserLanguage;
+
+        if (arguments.length >= 2) {
+            rootLang = rootLangOverride || "";
+        } else if (env.document && env.document.documentElement) {
+            rootLang = env.document.documentElement.lang || "";
+        }
+
+        if (arguments.length >= 3) {
+            browserLanguage = browserLanguageOverride;
+        } else if (env.navigator && env.navigator.language) {
+            browserLanguage = env.navigator.language;
+        }
+
+        if (rootLang.length > 2 && rootLang.slice(0, 2) === normalizedLang) return rootLang;
+        if (normalizedLang === "en") {
+            return browserLanguage || undefined;
+        }
+        return defaults[normalizedLang] || rootLang || undefined;
+    }
+
+    if (typeof module !== "undefined" && module.exports) {
+        module.exports = {
+            resolveTimeLocale,
+        };
+        return;
+    }
+
+    const core = env.CaffeineTrackerCore;
+    const storageFactory = env.CaffeineTrackerStorage;
+    const i18n = env.CaffeineTrackerI18n;
 
     if (!core || !storageFactory || !i18n) return;
 
@@ -85,20 +121,6 @@
 
     function wizardHref(lang) {
         return "halflife-wizard.html";
-    }
-
-    function resolveTimeLocale(lang) {
-        const defaults = {
-            en: "en-GB",
-            de: "de-DE",
-            es: "es-ES",
-            pl: "pl-PL",
-        };
-        const normalizedLang = (lang || "").slice(0, 2);
-        const rootLang = document.documentElement.lang || "";
-
-        if (rootLang.length > 2 && rootLang.slice(0, 2) === normalizedLang) return rootLang;
-        return defaults[normalizedLang] || rootLang || undefined;
     }
 
     function renderGraph(graph, options) {
@@ -588,7 +610,7 @@
     }
 
     function init(root) {
-        const lang = (root.getAttribute("data-lang") || document.documentElement.lang || "en").slice(0, 2);
+        const lang = (root.getAttribute("data-lang") || env.document.documentElement.lang || "en").slice(0, 2);
         const storage = storageFactory.createStorage(getBrowserStorage());
         const app = {
             lang,
@@ -601,12 +623,12 @@
         const appliedStatus = applyIncomingHalfLife(app);
 
         render(root, app, appliedStatus);
-        window.addEventListener("resize", function () { render(root, app); });
-        window.setInterval(function () { render(root, app); }, 60 * 1000);
+        env.addEventListener("resize", function () { render(root, app); });
+        env.setInterval(function () { render(root, app); }, 60 * 1000);
     }
 
     function applyIncomingHalfLife(app) {
-        const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(env.location.search);
         const minutesParam = Number(params.get("halfLifeMinutes"));
         const hoursParam = Number(params.get("halfLifeHours"));
         const halfLifeMinutes = Number.isFinite(minutesParam) && minutesParam > 0
@@ -623,8 +645,8 @@
         }));
         app.storage.writeSettings(normalized);
 
-        if (window.history && typeof window.history.replaceState === "function") {
-            window.history.replaceState({}, document.title, window.location.pathname);
+        if (env.history && typeof env.history.replaceState === "function") {
+            env.history.replaceState({}, env.document.title, env.location.pathname);
         }
 
         return i18n.t(app.dict, "metabolismAppliedStatus", {
@@ -634,13 +656,13 @@
 
     function getBrowserStorage() {
         try {
-            return window.localStorage;
+            return env.localStorage;
         } catch (error) {
             return null;
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll("[data-caffeine-tracker]").forEach(init);
+    env.document.addEventListener("DOMContentLoaded", function () {
+        env.document.querySelectorAll("[data-caffeine-tracker]").forEach(init);
     });
-})();
+})(typeof window !== "undefined" ? window : globalThis);

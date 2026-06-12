@@ -4,6 +4,7 @@ const assert = require("node:assert/strict");
 const core = require("./caffeine-tracker-core.js");
 const i18n = require("./caffeine-tracker-i18n.js");
 const storageFactory = require("./caffeine-tracker-storage.js");
+const ui = require("./caffeine-tracker-ui.js");
 
 function approx(actual, expected, epsilon = 0.000001) {
     assert.ok(Math.abs(actual - expected) <= epsilon, `${actual} ≈ ${expected}`);
@@ -129,6 +130,19 @@ test("formatTime supports 24-hour display locales", function () {
 
     assert.match(formatted, /13:05/);
     assert.doesNotMatch(formatted, /AM|PM/i);
+});
+
+test("resolveTimeLocale follows browser locale for generic English pages", function () {
+    assert.equal(ui.resolveTimeLocale("en", "en", "en-US"), "en-US");
+    assert.equal(ui.resolveTimeLocale("en", "en", "en-CA"), "en-CA");
+    assert.equal(ui.resolveTimeLocale("en", "en", undefined), undefined);
+});
+
+test("resolveTimeLocale keeps regional page locale and localized defaults", function () {
+    assert.equal(ui.resolveTimeLocale("en", "en-AU", "en-US"), "en-AU");
+    assert.equal(ui.resolveTimeLocale("de", "de", "en-US"), "de-DE");
+    assert.equal(ui.resolveTimeLocale("es", "es", "en-US"), "es-ES");
+    assert.equal(ui.resolveTimeLocale("pl", "pl", "en-US"), "pl-PL");
 });
 
 test("graphDataForRange returns requested point count and fixed max scale", function () {
