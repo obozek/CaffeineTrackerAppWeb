@@ -222,6 +222,25 @@ li { margin: 6px 0; }
     margin-top:12px;
 }
 
+/* Tracker SEO content */
+.tracker-seo-grid {
+    margin-top: 0;
+}
+.faq-list details {
+    border-top: 1px solid rgba(127,127,127,.18);
+    padding: 12px 0;
+}
+.faq-list details:first-of-type {
+    border-top: 0;
+}
+.faq-list summary {
+    cursor: pointer;
+    font-weight: 700;
+}
+.faq-list p {
+    margin-bottom: 0;
+}
+
 /* Screenshots */
 .shots {
     display:grid;

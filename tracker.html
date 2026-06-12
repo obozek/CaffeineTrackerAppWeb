@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="theme-color" content="#53311C">
 
-    <title>Caffeine Level Tracker — Web graph</title>
-    <meta name="description" content="Track your estimated caffeine blood level in a Garmin-style web graph. Log drinks, custom caffeine amounts, and scheduled intake locally in your browser."/>
+    <title>Caffeine Level Calculator & Tracker — Garmin-style web graph</title>
+    <meta name="description" content="Use a free caffeine level calculator to estimate your active caffeine curve, half-life, and sleep-safe timing. Log drinks locally in your browser."/>
 
     <link rel="canonical" href="https://www.caffeinetracker.app/tracker.html">
     <link rel="alternate" hreflang="en" href="https://www.caffeinetracker.app/tracker.html">
@@ -17,9 +17,16 @@
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.caffeinetracker.app/tracker.html">
-    <meta property="og:title" content="Caffeine Level Tracker — Web graph">
-    <meta property="og:description" content="Track your estimated caffeine blood level in a Garmin-style web graph.">
+    <meta property="og:title" content="Caffeine Level Calculator & Tracker — Garmin-style web graph">
+    <meta property="og:description" content="Estimate your active caffeine curve, half-life, and sleep-safe timing with a private browser-based tracker.">
     <meta property="og:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+    <meta property="og:site_name" content="Caffeine Tracker">
+    <meta property="og:locale" content="en_US">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Caffeine Level Calculator & Tracker">
+    <meta name="twitter:description" content="Estimate your active caffeine curve, half-life, and sleep-safe timing in your browser.">
+    <meta name="twitter:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
 
     <link rel="icon" type="image/png" href="assets/brown-coffee-cup-icon.png">
     <link rel="apple-touch-icon" href="assets/brown-coffee-cup-icon.png">
@@ -32,6 +39,70 @@
     <script src="assets/caffeine-tracker-storage.js"></script>
     <script src="assets/caffeine-tracker-i18n.js"></script>
     <script src="assets/caffeine-tracker-ui.js"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Caffeine Level Calculator & Tracker",
+      "url": "https://www.caffeinetracker.app/tracker.html",
+      "image": "https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Web browser",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "description": "A free browser-based caffeine level calculator that estimates your active caffeine curve, half-life, and sleep-safe timing from logged drinks.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Caffeine Tracker",
+        "url": "https://www.caffeinetracker.app/"
+      },
+      "featureList": [
+        "Estimate active caffeine level over the day",
+        "Adjust caffeine half-life and body weight",
+        "Log coffee, tea, energy drinks, and custom caffeine amounts",
+        "Keep tracker data locally in the browser"
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is this caffeine tracker a blood test?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The tracker is a model-based estimate from the drinks you log, your body weight, and your selected caffeine half-life."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the web tracker store my data on a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Drinks and settings are stored locally in your browser."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I choose a caffeine half-life?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use the caffeine half-life wizard to estimate a practical preset, then apply that value in the web tracker or Garmin widget."
+          }
+        }
+      ]
+    }
+    </script>
 </head>
 
 <body>
@@ -42,9 +113,9 @@
             <img class="icon" src="assets/brown-coffee-cup-icon.png" alt="Caffeine Tracker icon" width="240" height="242">
             <div>
                 <span class="badge">Garmin Connect IQ • Widget</span>
-                <h1>Caffeine Tracker</h1>
+                <h1>Caffeine Level Calculator & Tracker</h1>
                 <p class="lead">
-                    Web tracker: log caffeine, customize your metabolism, and see your estimated blood level curve for the current day.
+                    Estimate your active caffeine level over the day. Log drinks, adjust caffeine half-life and body weight, and see when your curve drops toward sleep-safe levels.
                 </p>
 
                 <div class="cta">
@@ -68,6 +139,57 @@
         <noscript>
             <div class="card">JavaScript is required to run the caffeine level tracker.</div>
         </noscript>
+
+        <div class="grid tracker-seo-grid" aria-label="About the caffeine level tracker">
+            <section class="card">
+                <h2>Free caffeine level calculator</h2>
+                <p>
+                    Use the web tracker to estimate how much caffeine is still active after coffee, tea,
+                    energy drinks, or custom caffeine amounts. The graph shows a Garmin-style caffeine curve
+                    for the current day.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>How the estimate works</h2>
+                <p>
+                    The calculator applies caffeine half-life decay over time and adjusts the estimate using
+                    your body weight. For more detail, read <a href="how-it-works.html">how Caffeine Tracker works</a>.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Use it before installing on Garmin</h2>
+                <p>
+                    Try different drinks, intake times, half-life presets, and sleep-safe thresholds before
+                    using the same model in the Garmin Connect IQ widget.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Private browser storage</h2>
+                <p>
+                    Drinks and settings are stored locally in this browser. The tracker is an estimate for
+                    personal planning only and is not medical advice.
+                </p>
+            </section>
+        </div>
+
+        <section class="card faq-list" aria-labelledby="tracker-faq-title">
+            <h2 id="tracker-faq-title">Caffeine tracker FAQ</h2>
+            <details>
+                <summary>Is this caffeine tracker a blood test?</summary>
+                <p>No. It is a model-based estimate from the drinks you log, your body weight, and your selected caffeine half-life.</p>
+            </details>
+            <details>
+                <summary>Does the web tracker store my data on a server?</summary>
+                <p>No. Drinks and settings are stored locally in your browser.</p>
+            </details>
+            <details>
+                <summary>How do I choose a caffeine half-life?</summary>
+                <p>Use the <a href="halflife-wizard.html">caffeine half-life wizard</a> to estimate a practical preset, then apply that value in the web tracker or Garmin widget.</p>
+            </details>
+        </section>
     </main>
 
     <footer>

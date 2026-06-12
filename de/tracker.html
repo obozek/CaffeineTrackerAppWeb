@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="theme-color" content="#53311C">
 
-    <title>Koffeinspiegel-Tracker — Web-Grafik</title>
-    <meta name="description" content="Verfolge deinen geschätzten Koffeinspiegel in einer Garmin-ähnlichen Web-Grafik. Getränke, eigene Mengen und geplante Einnahmen werden lokal im Browser gespeichert."/>
+    <title>Koffeinspiegel-Rechner & Tracker — Garmin-ähnliche Web-Grafik</title>
+    <meta name="description" content="Nutze einen kostenlosen Koffeinspiegel-Rechner, um aktive Koffeinkurve, Halbwertszeit und schlafsichere Zeit zu schätzen. Daten bleiben im Browser."/>
 
     <link rel="canonical" href="https://www.caffeinetracker.app/de/tracker.html">
     <link rel="alternate" hreflang="en" href="https://www.caffeinetracker.app/tracker.html">
@@ -17,9 +17,16 @@
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.caffeinetracker.app/de/tracker.html">
-    <meta property="og:title" content="Koffeinspiegel-Tracker — Web-Grafik">
-    <meta property="og:description" content="Verfolge deinen geschätzten Koffeinspiegel in einer Garmin-ähnlichen Web-Grafik.">
+    <meta property="og:title" content="Koffeinspiegel-Rechner & Tracker — Garmin-ähnliche Web-Grafik">
+    <meta property="og:description" content="Schätze deine aktive Koffeinkurve, Halbwertszeit und schlafsichere Zeit mit einem privaten Browser-Tracker.">
     <meta property="og:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+    <meta property="og:site_name" content="Caffeine Tracker">
+    <meta property="og:locale" content="de_DE">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Koffeinspiegel-Rechner & Tracker">
+    <meta name="twitter:description" content="Schätze aktive Koffeinkurve, Halbwertszeit und schlafsichere Zeit direkt im Browser.">
+    <meta name="twitter:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
 
     <link rel="icon" type="image/png" href="../assets/brown-coffee-cup-icon.png">
     <link rel="apple-touch-icon" href="../assets/brown-coffee-cup-icon.png">
@@ -32,6 +39,70 @@
     <script src="../assets/caffeine-tracker-storage.js"></script>
     <script src="../assets/caffeine-tracker-i18n.js"></script>
     <script src="../assets/caffeine-tracker-ui.js"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Koffeinspiegel-Rechner & Tracker",
+      "url": "https://www.caffeinetracker.app/de/tracker.html",
+      "image": "https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Web browser",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "de",
+      "isAccessibleForFree": true,
+      "description": "Ein kostenloser browserbasierter Koffeinspiegel-Rechner, der aktive Koffeinkurve, Halbwertszeit und schlafsichere Zeit anhand protokollierter Getränke schätzt.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Caffeine Tracker",
+        "url": "https://www.caffeinetracker.app/"
+      },
+      "featureList": [
+        "Aktiven Koffeinspiegel über den Tag schätzen",
+        "Koffein-Halbwertszeit und Körpergewicht anpassen",
+        "Kaffee, Tee, Energy Drinks und eigene Koffeinmengen protokollieren",
+        "Tracker-Daten lokal im Browser behalten"
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Ist dieser Koffein-Tracker ein Bluttest?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nein. Der Tracker ist eine modellbasierte Schätzung aus den protokollierten Getränken, deinem Körpergewicht und deiner gewählten Koffein-Halbwertszeit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Speichert der Web-Tracker meine Daten auf einem Server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nein. Getränke und Einstellungen werden lokal in deinem Browser gespeichert."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie wähle ich eine Koffein-Halbwertszeit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nutze den Koffein-Halbwertszeit-Assistenten, um einen praktischen Preset zu schätzen, und verwende diesen Wert dann im Web-Tracker oder Garmin-Widget."
+          }
+        }
+      ]
+    }
+    </script>
 </head>
 
 <body>
@@ -42,9 +113,9 @@
             <img class="icon" src="../assets/brown-coffee-cup-icon.png" alt="Caffeine Tracker Symbol" width="240" height="242">
             <div>
                 <span class="badge">Garmin Connect IQ • Widget</span>
-                <h1>Caffeine Tracker</h1>
+                <h1>Koffeinspiegel-Rechner & Tracker</h1>
                 <p class="lead">
-                    Web-Tracker: Protokolliere Koffein, passe deinen Stoffwechsel an und sieh die geschätzte Blutspiegelkurve für den aktuellen Tag.
+                    Schätze deinen aktiven Koffeinspiegel über den Tag. Protokolliere Getränke, passe Koffein-Halbwertszeit und Körpergewicht an und sieh, wann deine Kurve in Richtung schlafsicherer Werte fällt.
                 </p>
 
                 <div class="cta">
@@ -68,6 +139,58 @@
         <noscript>
             <div class="card">JavaScript ist erforderlich, um den Koffeinspiegel-Tracker zu verwenden.</div>
         </noscript>
+
+        <div class="grid tracker-seo-grid" aria-label="Über den Koffeinspiegel-Tracker">
+            <section class="card">
+                <h2>Kostenloser Koffeinspiegel-Rechner</h2>
+                <p>
+                    Nutze den Web-Tracker, um zu schätzen, wie viel Koffein nach Kaffee, Tee,
+                    Energy Drinks oder eigenen Koffeinmengen noch aktiv ist. Die Grafik zeigt eine
+                    Garmin-ähnliche Koffeinkurve für den aktuellen Tag.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Wie die Schätzung funktioniert</h2>
+                <p>
+                    Der Rechner nutzt den Koffeinabbau über die Halbwertszeit und passt die Schätzung
+                    über dein Körpergewicht an. Mehr Details findest du unter
+                    <a href="how-it-works.html">So funktioniert Caffeine Tracker</a>.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Vor der Garmin-Installation testen</h2>
+                <p>
+                    Teste unterschiedliche Getränke, Uhrzeiten, Halbwertszeit-Presets und schlafsichere
+                    Schwellenwerte, bevor du dasselbe Modell im Garmin Connect IQ Widget verwendest.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Private Browser-Speicherung</h2>
+                <p>
+                    Getränke und Einstellungen werden lokal in diesem Browser gespeichert. Der Tracker ist
+                    nur eine Schätzung zur persönlichen Planung und keine medizinische Beratung.
+                </p>
+            </section>
+        </div>
+
+        <section class="card faq-list" aria-labelledby="tracker-faq-title">
+            <h2 id="tracker-faq-title">Koffein-Tracker FAQ</h2>
+            <details>
+                <summary>Ist dieser Koffein-Tracker ein Bluttest?</summary>
+                <p>Nein. Er ist eine modellbasierte Schätzung aus den protokollierten Getränken, deinem Körpergewicht und deiner gewählten Koffein-Halbwertszeit.</p>
+            </details>
+            <details>
+                <summary>Speichert der Web-Tracker meine Daten auf einem Server?</summary>
+                <p>Nein. Getränke und Einstellungen werden lokal in deinem Browser gespeichert.</p>
+            </details>
+            <details>
+                <summary>Wie wähle ich eine Koffein-Halbwertszeit?</summary>
+                <p>Nutze den <a href="halflife-wizard.html">Koffein-Halbwertszeit-Assistenten</a>, um einen praktischen Preset zu schätzen, und verwende diesen Wert dann im Web-Tracker oder Garmin-Widget.</p>
+            </details>
+        </section>
     </main>
 
     <footer>
