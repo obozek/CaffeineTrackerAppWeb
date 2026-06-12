@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="theme-color" content="#53311C">
+
+    <title>Kalkulator i tracker poziomu kofeiny — Wykres web Garmin</title>
+    <meta name="description" content="Użyj darmowego kalkulatora kofeiny, aby oszacować aktywną krzywą kofeiny, okres półtrwania i porę bezpieczną dla snu. Dane zostają w przeglądarce."/>
+
+    <link rel="canonical" href="https://www.caffeinetracker.app/pl/tracker.html">
+    <link rel="alternate" hreflang="en" href="https://www.caffeinetracker.app/tracker.html">
+    <link rel="alternate" hreflang="de" href="https://www.caffeinetracker.app/de/tracker.html">
+    <link rel="alternate" hreflang="es" href="https://www.caffeinetracker.app/es/tracker.html">
+    <link rel="alternate" hreflang="pl" href="https://www.caffeinetracker.app/pl/tracker.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.caffeinetracker.app/tracker.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.caffeinetracker.app/pl/tracker.html">
+    <meta property="og:title" content="Kalkulator i tracker poziomu kofeiny — Wykres web Garmin">
+    <meta property="og:description" content="Oszacuj aktywną krzywą kofeiny, okres półtrwania i porę bezpieczną dla snu w prywatnym trackerze w przeglądarce.">
+    <meta property="og:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+    <meta property="og:site_name" content="Caffeine Tracker">
+    <meta property="og:locale" content="pl_PL">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Kalkulator i tracker poziomu kofeiny">
+    <meta name="twitter:description" content="Oszacuj aktywną krzywą kofeiny, okres półtrwania i porę bezpieczną dla snu w przeglądarce.">
+    <meta name="twitter:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+
+    <link rel="icon" type="image/png" href="../assets/brown-coffee-cup-icon.png">
+    <link rel="apple-touch-icon" href="../assets/brown-coffee-cup-icon.png">
+
+    <link rel="stylesheet" href="../assets/site.css">
+    <link rel="stylesheet" href="../assets/caffeine-tracker.css">
+    <script src="../assets/theme-toggle.js"></script>
+    <script src="../assets/lang-switcher.js"></script>
+    <script src="../assets/caffeine-tracker-core.js"></script>
+    <script src="../assets/caffeine-tracker-storage.js"></script>
+    <script src="../assets/caffeine-tracker-i18n.js"></script>
+    <script src="../assets/caffeine-tracker-ui.js"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Kalkulator i tracker poziomu kofeiny",
+      "url": "https://www.caffeinetracker.app/pl/tracker.html",
+      "image": "https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Web browser",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "pl",
+      "isAccessibleForFree": true,
+      "description": "Darmowy kalkulator kofeiny w przeglądarce, który szacuje aktywną krzywą kofeiny, okres półtrwania i porę bezpieczną dla snu na podstawie zapisanych napojów.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Caffeine Tracker",
+        "url": "https://www.caffeinetracker.app/"
+      },
+      "featureList": [
+        "Szacowanie aktywnego poziomu kofeiny w ciągu dnia",
+        "Dostosowanie okresu półtrwania kofeiny i masy ciała",
+        "Zapisywanie kawy, herbaty, napojów energetycznych i własnych ilości kofeiny",
+        "Przechowywanie danych trackera lokalnie w przeglądarce"
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Czy ten tracker kofeiny jest badaniem krwi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nie. Tracker jest szacunkiem opartym na modelu, który używa zapisanych napojów, masy ciała i wybranego okresu półtrwania kofeiny."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czy tracker web zapisuje moje dane na serwerze?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nie. Napoje i ustawienia są przechowywane lokalnie w przeglądarce."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Jak wybrać okres półtrwania kofeiny?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Użyj kreatora okresu półtrwania kofeiny, aby oszacować praktyczny preset, a potem zastosuj tę wartość w trackerze web lub widżecie Garmin."
+          }
+        }
+      ]
+    }
+    </script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Przejdź do treści</a>
+<div class="wrap">
+    <main id="main">
+        <div class="top">
+            <img class="icon" src="../assets/brown-coffee-cup-icon.png" alt="Ikona Caffeine Tracker" width="240" height="242">
+            <div>
+                <span class="badge">Garmin Connect IQ • Widget</span>
+                <h1>Kalkulator i tracker poziomu kofeiny</h1>
+                <p class="lead">
+                    Oszacuj aktywny poziom kofeiny w ciągu dnia. Zapisuj napoje, dostosuj okres półtrwania i masę ciała oraz zobacz, kiedy krzywa spada w stronę poziomów bezpiecznych dla snu.
+                </p>
+
+                <div class="cta">
+                    <a class="btn" href="index.html">← Powrót na stronę główną</a>
+                    <a class="btn" href="how-it-works.html">Jak to działa</a>
+                    <a class="btn" href="halflife-wizard.html">Znajdź swój okres półtrwania kofeiny</a>
+                    <a class="btn"
+                       href="https://apps.garmin.com/pl-PL/apps/b9325e27-582a-4aeb-a3a5-963097915714"
+                       target="_blank" rel="noopener">
+                        Zobacz w Garmin Store
+                    </a>
+                </div>
+
+                <div class="muted">
+                    Dane są przechowywane lokalnie w tej przeglądarce. To tylko szacunek, nie porada medyczna.
+                </div>
+            </div>
+        </div>
+
+        <div class="ct-app" data-caffeine-tracker data-lang="pl" data-home-href="index.html"></div>
+        <noscript>
+            <div class="card">JavaScript jest wymagany do użycia trackera poziomu kofeiny.</div>
+        </noscript>
+
+        <div class="grid tracker-seo-grid" aria-label="O trackerze poziomu kofeiny">
+            <section class="card">
+                <h2>Darmowy kalkulator kofeiny</h2>
+                <p>
+                    Użyj trackera web, aby oszacować, ile kofeiny pozostaje aktywne po kawie, herbacie,
+                    napojach energetycznych lub własnych ilościach kofeiny. Wykres pokazuje krzywą
+                    kofeiny w stylu Garmin dla bieżącego dnia.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Jak działa szacunek</h2>
+                <p>
+                    Kalkulator stosuje rozkład kofeiny według okresu półtrwania i dopasowuje szacunek
+                    do masy ciała. Więcej szczegółów znajdziesz w sekcji
+                    <a href="how-it-works.html">jak działa Caffeine Tracker</a>.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Przetestuj przed instalacją na Garmin</h2>
+                <p>
+                    Sprawdź różne napoje, godziny spożycia, presety okresu półtrwania i progi bezpieczne
+                    dla snu, zanim użyjesz tego samego modelu w widżecie Garmin Connect IQ.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Prywatne przechowywanie w przeglądarce</h2>
+                <p>
+                    Napoje i ustawienia są przechowywane lokalnie w tej przeglądarce. Tracker jest
+                    szacunkiem do osobistego planowania i nie jest poradą medyczną.
+                </p>
+            </section>
+        </div>
+
+        <section class="card faq-list" aria-labelledby="tracker-faq-title">
+            <h2 id="tracker-faq-title">FAQ trackera kofeiny</h2>
+            <details>
+                <summary>Czy ten tracker kofeiny jest badaniem krwi?</summary>
+                <p>Nie. To szacunek oparty na modelu, który używa zapisanych napojów, masy ciała i wybranego okresu półtrwania kofeiny.</p>
+            </details>
+            <details>
+                <summary>Czy tracker web zapisuje moje dane na serwerze?</summary>
+                <p>Nie. Napoje i ustawienia są przechowywane lokalnie w przeglądarce.</p>
+            </details>
+            <details>
+                <summary>Jak wybrać okres półtrwania kofeiny?</summary>
+                <p>Użyj <a href="halflife-wizard.html">kreatora okresu półtrwania kofeiny</a>, aby oszacować praktyczny preset, a potem zastosuj tę wartość w trackerze web lub widżecie Garmin.</p>
+            </details>
+        </section>
+    </main>
+
+    <footer>
+        <div>© <span id="y"></span> Caffeine Tracker</div>
+        <nav aria-label="Nawigacja stopki">
+            <a href="index.html">Strona główna</a> •
+            <a href="how-it-works.html">Jak to działa</a> •
+            <a href="halflife-wizard.html">Znajdź swój okres półtrwania kofeiny</a> •
+            <a href="../privacy.html">Prywatność</a> •
+            <a href="../refund.html">Zwroty i Warunki</a> •
+            <a href="mailto:support@caffeinetracker.app">Wsparcie</a>
+        </nav>
+        <div>Niezwiązane z Garmin.</div>
+    </footer>
+</div>
+
+<script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="theme-color" content="#53311C">
+
+    <title>Calculadora y tracker de cafeína — Gráfico web estilo Garmin</title>
+    <meta name="description" content="Usa una calculadora gratuita para estimar tu curva de cafeína activa, vida media y horario seguro para dormir. Los datos quedan en tu navegador."/>
+
+    <link rel="canonical" href="https://www.caffeinetracker.app/es/tracker.html">
+    <link rel="alternate" hreflang="en" href="https://www.caffeinetracker.app/tracker.html">
+    <link rel="alternate" hreflang="de" href="https://www.caffeinetracker.app/de/tracker.html">
+    <link rel="alternate" hreflang="es" href="https://www.caffeinetracker.app/es/tracker.html">
+    <link rel="alternate" hreflang="pl" href="https://www.caffeinetracker.app/pl/tracker.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.caffeinetracker.app/tracker.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.caffeinetracker.app/es/tracker.html">
+    <meta property="og:title" content="Calculadora y tracker de cafeína — Gráfico web estilo Garmin">
+    <meta property="og:description" content="Estima tu curva de cafeína activa, vida media y horario seguro para dormir con un tracker privado en el navegador.">
+    <meta property="og:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+    <meta property="og:site_name" content="Caffeine Tracker">
+    <meta property="og:locale" content="es_ES">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Calculadora y tracker de cafeína">
+    <meta name="twitter:description" content="Estima tu curva de cafeína activa, vida media y horario seguro para dormir en el navegador.">
+    <meta name="twitter:image" content="https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png">
+
+    <link rel="icon" type="image/png" href="../assets/brown-coffee-cup-icon.png">
+    <link rel="apple-touch-icon" href="../assets/brown-coffee-cup-icon.png">
+
+    <link rel="stylesheet" href="../assets/site.css">
+    <link rel="stylesheet" href="../assets/caffeine-tracker.css">
+    <script src="../assets/theme-toggle.js"></script>
+    <script src="../assets/lang-switcher.js"></script>
+    <script src="../assets/caffeine-tracker-core.js"></script>
+    <script src="../assets/caffeine-tracker-storage.js"></script>
+    <script src="../assets/caffeine-tracker-i18n.js"></script>
+    <script src="../assets/caffeine-tracker-ui.js"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calculadora y tracker de cafeína",
+      "url": "https://www.caffeinetracker.app/es/tracker.html",
+      "image": "https://www.caffeinetracker.app/assets/brown-coffee-cup-icon.png",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Web browser",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "es",
+      "isAccessibleForFree": true,
+      "description": "Una calculadora gratuita en el navegador que estima tu curva de cafeína activa, vida media y horario seguro para dormir a partir de las bebidas registradas.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Caffeine Tracker",
+        "url": "https://www.caffeinetracker.app/"
+      },
+      "featureList": [
+        "Estimar el nivel de cafeína activa durante el día",
+        "Ajustar la vida media de cafeína y el peso corporal",
+        "Registrar café, té, bebidas energéticas y cantidades personalizadas",
+        "Mantener los datos del tracker localmente en el navegador"
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Este tracker de cafeína es un análisis de sangre?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El tracker es una estimación basada en un modelo que usa las bebidas registradas, tu peso corporal y la vida media de cafeína seleccionada."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿El tracker web guarda mis datos en un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Las bebidas y los ajustes se guardan localmente en tu navegador."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo elijo una vida media de cafeína?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usa el asistente de vida media de cafeína para estimar un ajuste práctico y luego aplica ese valor en el tracker web o en el widget de Garmin."
+          }
+        }
+      ]
+    }
+    </script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+<div class="wrap">
+    <main id="main">
+        <div class="top">
+            <img class="icon" src="../assets/brown-coffee-cup-icon.png" alt="Icono de Caffeine Tracker" width="240" height="242">
+            <div>
+                <span class="badge">Garmin Connect IQ • Widget</span>
+                <h1>Calculadora y tracker de cafeína</h1>
+                <p class="lead">
+                    Estima tu nivel de cafeína activa durante el día. Registra bebidas, ajusta la vida media y el peso corporal, y ve cuándo tu curva baja hacia niveles seguros para dormir.
+                </p>
+
+                <div class="cta">
+                    <a class="btn" href="index.html">← Volver al inicio</a>
+                    <a class="btn" href="how-it-works.html">Cómo funciona</a>
+                    <a class="btn" href="halflife-wizard.html">Encuentra tu vida media de cafeína</a>
+                    <a class="btn"
+                       href="https://apps.garmin.com/es-ES/apps/b9325e27-582a-4aeb-a3a5-963097915714"
+                       target="_blank" rel="noopener">
+                        Ver en Garmin Store
+                    </a>
+                </div>
+
+                <div class="muted">
+                    Los datos se guardan localmente en este navegador. Solo es una estimación, no consejo médico.
+                </div>
+            </div>
+        </div>
+
+        <div class="ct-app" data-caffeine-tracker data-lang="es" data-home-href="index.html"></div>
+        <noscript>
+            <div class="card">JavaScript es necesario para usar el control de nivel de cafeína.</div>
+        </noscript>
+
+        <div class="grid tracker-seo-grid" aria-label="Acerca del tracker de cafeína">
+            <section class="card">
+                <h2>Calculadora gratuita de cafeína</h2>
+                <p>
+                    Usa el tracker web para estimar cuánta cafeína sigue activa después de café, té,
+                    bebidas energéticas o cantidades personalizadas. El gráfico muestra una curva de
+                    cafeína estilo Garmin para el día actual.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Cómo funciona la estimación</h2>
+                <p>
+                    La calculadora aplica la degradación por vida media de la cafeína y ajusta la
+                    estimación con tu peso corporal. Para más detalles, lee
+                    <a href="how-it-works.html">cómo funciona Caffeine Tracker</a>.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Úsalo antes de instalar en Garmin</h2>
+                <p>
+                    Prueba diferentes bebidas, horarios, ajustes de vida media y umbrales seguros para
+                    dormir antes de usar el mismo modelo en el widget de Garmin Connect IQ.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2>Almacenamiento privado en el navegador</h2>
+                <p>
+                    Las bebidas y los ajustes se guardan localmente en este navegador. El tracker es una
+                    estimación para planificación personal y no es consejo médico.
+                </p>
+            </section>
+        </div>
+
+        <section class="card faq-list" aria-labelledby="tracker-faq-title">
+            <h2 id="tracker-faq-title">FAQ del tracker de cafeína</h2>
+            <details>
+                <summary>¿Este tracker de cafeína es un análisis de sangre?</summary>
+                <p>No. Es una estimación basada en un modelo que usa las bebidas registradas, tu peso corporal y la vida media de cafeína seleccionada.</p>
+            </details>
+            <details>
+                <summary>¿El tracker web guarda mis datos en un servidor?</summary>
+                <p>No. Las bebidas y los ajustes se guardan localmente en tu navegador.</p>
+            </details>
+            <details>
+                <summary>¿Cómo elijo una vida media de cafeína?</summary>
+                <p>Usa el <a href="halflife-wizard.html">asistente de vida media de cafeína</a> para estimar un ajuste práctico y luego aplica ese valor en el tracker web o en el widget de Garmin.</p>
+            </details>
+        </section>
+    </main>
+
+    <footer>
+        <div>© <span id="y"></span> Caffeine Tracker</div>
+        <nav aria-label="Navegación del pie de página">
+            <a href="index.html">Inicio</a> •
+            <a href="how-it-works.html">Cómo funciona</a> •
+            <a href="halflife-wizard.html">Encuentra tu vida media de cafeína</a> •
+            <a href="../privacy.html">Privacidad</a> •
+            <a href="../refund.html">Reembolsos y Términos</a> •
+            <a href="mailto:support@caffeinetracker.app">Soporte</a>
+        </nav>
+        <div>No afiliado con Garmin.</div>
+    </footer>
+</div>
+
+<script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

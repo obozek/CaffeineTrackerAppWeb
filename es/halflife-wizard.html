@@ -104,6 +104,7 @@
             </div>
 
             <div class="wizard-nav">
+                <a class="btn primary" id="btnUseTracker" href="tracker.html">Usar en el tracker web</a>
                 <button class="btn" id="btnRestart">Reiniciar</button>
             </div>
         </div>
@@ -139,6 +140,7 @@
     var warningEl = document.getElementById("resultWarning");
     var warningTxt= document.getElementById("resultWarningText");
     var restartBtn= document.getElementById("btnRestart");
+    var useTrackerLink = document.getElementById("btnUseTracker");
 
     var answers  = {};
     var current  = 0;
@@ -231,6 +233,7 @@
         presetEl.textContent = result.preset;
         repeatEl.textContent = result.preset;
         rawEl.textContent = "Estimación calculada: " + result.raw + " h (redondeada al preajuste más cercano).";
+        useTrackerLink.href = "tracker.html?halfLifeMinutes=" + encodeURIComponent(result.preset * 60);
 
         var warnings = [];
         if (answers.pregnancy && answers.pregnancy !== "no") {
