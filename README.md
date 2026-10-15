@@ -29,3 +29,18 @@ Review regression proof (2026-10-15): returning zero for every 20-minute
 absorption input previously passed all 72 tests. With per-sample standalone
 goldens, the same temporary mutant fails six fixture tests; the baseline passes
 72/72. Mutation was injected outside the repository; production core is unchanged.
+
+## Graph and time baseline (next R02 slice)
+
+`tests/companion-time-graph.test.js` characterizes the current standalone graph:
+explicit watch-range instants are zone-independent, local calendar bounds are
+23/25 hours on DST days, repeated-hour labels and midnight depend on the browser
+zone, the time marker is clamped, scale stays at 15 mg/L, and annotation uses all
+supplied events. Tests use fresh Node processes with Europe/Prague and
+America/New_York zones, including both DST transitions in 2026.
+
+The coordinated watch tests record its different grid, dynamic scale, annotation
+input filtering, and fixed-day/unclamped marker. These differences are preserved
+until the connected adapter exists. Node timezone tests are not physical-watch
+Gregorian/DST capture or browser SVG fidelity evidence. No runtime, local data,
+version, or UI changes are included.
