@@ -12,6 +12,8 @@ for (const fixture of data.fixtures) {
             const actual = core.levelAtTime(fixture.events, sample.time,
                 fixture.halfLifeMinutes, effectiveVolume / 0.7, fixture.absorptionMinutes);
             assert.ok(Number.isFinite(actual), "Standalone output must be finite");
+            assert.ok(Math.abs(actual - sample.standaloneLevelMgPerL) <= data.standaloneToleranceMgPerL,
+                `${fixture.id} at ${sample.time}: expected standalone ${sample.standaloneLevelMgPerL}, got ${actual}`);
             return Math.abs(actual - sample.levelMgPerL);
         });
         const maxError = Math.max(...differences);

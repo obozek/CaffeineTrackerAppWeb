@@ -18,35 +18,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0017006256981960191
+          "levelMgPerL": 0.0017006256981960191,
+          "standaloneLevelMgPerL": 0.0011337504654640128
         },
         {
           "time": 600,
-          "levelMgPerL": 1.001010915489112
+          "levelMgPerL": 1.001010915489112,
+          "standaloneLevelMgPerL": 0.6673406103260746
         },
         {
           "time": 1199,
-          "levelMgPerL": 1.962632811975567
+          "levelMgPerL": 1.962632811975567,
+          "standaloneLevelMgPerL": 1.308421874650378
         },
         {
           "time": 1200,
-          "levelMgPerL": 1.9642074793639661
+          "levelMgPerL": 1.9642074793639661,
+          "standaloneLevelMgPerL": 1.3094716529093107
         },
         {
           "time": 1201,
-          "levelMgPerL": 1.9640814199947958
+          "levelMgPerL": 1.9640814199947958,
+          "standaloneLevelMgPerL": 1.310521363795328
         },
         {
           "time": 12000,
-          "levelMgPerL": 0.9821037396819831
+          "levelMgPerL": 0.9821037396819831,
+          "standaloneLevelMgPerL": 1.0015057695482026
         }
       ],
       "standaloneParity": false,
@@ -66,35 +74,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0011337504654640128
+          "levelMgPerL": 0.0011337504654640128,
+          "standaloneLevelMgPerL": 0.0011337504654640128
         },
         {
           "time": 900,
-          "levelMgPerL": 0.9914969480890454
+          "levelMgPerL": 0.9914969480890454,
+          "standaloneLevelMgPerL": 0.9914969480890454
         },
         {
           "time": 1799,
-          "levelMgPerL": 1.9263353268283914
+          "levelMgPerL": 1.9263353268283914,
+          "standaloneLevelMgPerL": 1.9263353268283914
         },
         {
           "time": 1800,
-          "levelMgPerL": 1.9273454484925898
+          "levelMgPerL": 1.9273454484925898,
+          "standaloneLevelMgPerL": 1.9273454484925898
         },
         {
           "time": 1801,
-          "levelMgPerL": 1.927221754863499
+          "levelMgPerL": 1.927221754863499,
+          "standaloneLevelMgPerL": 1.927221754863499
         },
         {
           "time": 12600,
-          "levelMgPerL": 0.9636727242462949
+          "levelMgPerL": 0.9636727242462949,
+          "standaloneLevelMgPerL": 0.9636727242462949
         }
       ],
       "standaloneParity": true,
@@ -114,35 +130,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0007558336436426751
+          "levelMgPerL": 0.0007558336436426751,
+          "standaloneLevelMgPerL": 0.0007558336436426751
         },
         {
           "time": 1350,
-          "levelMgPerL": 0.9774518798567794
+          "levelMgPerL": 0.9774518798567794,
+          "standaloneLevelMgPerL": 0.9774518798567794
         },
         {
           "time": 2699,
-          "levelMgPerL": 1.8731435871291058
+          "levelMgPerL": 1.8731435871291058,
+          "standaloneLevelMgPerL": 1.8731435871291058
         },
         {
           "time": 2700,
-          "levelMgPerL": 1.8737792057234526
+          "levelMgPerL": 1.8737792057234526,
+          "standaloneLevelMgPerL": 1.8737792057234526
         },
         {
           "time": 2701,
-          "levelMgPerL": 1.8736589498812772
+          "levelMgPerL": 1.8736589498812772,
+          "standaloneLevelMgPerL": 1.8736589498812772
         },
         {
           "time": 13500,
-          "levelMgPerL": 0.9368896028617263
+          "levelMgPerL": 0.9368896028617263,
+          "standaloneLevelMgPerL": 0.9368896028617263
         }
       ],
       "standaloneParity": true,
@@ -162,35 +186,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0005668752327320064
+          "levelMgPerL": 0.0005668752327320064,
+          "standaloneLevelMgPerL": 0.0005668752327320064
         },
         {
           "time": 1800,
-          "levelMgPerL": 0.9636727242462949
+          "levelMgPerL": 0.9636727242462949,
+          "standaloneLevelMgPerL": 0.9636727242462949
         },
         {
           "time": 3599,
-          "levelMgPerL": 1.8217575609362278
+          "levelMgPerL": 1.8217575609362278,
+          "standaloneLevelMgPerL": 1.8217575609362278
         },
         {
           "time": 3600,
-          "levelMgPerL": 1.8222075189841278
+          "levelMgPerL": 1.8222075189841278,
+          "standaloneLevelMgPerL": 1.8222075189841278
         },
         {
           "time": 3601,
-          "levelMgPerL": 1.8220905729217824
+          "levelMgPerL": 1.8220905729217824,
+          "standaloneLevelMgPerL": 1.8220905729217824
         },
         {
           "time": 14400,
-          "levelMgPerL": 0.9111037594920639
+          "levelMgPerL": 0.9111037594920639,
+          "standaloneLevelMgPerL": 0.9111037594920639
         }
       ],
       "standaloneParity": true,
@@ -210,35 +242,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.001700639341455316
+          "levelMgPerL": 0.001700639341455316,
+          "standaloneLevelMgPerL": 0.0011337595609702106
         },
         {
           "time": 600,
-          "levelMgPerL": 1.0058137303206856
+          "levelMgPerL": 1.0058137303206856,
+          "standaloneLevelMgPerL": 0.6705424868804571
         },
         {
           "time": 1199,
-          "levelMgPerL": 1.9813886291205305
+          "levelMgPerL": 1.9813886291205305,
+          "standaloneLevelMgPerL": 1.3209257527470204
         },
         {
           "time": 1200,
-          "levelMgPerL": 1.9829938961780909
+          "levelMgPerL": 1.9829938961780909,
+          "standaloneLevelMgPerL": 1.321995930785394
         },
         {
           "time": 1201,
-          "levelMgPerL": 1.9828984466261712
+          "levelMgPerL": 1.9828984466261712,
+          "standaloneLevelMgPerL": 1.323066057311751
         },
         {
           "time": 15600,
-          "levelMgPerL": 0.9914969480890454
+          "levelMgPerL": 0.9914969480890454,
+          "standaloneLevelMgPerL": 1.006093406147969
         }
       ],
       "standaloneParity": false,
@@ -258,35 +298,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0011337595609702106
+          "levelMgPerL": 0.0011337595609702106,
+          "standaloneLevelMgPerL": 0.0011337595609702106
         },
         {
           "time": 900,
-          "levelMgPerL": 0.9986210071204766
+          "levelMgPerL": 0.9986210071204766,
+          "standaloneLevelMgPerL": 0.9986210071204766
         },
         {
           "time": 1799,
-          "levelMgPerL": 1.9538640475665578
+          "levelMgPerL": 1.9538640475665578,
+          "standaloneLevelMgPerL": 1.9538640475665578
         },
         {
           "time": 1800,
-          "levelMgPerL": 1.9549037597135588
+          "levelMgPerL": 1.9549037597135588,
+          "standaloneLevelMgPerL": 1.9549037597135588
         },
         {
           "time": 1801,
-          "levelMgPerL": 1.9548096622540203
+          "levelMgPerL": 1.9548096622540203,
+          "standaloneLevelMgPerL": 1.9548096622540203
         },
         {
           "time": 16200,
-          "levelMgPerL": 0.9774518798567794
+          "levelMgPerL": 0.9774518798567794,
+          "standaloneLevelMgPerL": 0.9774518798567794
         }
       ],
       "standaloneParity": true,
@@ -306,35 +354,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0007558397073134738
+          "levelMgPerL": 0.0007558397073134738,
+          "standaloneLevelMgPerL": 0.0007558397073134738
         },
         {
           "time": 1350,
-          "levelMgPerL": 0.9879604367477327
+          "levelMgPerL": 0.9879604367477327,
+          "standaloneLevelMgPerL": 0.9879604367477327
         },
         {
           "time": 2699,
-          "levelMgPerL": 1.9130984194061376
+          "levelMgPerL": 1.9130984194061376,
+          "standaloneLevelMgPerL": 1.9130984194061376
         },
         {
           "time": 2700,
-          "levelMgPerL": 1.9137621739147712
+          "levelMgPerL": 1.9137621739147712,
+          "standaloneLevelMgPerL": 1.9137621739147712
         },
         {
           "time": 2701,
-          "levelMgPerL": 1.9136700567668903
+          "levelMgPerL": 1.9136700567668903,
+          "standaloneLevelMgPerL": 1.9136700567668903
         },
         {
           "time": 17100,
-          "levelMgPerL": 0.9568810869573856
+          "levelMgPerL": 0.9568810869573856,
+          "standaloneLevelMgPerL": 0.9568810869573856
         }
       ],
       "standaloneParity": true,
@@ -354,35 +410,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0005668797804851053
+          "levelMgPerL": 0.0005668797804851053,
+          "standaloneLevelMgPerL": 0.0005668797804851053
         },
         {
           "time": 1800,
-          "levelMgPerL": 0.9774518798567794
+          "levelMgPerL": 0.9774518798567794,
+          "standaloneLevelMgPerL": 0.9774518798567794
         },
         {
           "time": 3599,
-          "levelMgPerL": 1.8733024956021682
+          "levelMgPerL": 1.8733024956021682,
+          "standaloneLevelMgPerL": 1.8733024956021682
         },
         {
           "time": 3600,
-          "levelMgPerL": 1.8737792057234526
+          "levelMgPerL": 1.8737792057234526,
+          "standaloneLevelMgPerL": 1.8737792057234526
         },
         {
           "time": 3601,
-          "levelMgPerL": 1.8736890131182573
+          "levelMgPerL": 1.8736890131182573,
+          "standaloneLevelMgPerL": 1.8736890131182573
         },
         {
           "time": 18000,
-          "levelMgPerL": 0.9368896028617263
+          "levelMgPerL": 0.9368896028617263,
+          "standaloneLevelMgPerL": 0.9368896028617263
         }
       ],
       "standaloneParity": true,
@@ -402,35 +466,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0017006475274809446
+          "levelMgPerL": 0.0017006475274809446,
+          "standaloneLevelMgPerL": 0.0011337650183206296
         },
         {
           "time": 600,
-          "levelMgPerL": 1.0087102124590024
+          "levelMgPerL": 1.0087102124590024,
+          "standaloneLevelMgPerL": 0.6724734749726683
         },
         {
           "time": 1199,
-          "levelMgPerL": 1.992757540279248
+          "levelMgPerL": 1.992757540279248,
+          "standaloneLevelMgPerL": 1.328505026852832
         },
         {
           "time": 1200,
-          "levelMgPerL": 1.994381451824743
+          "levelMgPerL": 1.994381451824743,
+          "standaloneLevelMgPerL": 1.3295876345498285
         },
         {
           "time": 1201,
-          "levelMgPerL": 1.994304653310088
+          "levelMgPerL": 1.994304653310088,
+          "standaloneLevelMgPerL": 1.3306702005583793
         },
         {
           "time": 19200,
-          "levelMgPerL": 0.9971907259123715
+          "levelMgPerL": 0.9971907259123715,
+          "standaloneLevelMgPerL": 1.0088897159486019
         }
       ],
       "standaloneParity": false,
@@ -450,35 +522,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0011337650183206296
+          "levelMgPerL": 0.0011337650183206296,
+          "standaloneLevelMgPerL": 0.0011337650183206296
         },
         {
           "time": 900,
-          "levelMgPerL": 1.002928353767309
+          "levelMgPerL": 1.002928353767309,
+          "standaloneLevelMgPerL": 1.002928353767309
         },
         {
           "time": 1799,
-          "levelMgPerL": 1.9706354050769186
+          "levelMgPerL": 1.9706354050769186,
+          "standaloneLevelMgPerL": 1.9706354050769186
         },
         {
           "time": 1800,
-          "levelMgPerL": 1.9716932859799425
+          "levelMgPerL": 1.9716932859799425,
+          "standaloneLevelMgPerL": 1.9716932859799425
         },
         {
           "time": 1801,
-          "levelMgPerL": 1.9716173611283654
+          "levelMgPerL": 1.9716173611283654,
+          "standaloneLevelMgPerL": 1.9716173611283654
         },
         {
           "time": 19800,
-          "levelMgPerL": 0.9858466429899713
+          "levelMgPerL": 0.9858466429899713,
+          "standaloneLevelMgPerL": 0.9858466429899713
         }
       ],
       "standaloneParity": true,
@@ -498,35 +578,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0007558433455470865
+          "levelMgPerL": 0.0007558433455470865,
+          "standaloneLevelMgPerL": 0.0007558433455470865
         },
         {
           "time": 1350,
-          "levelMgPerL": 0.9943383794100524
+          "levelMgPerL": 0.9943383794100524,
+          "standaloneLevelMgPerL": 0.9943383794100524
         },
         {
           "time": 2699,
-          "levelMgPerL": 1.9376244550644226
+          "levelMgPerL": 1.9376244550644226,
+          "standaloneLevelMgPerL": 1.9376244550644226
         },
         {
           "time": 2700,
-          "levelMgPerL": 1.9383056854616936
+          "levelMgPerL": 1.9383056854616936,
+          "standaloneLevelMgPerL": 1.9383056854616936
         },
         {
           "time": 2701,
-          "levelMgPerL": 1.9382310462809822
+          "levelMgPerL": 1.9382310462809822,
+          "standaloneLevelMgPerL": 1.9382310462809822
         },
         {
           "time": 20700,
-          "levelMgPerL": 0.9691528427308468
+          "levelMgPerL": 0.9691528427308468,
+          "standaloneLevelMgPerL": 0.9691528427308468
         }
       ],
       "standaloneParity": true,
@@ -546,35 +634,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0005668825091603148
+          "levelMgPerL": 0.0005668825091603148,
+          "standaloneLevelMgPerL": 0.0005668825091603148
         },
         {
           "time": 1800,
-          "levelMgPerL": 0.9858466429899713
+          "levelMgPerL": 0.9858466429899713,
+          "standaloneLevelMgPerL": 0.9858466429899713
         },
         {
           "time": 3599,
-          "levelMgPerL": 1.9051805666036041
+          "levelMgPerL": 1.9051805666036041,
+          "standaloneLevelMgPerL": 1.9051805666036041
         },
         {
           "time": 3600,
-          "levelMgPerL": 1.905674085495423
+          "levelMgPerL": 1.905674085495423,
+          "standaloneLevelMgPerL": 1.905674085495423
         },
         {
           "time": 3601,
-          "levelMgPerL": 1.905600702873935
+          "levelMgPerL": 1.905600702873935,
+          "standaloneLevelMgPerL": 1.905600702873935
         },
         {
           "time": 21600,
-          "levelMgPerL": 0.9528370427477115
+          "levelMgPerL": 0.9528370427477115,
+          "standaloneLevelMgPerL": 0.9528370427477115
         }
       ],
       "standaloneParity": true,
@@ -594,35 +690,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0017006529848605512
+          "levelMgPerL": 0.0017006529848605512,
+          "standaloneLevelMgPerL": 0.0011337686565737008
         },
         {
           "time": 600,
-          "levelMgPerL": 1.0106473940905856
+          "levelMgPerL": 1.0106473940905856,
+          "standaloneLevelMgPerL": 0.6737649293937237
         },
         {
           "time": 1199,
-          "levelMgPerL": 2.0003853696244627
+          "levelMgPerL": 2.0003853696244627,
+          "standaloneLevelMgPerL": 1.3335902464163085
         },
         {
           "time": 1200,
-          "levelMgPerL": 2.002021830978224
+          "levelMgPerL": 2.002021830978224,
+          "standaloneLevelMgPerL": 1.3346812206521492
         },
         {
           "time": 1201,
-          "levelMgPerL": 2.001957586833681
+          "levelMgPerL": 2.001957586833681,
+          "standaloneLevelMgPerL": 1.335772159879028
         },
         {
           "time": 22800,
-          "levelMgPerL": 1.001010915489112
+          "levelMgPerL": 1.001010915489112,
+          "standaloneLevelMgPerL": 1.0107722869886084
         }
       ],
       "standaloneParity": false,
@@ -642,35 +746,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0011337686565737008
+          "levelMgPerL": 0.0011337686565737008,
+          "standaloneLevelMgPerL": 0.0011337686565737008
         },
         {
           "time": 900,
-          "levelMgPerL": 1.0058137303206856
+          "levelMgPerL": 1.0058137303206856,
+          "standaloneLevelMgPerL": 1.0058137303206856
         },
         {
           "time": 1799,
-          "levelMgPerL": 1.981923726725283
+          "levelMgPerL": 1.981923726725283,
+          "standaloneLevelMgPerL": 1.981923726725283
         },
         {
           "time": 1800,
-          "levelMgPerL": 1.9829938961780909
+          "levelMgPerL": 1.9829938961780909,
+          "standaloneLevelMgPerL": 1.9829938961780909
         },
         {
           "time": 1801,
-          "levelMgPerL": 1.9829302626329808
+          "levelMgPerL": 1.9829302626329808,
+          "standaloneLevelMgPerL": 1.9829302626329808
         },
         {
           "time": 23400,
-          "levelMgPerL": 0.9914969480890454
+          "levelMgPerL": 0.9914969480890454,
+          "standaloneLevelMgPerL": 0.9914969480890454
         }
       ],
       "standaloneParity": true,
@@ -690,35 +802,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0007558457710491339
+          "levelMgPerL": 0.0007558457710491339,
+          "standaloneLevelMgPerL": 0.0007558457710491339
         },
         {
           "time": 1350,
-          "levelMgPerL": 0.9986210071204766
+          "levelMgPerL": 0.9986210071204766,
+          "standaloneLevelMgPerL": 0.9986210071204766
         },
         {
           "time": 2699,
-          "levelMgPerL": 1.9542106238429924
+          "levelMgPerL": 1.9542106238429924,
+          "standaloneLevelMgPerL": 1.9542106238429924
         },
         {
           "time": 2700,
-          "levelMgPerL": 1.9549037597135588
+          "levelMgPerL": 1.9549037597135588,
+          "standaloneLevelMgPerL": 1.9549037597135588
         },
         {
           "time": 2701,
-          "levelMgPerL": 1.954841027570601
+          "levelMgPerL": 1.954841027570601,
+          "standaloneLevelMgPerL": 1.954841027570601
         },
         {
           "time": 24300,
-          "levelMgPerL": 0.9774518798567794
+          "levelMgPerL": 0.9774518798567794,
+          "standaloneLevelMgPerL": 0.9774518798567794
         }
       ],
       "standaloneParity": true,
@@ -738,35 +858,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0005668843282868504
+          "levelMgPerL": 0.0005668843282868504,
+          "standaloneLevelMgPerL": 0.0005668843282868504
         },
         {
           "time": 1800,
-          "levelMgPerL": 0.9914969480890454
+          "levelMgPerL": 0.9914969480890454,
+          "standaloneLevelMgPerL": 0.9914969480890454
         },
         {
           "time": 3599,
-          "levelMgPerL": 1.9268403957642288
+          "levelMgPerL": 1.9268403957642288,
+          "standaloneLevelMgPerL": 1.9268403957642288
         },
         {
           "time": 3600,
-          "levelMgPerL": 1.9273454484925898
+          "levelMgPerL": 1.9273454484925898,
+          "standaloneLevelMgPerL": 1.9273454484925898
         },
         {
           "time": 3601,
-          "levelMgPerL": 1.9272836006857077
+          "levelMgPerL": 1.9272836006857077,
+          "standaloneLevelMgPerL": 1.9272836006857077
         },
         {
           "time": 25200,
-          "levelMgPerL": 0.9636727242462949
+          "levelMgPerL": 0.9636727242462949,
+          "standaloneLevelMgPerL": 0.9636727242462949
         }
       ],
       "standaloneParity": true,
@@ -786,35 +914,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0017006598066178964
+          "levelMgPerL": 0.0017006598066178964,
+          "standaloneLevelMgPerL": 0.0011337732044119308
         },
         {
           "time": 600,
-          "levelMgPerL": 1.013075864033218
+          "levelMgPerL": 1.013075864033218,
+          "standaloneLevelMgPerL": 0.6753839093554787
         },
         {
           "time": 1199,
-          "levelMgPerL": 2.0099751755521305
+          "levelMgPerL": 2.0099751755521305,
+          "standaloneLevelMgPerL": 1.339983450368087
         },
         {
           "time": 1200,
-          "levelMgPerL": 2.011627460641371
+          "levelMgPerL": 2.011627460641371,
+          "standaloneLevelMgPerL": 1.3410849737609143
         },
         {
           "time": 1201,
-          "levelMgPerL": 2.0115790461579186
+          "levelMgPerL": 2.0115790461579186,
+          "standaloneLevelMgPerL": 1.3421864706430244
         },
         {
           "time": 30000,
-          "levelMgPerL": 1.0058137303206856
+          "levelMgPerL": 1.0058137303206856,
+          "standaloneLevelMgPerL": 1.0131462841446912
         }
       ],
       "standaloneParity": false,
@@ -834,35 +970,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0011337732044119308
+          "levelMgPerL": 0.0011337732044119308,
+          "standaloneLevelMgPerL": 0.0011337732044119308
         },
         {
           "time": 900,
-          "levelMgPerL": 1.0094360738792367
+          "levelMgPerL": 1.0094360738792367,
+          "standaloneLevelMgPerL": 1.0094360738792367
         },
         {
           "time": 1799,
-          "levelMgPerL": 1.9961562831702024
+          "levelMgPerL": 1.9961562831702024,
+          "standaloneLevelMgPerL": 1.9961562831702024
         },
         {
           "time": 1800,
-          "levelMgPerL": 1.9972420142409533
+          "levelMgPerL": 1.9972420142409533,
+          "standaloneLevelMgPerL": 1.9972420142409533
         },
         {
           "time": 1801,
-          "levelMgPerL": 1.9971939459766543
+          "levelMgPerL": 1.9971939459766543,
+          "standaloneLevelMgPerL": 1.9971939459766543
         },
         {
           "time": 30600,
-          "levelMgPerL": 0.9986210071204766
+          "levelMgPerL": 0.9986210071204766,
+          "standaloneLevelMgPerL": 0.9986210071204766
         }
       ],
       "standaloneParity": true,
@@ -882,35 +1026,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0007558488029412872
+          "levelMgPerL": 0.0007558488029412872,
+          "standaloneLevelMgPerL": 0.0007558488029412872
         },
         {
           "time": 1350,
-          "levelMgPerL": 1.004009071586408
+          "levelMgPerL": 1.004009071586408,
+          "standaloneLevelMgPerL": 1.004009071586408
         },
         {
           "time": 2699,
-          "levelMgPerL": 1.9752125627669472
+          "levelMgPerL": 1.9752125627669472,
+          "standaloneLevelMgPerL": 1.9752125627669472
         },
         {
           "time": 2700,
-          "levelMgPerL": 1.9759208734954654
+          "levelMgPerL": 1.9759208734954654,
+          "standaloneLevelMgPerL": 1.9759208734954654
         },
         {
           "time": 2701,
-          "levelMgPerL": 1.975873318373901
+          "levelMgPerL": 1.975873318373901,
+          "standaloneLevelMgPerL": 1.975873318373901
         },
         {
           "time": 31500,
-          "levelMgPerL": 0.9879604367477327
+          "levelMgPerL": 0.9879604367477327,
+          "standaloneLevelMgPerL": 0.9879604367477327
         }
       ],
       "standaloneParity": true,
@@ -930,35 +1082,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0005668866022059654
+          "levelMgPerL": 0.0005668866022059654,
+          "standaloneLevelMgPerL": 0.0005668866022059654
         },
         {
           "time": 1800,
-          "levelMgPerL": 0.9986210071204766
+          "levelMgPerL": 0.9986210071204766,
+          "standaloneLevelMgPerL": 0.9986210071204766
         },
         {
           "time": 3599,
-          "levelMgPerL": 1.954383909895905
+          "levelMgPerL": 1.954383909895905,
+          "standaloneLevelMgPerL": 1.954383909895905
         },
         {
           "time": 3600,
-          "levelMgPerL": 1.9549037597135588
+          "levelMgPerL": 1.9549037597135588,
+          "standaloneLevelMgPerL": 1.9549037597135588
         },
         {
           "time": 3601,
-          "levelMgPerL": 1.9548567104176142
+          "levelMgPerL": 1.9548567104176142,
+          "standaloneLevelMgPerL": 1.9548567104176142
         },
         {
           "time": 32400,
-          "levelMgPerL": 0.9774518798567794
+          "levelMgPerL": 0.9774518798567794,
+          "standaloneLevelMgPerL": 0.9774518798567794
         }
       ],
       "standaloneParity": true,
@@ -978,35 +1138,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0017006638996898162
+          "levelMgPerL": 0.0017006638996898162,
+          "standaloneLevelMgPerL": 0.0011337759331265442
         },
         {
           "time": 600,
-          "levelMgPerL": 1.0145366863241823
+          "levelMgPerL": 1.0145366863241823,
+          "standaloneLevelMgPerL": 0.6763577908827882
         },
         {
           "time": 1199,
-          "levelMgPerL": 2.0157585722383167
+          "levelMgPerL": 2.0157585722383167,
+          "standaloneLevelMgPerL": 1.3438390481588776
         },
         {
           "time": 1200,
-          "levelMgPerL": 2.0174204249180048
+          "levelMgPerL": 2.0174204249180048,
+          "standaloneLevelMgPerL": 1.3449469499453366
         },
         {
           "time": 1201,
-          "levelMgPerL": 2.017381581700853
+          "levelMgPerL": 2.017381581700853,
+          "standaloneLevelMgPerL": 1.3460548304003621
         },
         {
           "time": 37200,
-          "levelMgPerL": 1.0087102124590024
+          "levelMgPerL": 1.0087102124590024,
+          "standaloneLevelMgPerL": 1.0145818199010137
         }
       ],
       "standaloneParity": false,
@@ -1026,35 +1194,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0011337759331265442
+          "levelMgPerL": 0.0011337759331265442,
+          "standaloneLevelMgPerL": 0.0011337759331265442
         },
         {
           "time": 900,
-          "levelMgPerL": 1.0116178483349771
+          "levelMgPerL": 1.0116178483349771,
+          "standaloneLevelMgPerL": 1.0116178483349771
         },
         {
           "time": 1799,
-          "levelMgPerL": 2.0047615310855296
+          "levelMgPerL": 2.0047615310855296,
+          "standaloneLevelMgPerL": 2.0047615310855296
         },
         {
           "time": 1800,
-          "levelMgPerL": 2.005856707534618
+          "levelMgPerL": 2.005856707534618,
+          "standaloneLevelMgPerL": 2.005856707534618
         },
         {
           "time": 1801,
-          "levelMgPerL": 2.0058180869641595
+          "levelMgPerL": 2.0058180869641595,
+          "standaloneLevelMgPerL": 2.0058180869641595
         },
         {
           "time": 37800,
-          "levelMgPerL": 1.002928353767309
+          "levelMgPerL": 1.002928353767309,
+          "standaloneLevelMgPerL": 1.002928353767309
         }
       ],
       "standaloneParity": true,
@@ -1074,35 +1250,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0007558506220843627
+          "levelMgPerL": 0.0007558506220843627,
+          "standaloneLevelMgPerL": 0.0007558506220843627
         },
         {
           "time": 1350,
-          "levelMgPerL": 1.0072605801873924
+          "levelMgPerL": 1.0072605801873924,
+          "standaloneLevelMgPerL": 1.0072605801873924
         },
         {
           "time": 2699,
-          "levelMgPerL": 1.987959184171301
+          "levelMgPerL": 1.987959184171301,
+          "standaloneLevelMgPerL": 1.987959184171301
         },
         {
           "time": 2700,
-          "levelMgPerL": 1.9886767588201049
+          "levelMgPerL": 1.9886767588201049,
+          "standaloneLevelMgPerL": 1.9886767588201049
         },
         {
           "time": 2701,
-          "levelMgPerL": 1.9886384690307117
+          "levelMgPerL": 1.9886384690307117,
+          "standaloneLevelMgPerL": 1.9886384690307117
         },
         {
           "time": 38700,
-          "levelMgPerL": 0.9943383794100524
+          "levelMgPerL": 0.9943383794100524,
+          "standaloneLevelMgPerL": 0.9943383794100524
         }
       ],
       "standaloneParity": true,
@@ -1122,35 +1306,43 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 1,
-          "levelMgPerL": 0.0005668879665632721
+          "levelMgPerL": 0.0005668879665632721,
+          "standaloneLevelMgPerL": 0.0005668879665632721
         },
         {
           "time": 1800,
-          "levelMgPerL": 1.002928353767309
+          "levelMgPerL": 1.002928353767309,
+          "standaloneLevelMgPerL": 1.002928353767309
         },
         {
           "time": 3599,
-          "levelMgPerL": 1.9711643506205636
+          "levelMgPerL": 1.9711643506205636,
+          "standaloneLevelMgPerL": 1.9711643506205636
         },
         {
           "time": 3600,
-          "levelMgPerL": 1.9716932859799425
+          "levelMgPerL": 1.9716932859799425,
+          "standaloneLevelMgPerL": 1.9716932859799425
         },
         {
           "time": 3601,
-          "levelMgPerL": 1.971655323188688
+          "levelMgPerL": 1.971655323188688,
+          "standaloneLevelMgPerL": 1.971655323188688
         },
         {
           "time": 39600,
-          "levelMgPerL": 0.9858466429899713
+          "levelMgPerL": 0.9858466429899713,
+          "standaloneLevelMgPerL": 0.9858466429899713
         }
       ],
       "standaloneParity": true,
@@ -1165,11 +1357,13 @@
       "samples": [
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 86400,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         }
       ],
       "standaloneParity": true,
@@ -1193,19 +1387,23 @@
       "samples": [
         {
           "time": 0,
-          "levelMgPerL": 0.0
+          "levelMgPerL": 0.0,
+          "standaloneLevelMgPerL": 0.0
         },
         {
           "time": 900,
-          "levelMgPerL": 1.2837482928221557
+          "levelMgPerL": 1.2837482928221557,
+          "standaloneLevelMgPerL": 1.2837482928221557
         },
         {
           "time": 1800,
-          "levelMgPerL": 2.5237674060543265
+          "levelMgPerL": 2.5237674060543265,
+          "standaloneLevelMgPerL": 2.5237674060543265
         },
         {
           "time": 19800,
-          "levelMgPerL": 1.2618837030271632
+          "levelMgPerL": 1.2618837030271632,
+          "standaloneLevelMgPerL": 1.2618837030271632
         }
       ],
       "standaloneParity": true,
@@ -1233,31 +1431,38 @@
       "samples": [
         {
           "time": -1,
-          "levelMgPerL": 0.8014665334198455
+          "levelMgPerL": 0.8014665334198455,
+          "standaloneLevelMgPerL": 0.8014665334198455
         },
         {
           "time": 0,
-          "levelMgPerL": 0.8023426830138473
+          "levelMgPerL": 0.8023426830138473,
+          "standaloneLevelMgPerL": 0.8023426830138473
         },
         {
           "time": 900,
-          "levelMgPerL": 2.219228775195032
+          "levelMgPerL": 2.219228775195032,
+          "standaloneLevelMgPerL": 2.219228775195032
         },
         {
           "time": 1800,
-          "levelMgPerL": 2.7855078425673483
+          "levelMgPerL": 2.7855078425673483,
+          "standaloneLevelMgPerL": 2.7855078425673483
         },
         {
           "time": 7199,
-          "levelMgPerL": 2.2626225479857176
+          "levelMgPerL": 2.2626225479857176,
+          "standaloneLevelMgPerL": 2.2626225479857176
         },
         {
           "time": 7200,
-          "levelMgPerL": 2.2625354201944163
+          "levelMgPerL": 2.2625354201944163,
+          "standaloneLevelMgPerL": 2.2625354201944163
         },
         {
           "time": 9000,
-          "levelMgPerL": 4.477052134737915
+          "levelMgPerL": 4.477052134737915,
+          "standaloneLevelMgPerL": 4.477052134737915
         }
       ],
       "standaloneParity": true,
@@ -1281,15 +1486,18 @@
       "samples": [
         {
           "time": 0,
-          "levelMgPerL": 0.12978706822265892
+          "levelMgPerL": 0.12978706822265892,
+          "standaloneLevelMgPerL": 0.12978706822265892
         },
         {
           "time": 1800,
-          "levelMgPerL": 1.4091143370430694
+          "levelMgPerL": 1.4091143370430694,
+          "standaloneLevelMgPerL": 1.4091143370430694
         },
         {
           "time": 86400,
-          "levelMgPerL": 0.27639217524057863
+          "levelMgPerL": 0.27639217524057863,
+          "standaloneLevelMgPerL": 0.27639217524057863
         }
       ],
       "standaloneParity": true,
@@ -1505,19 +1713,23 @@
       "samples": [
         {
           "time": 0,
-          "levelMgPerL": 13.643114434134192
+          "levelMgPerL": 13.643114434134192,
+          "standaloneLevelMgPerL": 13.643114434134192
         },
         {
           "time": 900,
-          "levelMgPerL": 13.990751838160673
+          "levelMgPerL": 13.990751838160673,
+          "standaloneLevelMgPerL": 13.990751838160673
         },
         {
           "time": 1800,
-          "levelMgPerL": 14.326547436002976
+          "levelMgPerL": 14.326547436002976,
+          "standaloneLevelMgPerL": 14.326547436002976
         },
         {
           "time": 86400,
-          "levelMgPerL": 0.551189026198625
+          "levelMgPerL": 0.551189026198625,
+          "standaloneLevelMgPerL": 0.551189026198625
         }
       ],
       "standaloneParity": true,
@@ -1537,15 +1749,18 @@
       "samples": [
         {
           "time": 900,
-          "levelMgPerL": 7.5219626532548185
+          "levelMgPerL": 7.5219626532548185,
+          "standaloneLevelMgPerL": 5.014641768836546
         },
         {
           "time": 1800,
-          "levelMgPerL": 14.78769964484957
+          "levelMgPerL": 14.78769964484957,
+          "standaloneLevelMgPerL": 9.858466429899712
         },
         {
           "time": 19800,
-          "levelMgPerL": 7.393849822424785
+          "levelMgPerL": 7.393849822424785,
+          "standaloneLevelMgPerL": 4.929233214949856
         }
       ],
       "standaloneParity": false,
@@ -1565,19 +1780,23 @@
       "samples": [
         {
           "time": 900,
-          "levelMgPerL": 0.6468887881799144
+          "levelMgPerL": 0.6468887881799144,
+          "standaloneLevelMgPerL": 0.651903429948751
         },
         {
           "time": 1800,
-          "levelMgPerL": 1.271742169457063
+          "levelMgPerL": 1.271742169457063,
+          "standaloneLevelMgPerL": 1.2816006358869627
         },
         {
           "time": 19800,
-          "levelMgPerL": 0.6358710847285315
+          "levelMgPerL": 0.6358710847285315,
+          "standaloneLevelMgPerL": 0.6408003179434814
         }
       ],
       "standaloneParity": false,
-      "reason": "Standalone rounds fractional mg."
+      "reason": "Standalone rounds fractional mg.",
+      "toleranceMgPerL": 0.0001
     },
     {
       "id": "small-positive-volume",
@@ -1593,15 +1812,18 @@
       "samples": [
         {
           "time": 900,
-          "levelMgPerL": 62.90366634828563
+          "levelMgPerL": 62.90366634828563,
+          "standaloneLevelMgPerL": 31.451833174142816
         },
         {
           "time": 1800,
-          "levelMgPerL": 123.66460289666199
+          "levelMgPerL": 123.66460289666199,
+          "standaloneLevelMgPerL": 61.832301448330995
         },
         {
           "time": 19800,
-          "levelMgPerL": 61.832301448330995
+          "levelMgPerL": 61.832301448330995,
+          "standaloneLevelMgPerL": 30.916150724165497
         }
       ],
       "standaloneParity": false,
@@ -1621,19 +1843,23 @@
       "samples": [
         {
           "time": 900,
-          "levelMgPerL": 31.451833174142816
+          "levelMgPerL": 31.451833174142816,
+          "standaloneLevelMgPerL": 31.451833174142816
         },
         {
           "time": 1800,
-          "levelMgPerL": 61.832301448330995
+          "levelMgPerL": 61.832301448330995,
+          "standaloneLevelMgPerL": 61.832301448330995
         },
         {
           "time": 19800,
-          "levelMgPerL": 30.916150724165497
+          "levelMgPerL": 30.916150724165497,
+          "standaloneLevelMgPerL": 30.916150724165497
         }
       ],
       "standaloneParity": true,
       "reason": "Watch uses 1 L only for nonpositive effective volume."
     }
-  ]
+  ],
+  "standaloneToleranceMgPerL": 1e-06
 }
