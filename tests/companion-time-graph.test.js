@@ -45,7 +45,9 @@ test("a different browser zone changes local midnight and repeated-hour labels",
 test("explicit graph instants survive browser-zone differences on a 23-hour day", () => {
     const startSec = sec("2026-03-28T23:00:00Z");
     const endSec = sec("2026-03-29T22:00:00Z");
-    const options = { events: [], startSec, endSec, points: 4,
+    const events = [{ time: startSec - 900, mg: 80 },
+        { time: startSec + 5400, mg: 100 }, { time: startSec + 9000, mg: 64 }];
+    const options = { events, startSec, endSec, points: 4,
         halfLifeMinutes: 300, absorptionMinutes: 30, weightKg: 70,
         includeCurrentTimeRatio: true, nowSec: endSec };
     const expression = `core.graphDataForRange(${JSON.stringify(options)})`;
@@ -53,6 +55,13 @@ test("explicit graph instants survive browser-zone differences on a 23-hour day"
     assert.deepEqual(prague, inZone("America/New_York", expression));
     assert.deepEqual(prague.points.map(p => p.time),
         [startSec, startSec + 27600, startSec + 55200, endSec]);
+    // Independent 55-digit Decimal references: carry-in absorption and drinks
+    // on both sides of the spring DST jump; calculations use UTC instants.
+    const expectedLevels = [0.8023426830138473, 2.123759243534742, 0.7337125631478202, 0.2534817103020357];
+    prague.levelPoints.forEach((level, index) => {
+        assert.ok(Math.abs(level - expectedLevels[index]) <= 0.000001,
+            `DST graph sample ${index}: expected ${expectedLevels[index]}, got ${level}`);
+    });
     assert.equal(prague.currentTimeRatio, 1);
 });
 

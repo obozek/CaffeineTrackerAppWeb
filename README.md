@@ -44,3 +44,8 @@ input filtering, and fixed-day/unclamped marker. These differences are preserved
 until the connected adapter exists. Node timezone tests are not physical-watch
 Gregorian/DST capture or browser SVG fidelity evidence. No runtime, local data,
 version, or UI changes are included.
+
+The cross-zone graph includes carry-in absorption and drinks on both sides of
+the DST jump, with independent analytic sample levels. Review regression proof:
+a temporary mutant that adds the browser timezone offset to graph calculation
+timestamps previously passed 81/81 under UTC; the strengthened test rejects it.
