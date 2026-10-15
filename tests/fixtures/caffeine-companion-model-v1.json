@@ -1,0 +1,1639 @@
+{
+  "schemaVersion": 1,
+  "modelId": "caffeine-constant-absorption-v1",
+  "reference": "55-digit Decimal analytic equation; expected values are independent golden numbers, not simulator captures.",
+  "toleranceMgPerL": 0.01,
+  "fixtures": [
+    {
+      "id": "absorption-20-half-life-180",
+      "halfLifeMinutes": 180,
+      "absorptionMinutes": 20,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0017006256981960191
+        },
+        {
+          "time": 600,
+          "levelMgPerL": 1.001010915489112
+        },
+        {
+          "time": 1199,
+          "levelMgPerL": 1.962632811975567
+        },
+        {
+          "time": 1200,
+          "levelMgPerL": 1.9642074793639661
+        },
+        {
+          "time": 1201,
+          "levelMgPerL": 1.9640814199947958
+        },
+        {
+          "time": 12000,
+          "levelMgPerL": 0.9821037396819831
+        }
+      ],
+      "standaloneParity": false,
+      "reason": "Standalone maps 20-minute absorption to 30."
+    },
+    {
+      "id": "absorption-30-half-life-180",
+      "halfLifeMinutes": 180,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0011337504654640128
+        },
+        {
+          "time": 900,
+          "levelMgPerL": 0.9914969480890454
+        },
+        {
+          "time": 1799,
+          "levelMgPerL": 1.9263353268283914
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 1.9273454484925898
+        },
+        {
+          "time": 1801,
+          "levelMgPerL": 1.927221754863499
+        },
+        {
+          "time": 12600,
+          "levelMgPerL": 0.9636727242462949
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-45-half-life-180",
+      "halfLifeMinutes": 180,
+      "absorptionMinutes": 45,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0007558336436426751
+        },
+        {
+          "time": 1350,
+          "levelMgPerL": 0.9774518798567794
+        },
+        {
+          "time": 2699,
+          "levelMgPerL": 1.8731435871291058
+        },
+        {
+          "time": 2700,
+          "levelMgPerL": 1.8737792057234526
+        },
+        {
+          "time": 2701,
+          "levelMgPerL": 1.8736589498812772
+        },
+        {
+          "time": 13500,
+          "levelMgPerL": 0.9368896028617263
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-60-half-life-180",
+      "halfLifeMinutes": 180,
+      "absorptionMinutes": 60,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0005668752327320064
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 0.9636727242462949
+        },
+        {
+          "time": 3599,
+          "levelMgPerL": 1.8217575609362278
+        },
+        {
+          "time": 3600,
+          "levelMgPerL": 1.8222075189841278
+        },
+        {
+          "time": 3601,
+          "levelMgPerL": 1.8220905729217824
+        },
+        {
+          "time": 14400,
+          "levelMgPerL": 0.9111037594920639
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-20-half-life-240",
+      "halfLifeMinutes": 240,
+      "absorptionMinutes": 20,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.001700639341455316
+        },
+        {
+          "time": 600,
+          "levelMgPerL": 1.0058137303206856
+        },
+        {
+          "time": 1199,
+          "levelMgPerL": 1.9813886291205305
+        },
+        {
+          "time": 1200,
+          "levelMgPerL": 1.9829938961780909
+        },
+        {
+          "time": 1201,
+          "levelMgPerL": 1.9828984466261712
+        },
+        {
+          "time": 15600,
+          "levelMgPerL": 0.9914969480890454
+        }
+      ],
+      "standaloneParity": false,
+      "reason": "Standalone maps 20-minute absorption to 30."
+    },
+    {
+      "id": "absorption-30-half-life-240",
+      "halfLifeMinutes": 240,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0011337595609702106
+        },
+        {
+          "time": 900,
+          "levelMgPerL": 0.9986210071204766
+        },
+        {
+          "time": 1799,
+          "levelMgPerL": 1.9538640475665578
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 1.9549037597135588
+        },
+        {
+          "time": 1801,
+          "levelMgPerL": 1.9548096622540203
+        },
+        {
+          "time": 16200,
+          "levelMgPerL": 0.9774518798567794
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-45-half-life-240",
+      "halfLifeMinutes": 240,
+      "absorptionMinutes": 45,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0007558397073134738
+        },
+        {
+          "time": 1350,
+          "levelMgPerL": 0.9879604367477327
+        },
+        {
+          "time": 2699,
+          "levelMgPerL": 1.9130984194061376
+        },
+        {
+          "time": 2700,
+          "levelMgPerL": 1.9137621739147712
+        },
+        {
+          "time": 2701,
+          "levelMgPerL": 1.9136700567668903
+        },
+        {
+          "time": 17100,
+          "levelMgPerL": 0.9568810869573856
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-60-half-life-240",
+      "halfLifeMinutes": 240,
+      "absorptionMinutes": 60,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0005668797804851053
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 0.9774518798567794
+        },
+        {
+          "time": 3599,
+          "levelMgPerL": 1.8733024956021682
+        },
+        {
+          "time": 3600,
+          "levelMgPerL": 1.8737792057234526
+        },
+        {
+          "time": 3601,
+          "levelMgPerL": 1.8736890131182573
+        },
+        {
+          "time": 18000,
+          "levelMgPerL": 0.9368896028617263
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-20-half-life-300",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 20,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0017006475274809446
+        },
+        {
+          "time": 600,
+          "levelMgPerL": 1.0087102124590024
+        },
+        {
+          "time": 1199,
+          "levelMgPerL": 1.992757540279248
+        },
+        {
+          "time": 1200,
+          "levelMgPerL": 1.994381451824743
+        },
+        {
+          "time": 1201,
+          "levelMgPerL": 1.994304653310088
+        },
+        {
+          "time": 19200,
+          "levelMgPerL": 0.9971907259123715
+        }
+      ],
+      "standaloneParity": false,
+      "reason": "Standalone maps 20-minute absorption to 30."
+    },
+    {
+      "id": "absorption-30-half-life-300",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0011337650183206296
+        },
+        {
+          "time": 900,
+          "levelMgPerL": 1.002928353767309
+        },
+        {
+          "time": 1799,
+          "levelMgPerL": 1.9706354050769186
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 1.9716932859799425
+        },
+        {
+          "time": 1801,
+          "levelMgPerL": 1.9716173611283654
+        },
+        {
+          "time": 19800,
+          "levelMgPerL": 0.9858466429899713
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-45-half-life-300",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 45,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0007558433455470865
+        },
+        {
+          "time": 1350,
+          "levelMgPerL": 0.9943383794100524
+        },
+        {
+          "time": 2699,
+          "levelMgPerL": 1.9376244550644226
+        },
+        {
+          "time": 2700,
+          "levelMgPerL": 1.9383056854616936
+        },
+        {
+          "time": 2701,
+          "levelMgPerL": 1.9382310462809822
+        },
+        {
+          "time": 20700,
+          "levelMgPerL": 0.9691528427308468
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-60-half-life-300",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 60,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0005668825091603148
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 0.9858466429899713
+        },
+        {
+          "time": 3599,
+          "levelMgPerL": 1.9051805666036041
+        },
+        {
+          "time": 3600,
+          "levelMgPerL": 1.905674085495423
+        },
+        {
+          "time": 3601,
+          "levelMgPerL": 1.905600702873935
+        },
+        {
+          "time": 21600,
+          "levelMgPerL": 0.9528370427477115
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-20-half-life-360",
+      "halfLifeMinutes": 360,
+      "absorptionMinutes": 20,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0017006529848605512
+        },
+        {
+          "time": 600,
+          "levelMgPerL": 1.0106473940905856
+        },
+        {
+          "time": 1199,
+          "levelMgPerL": 2.0003853696244627
+        },
+        {
+          "time": 1200,
+          "levelMgPerL": 2.002021830978224
+        },
+        {
+          "time": 1201,
+          "levelMgPerL": 2.001957586833681
+        },
+        {
+          "time": 22800,
+          "levelMgPerL": 1.001010915489112
+        }
+      ],
+      "standaloneParity": false,
+      "reason": "Standalone maps 20-minute absorption to 30."
+    },
+    {
+      "id": "absorption-30-half-life-360",
+      "halfLifeMinutes": 360,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0011337686565737008
+        },
+        {
+          "time": 900,
+          "levelMgPerL": 1.0058137303206856
+        },
+        {
+          "time": 1799,
+          "levelMgPerL": 1.981923726725283
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 1.9829938961780909
+        },
+        {
+          "time": 1801,
+          "levelMgPerL": 1.9829302626329808
+        },
+        {
+          "time": 23400,
+          "levelMgPerL": 0.9914969480890454
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-45-half-life-360",
+      "halfLifeMinutes": 360,
+      "absorptionMinutes": 45,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0007558457710491339
+        },
+        {
+          "time": 1350,
+          "levelMgPerL": 0.9986210071204766
+        },
+        {
+          "time": 2699,
+          "levelMgPerL": 1.9542106238429924
+        },
+        {
+          "time": 2700,
+          "levelMgPerL": 1.9549037597135588
+        },
+        {
+          "time": 2701,
+          "levelMgPerL": 1.954841027570601
+        },
+        {
+          "time": 24300,
+          "levelMgPerL": 0.9774518798567794
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-60-half-life-360",
+      "halfLifeMinutes": 360,
+      "absorptionMinutes": 60,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0005668843282868504
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 0.9914969480890454
+        },
+        {
+          "time": 3599,
+          "levelMgPerL": 1.9268403957642288
+        },
+        {
+          "time": 3600,
+          "levelMgPerL": 1.9273454484925898
+        },
+        {
+          "time": 3601,
+          "levelMgPerL": 1.9272836006857077
+        },
+        {
+          "time": 25200,
+          "levelMgPerL": 0.9636727242462949
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-20-half-life-480",
+      "halfLifeMinutes": 480,
+      "absorptionMinutes": 20,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0017006598066178964
+        },
+        {
+          "time": 600,
+          "levelMgPerL": 1.013075864033218
+        },
+        {
+          "time": 1199,
+          "levelMgPerL": 2.0099751755521305
+        },
+        {
+          "time": 1200,
+          "levelMgPerL": 2.011627460641371
+        },
+        {
+          "time": 1201,
+          "levelMgPerL": 2.0115790461579186
+        },
+        {
+          "time": 30000,
+          "levelMgPerL": 1.0058137303206856
+        }
+      ],
+      "standaloneParity": false,
+      "reason": "Standalone maps 20-minute absorption to 30."
+    },
+    {
+      "id": "absorption-30-half-life-480",
+      "halfLifeMinutes": 480,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0011337732044119308
+        },
+        {
+          "time": 900,
+          "levelMgPerL": 1.0094360738792367
+        },
+        {
+          "time": 1799,
+          "levelMgPerL": 1.9961562831702024
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 1.9972420142409533
+        },
+        {
+          "time": 1801,
+          "levelMgPerL": 1.9971939459766543
+        },
+        {
+          "time": 30600,
+          "levelMgPerL": 0.9986210071204766
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-45-half-life-480",
+      "halfLifeMinutes": 480,
+      "absorptionMinutes": 45,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0007558488029412872
+        },
+        {
+          "time": 1350,
+          "levelMgPerL": 1.004009071586408
+        },
+        {
+          "time": 2699,
+          "levelMgPerL": 1.9752125627669472
+        },
+        {
+          "time": 2700,
+          "levelMgPerL": 1.9759208734954654
+        },
+        {
+          "time": 2701,
+          "levelMgPerL": 1.975873318373901
+        },
+        {
+          "time": 31500,
+          "levelMgPerL": 0.9879604367477327
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-60-half-life-480",
+      "halfLifeMinutes": 480,
+      "absorptionMinutes": 60,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0005668866022059654
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 0.9986210071204766
+        },
+        {
+          "time": 3599,
+          "levelMgPerL": 1.954383909895905
+        },
+        {
+          "time": 3600,
+          "levelMgPerL": 1.9549037597135588
+        },
+        {
+          "time": 3601,
+          "levelMgPerL": 1.9548567104176142
+        },
+        {
+          "time": 32400,
+          "levelMgPerL": 0.9774518798567794
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-20-half-life-600",
+      "halfLifeMinutes": 600,
+      "absorptionMinutes": 20,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0017006638996898162
+        },
+        {
+          "time": 600,
+          "levelMgPerL": 1.0145366863241823
+        },
+        {
+          "time": 1199,
+          "levelMgPerL": 2.0157585722383167
+        },
+        {
+          "time": 1200,
+          "levelMgPerL": 2.0174204249180048
+        },
+        {
+          "time": 1201,
+          "levelMgPerL": 2.017381581700853
+        },
+        {
+          "time": 37200,
+          "levelMgPerL": 1.0087102124590024
+        }
+      ],
+      "standaloneParity": false,
+      "reason": "Standalone maps 20-minute absorption to 30."
+    },
+    {
+      "id": "absorption-30-half-life-600",
+      "halfLifeMinutes": 600,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0011337759331265442
+        },
+        {
+          "time": 900,
+          "levelMgPerL": 1.0116178483349771
+        },
+        {
+          "time": 1799,
+          "levelMgPerL": 2.0047615310855296
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 2.005856707534618
+        },
+        {
+          "time": 1801,
+          "levelMgPerL": 2.0058180869641595
+        },
+        {
+          "time": 37800,
+          "levelMgPerL": 1.002928353767309
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-45-half-life-600",
+      "halfLifeMinutes": 600,
+      "absorptionMinutes": 45,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0007558506220843627
+        },
+        {
+          "time": 1350,
+          "levelMgPerL": 1.0072605801873924
+        },
+        {
+          "time": 2699,
+          "levelMgPerL": 1.987959184171301
+        },
+        {
+          "time": 2700,
+          "levelMgPerL": 1.9886767588201049
+        },
+        {
+          "time": 2701,
+          "levelMgPerL": 1.9886384690307117
+        },
+        {
+          "time": 38700,
+          "levelMgPerL": 0.9943383794100524
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "absorption-60-half-life-600",
+      "halfLifeMinutes": 600,
+      "absorptionMinutes": 60,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 100
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 1,
+          "levelMgPerL": 0.0005668879665632721
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 1.002928353767309
+        },
+        {
+          "time": 3599,
+          "levelMgPerL": 1.9711643506205636
+        },
+        {
+          "time": 3600,
+          "levelMgPerL": 1.9716932859799425
+        },
+        {
+          "time": 3601,
+          "levelMgPerL": 1.971655323188688
+        },
+        {
+          "time": 39600,
+          "levelMgPerL": 0.9858466429899713
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported absorption/half-life boundaries and one-half-life decay."
+    },
+    {
+      "id": "empty",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [],
+      "samples": [
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 86400,
+          "levelMgPerL": 0.0
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported inputs agree with the standalone model."
+    },
+    {
+      "id": "same-second-duplicates",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 64
+        },
+        {
+          "time": 0,
+          "mg": 64
+        }
+      ],
+      "samples": [
+        {
+          "time": 0,
+          "levelMgPerL": 0.0
+        },
+        {
+          "time": 900,
+          "levelMgPerL": 1.2837482928221557
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 2.5237674060543265
+        },
+        {
+          "time": 19800,
+          "levelMgPerL": 1.2618837030271632
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported inputs agree with the standalone model."
+    },
+    {
+      "id": "midnight-carry-and-future",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": -900,
+          "mg": 80
+        },
+        {
+          "time": 0,
+          "mg": 64
+        },
+        {
+          "time": 7200,
+          "mg": 120
+        }
+      ],
+      "samples": [
+        {
+          "time": -1,
+          "levelMgPerL": 0.8014665334198455
+        },
+        {
+          "time": 0,
+          "levelMgPerL": 0.8023426830138473
+        },
+        {
+          "time": 900,
+          "levelMgPerL": 2.219228775195032
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 2.7855078425673483
+        },
+        {
+          "time": 7199,
+          "levelMgPerL": 2.2626225479857176
+        },
+        {
+          "time": 7200,
+          "levelMgPerL": 2.2625354201944163
+        },
+        {
+          "time": 9000,
+          "levelMgPerL": 4.477052134737915
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported inputs agree with the standalone model."
+    },
+    {
+      "id": "retained-over-48-hours",
+      "halfLifeMinutes": 600,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": -180000,
+          "mg": 200
+        },
+        {
+          "time": 0,
+          "mg": 64
+        }
+      ],
+      "samples": [
+        {
+          "time": 0,
+          "levelMgPerL": 0.12978706822265892
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 1.4091143370430694
+        },
+        {
+          "time": 86400,
+          "levelMgPerL": 0.27639217524057863
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported inputs agree with the standalone model."
+    },
+    {
+      "id": "maximum-50",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": -132300,
+          "mg": 32
+        },
+        {
+          "time": -129600,
+          "mg": 33
+        },
+        {
+          "time": -126900,
+          "mg": 34
+        },
+        {
+          "time": -124200,
+          "mg": 35
+        },
+        {
+          "time": -121500,
+          "mg": 36
+        },
+        {
+          "time": -118800,
+          "mg": 37
+        },
+        {
+          "time": -116100,
+          "mg": 38
+        },
+        {
+          "time": -113400,
+          "mg": 39
+        },
+        {
+          "time": -110700,
+          "mg": 40
+        },
+        {
+          "time": -108000,
+          "mg": 41
+        },
+        {
+          "time": -105300,
+          "mg": 42
+        },
+        {
+          "time": -102600,
+          "mg": 43
+        },
+        {
+          "time": -99900,
+          "mg": 44
+        },
+        {
+          "time": -97200,
+          "mg": 45
+        },
+        {
+          "time": -94500,
+          "mg": 46
+        },
+        {
+          "time": -91800,
+          "mg": 47
+        },
+        {
+          "time": -89100,
+          "mg": 48
+        },
+        {
+          "time": -86400,
+          "mg": 49
+        },
+        {
+          "time": -83700,
+          "mg": 50
+        },
+        {
+          "time": -81000,
+          "mg": 51
+        },
+        {
+          "time": -78300,
+          "mg": 52
+        },
+        {
+          "time": -75600,
+          "mg": 53
+        },
+        {
+          "time": -72900,
+          "mg": 54
+        },
+        {
+          "time": -70200,
+          "mg": 55
+        },
+        {
+          "time": -67500,
+          "mg": 56
+        },
+        {
+          "time": -64800,
+          "mg": 57
+        },
+        {
+          "time": -62100,
+          "mg": 58
+        },
+        {
+          "time": -59400,
+          "mg": 59
+        },
+        {
+          "time": -56700,
+          "mg": 60
+        },
+        {
+          "time": -54000,
+          "mg": 61
+        },
+        {
+          "time": -51300,
+          "mg": 62
+        },
+        {
+          "time": -48600,
+          "mg": 63
+        },
+        {
+          "time": -45900,
+          "mg": 64
+        },
+        {
+          "time": -43200,
+          "mg": 65
+        },
+        {
+          "time": -40500,
+          "mg": 66
+        },
+        {
+          "time": -37800,
+          "mg": 67
+        },
+        {
+          "time": -35100,
+          "mg": 68
+        },
+        {
+          "time": -32400,
+          "mg": 69
+        },
+        {
+          "time": -29700,
+          "mg": 70
+        },
+        {
+          "time": -27000,
+          "mg": 71
+        },
+        {
+          "time": -24300,
+          "mg": 72
+        },
+        {
+          "time": -21600,
+          "mg": 73
+        },
+        {
+          "time": -18900,
+          "mg": 74
+        },
+        {
+          "time": -16200,
+          "mg": 75
+        },
+        {
+          "time": -13500,
+          "mg": 76
+        },
+        {
+          "time": -10800,
+          "mg": 77
+        },
+        {
+          "time": -8100,
+          "mg": 78
+        },
+        {
+          "time": -5400,
+          "mg": 79
+        },
+        {
+          "time": -2700,
+          "mg": 80
+        },
+        {
+          "time": 0,
+          "mg": 81
+        }
+      ],
+      "samples": [
+        {
+          "time": 0,
+          "levelMgPerL": 13.643114434134192
+        },
+        {
+          "time": 900,
+          "levelMgPerL": 13.990751838160673
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 14.326547436002976
+        },
+        {
+          "time": 86400,
+          "levelMgPerL": 0.551189026198625
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Supported inputs agree with the standalone model."
+    },
+    {
+      "id": "legacy-dose-above-ui-limit",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 750
+        }
+      ],
+      "samples": [
+        {
+          "time": 900,
+          "levelMgPerL": 7.5219626532548185
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 14.78769964484957
+        },
+        {
+          "time": 19800,
+          "levelMgPerL": 7.393849822424785
+        }
+      ],
+      "standaloneParity": false,
+      "reason": "Standalone clamps a legacy dose to 500 mg."
+    },
+    {
+      "id": "legacy-fractional-dose",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 49,
+      "events": [
+        {
+          "time": 0,
+          "mg": 64.5
+        }
+      ],
+      "samples": [
+        {
+          "time": 900,
+          "levelMgPerL": 0.6468887881799144
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 1.271742169457063
+        },
+        {
+          "time": 19800,
+          "levelMgPerL": 0.6358710847285315
+        }
+      ],
+      "standaloneParity": false,
+      "reason": "Standalone rounds fractional mg."
+    },
+    {
+      "id": "small-positive-volume",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 0.5,
+      "events": [
+        {
+          "time": 0,
+          "mg": 64
+        }
+      ],
+      "samples": [
+        {
+          "time": 900,
+          "levelMgPerL": 62.90366634828563
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 123.66460289666199
+        },
+        {
+          "time": 19800,
+          "levelMgPerL": 61.832301448330995
+        }
+      ],
+      "standaloneParity": false,
+      "reason": "Standalone clamps positive apparent volume to at least 1 L."
+    },
+    {
+      "id": "nonpositive-volume-fallback",
+      "halfLifeMinutes": 300,
+      "absorptionMinutes": 30,
+      "apparentVolumeLiters": 0,
+      "events": [
+        {
+          "time": 0,
+          "mg": 64
+        }
+      ],
+      "samples": [
+        {
+          "time": 900,
+          "levelMgPerL": 31.451833174142816
+        },
+        {
+          "time": 1800,
+          "levelMgPerL": 61.832301448330995
+        },
+        {
+          "time": 19800,
+          "levelMgPerL": 30.916150724165497
+        }
+      ],
+      "standaloneParity": true,
+      "reason": "Watch uses 1 L only for nonpositive effective volume."
+    }
+  ]
+}
