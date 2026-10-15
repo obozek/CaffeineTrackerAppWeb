@@ -49,3 +49,23 @@ The cross-zone graph includes carry-in absorption and drinks on both sides of
 the DST jump, with independent analytic sample levels. Review regression proof:
 a temporary mutant that adds the browser timezone offset to graph calculation
 timestamps previously passed 81/81 under UTC; the strengthened test rejects it.
+
+## Shared companion platform and future products
+
+The [canonical product boundary](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md#31-shared-platform-and-future-products)
+and [integration contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/companion-product-integration.md)
+(currently proposed in [Worker PR #6](https://github.com/obozek/CaffeineTrackerCodeWorker/pull/6))
+plan Alcogram and other tracker apps as deferred R24 after Caffeine R18/R19.
+The first companion release stays Caffeine-only. This website remains the
+Caffeine frontend; Alcogram's origin/hosting, policy and UI are future decisions.
+
+Reuse session/transport infrastructure while keeping product DTO validation,
+model adapters, graph/editor behavior, units and copy product-owned. Caffeine
+mg/half-life/calendar-day inputs must not be used as an alcohol model; Alcogram
+needs volume/ABV/grams, elimination and BAC/per-mille/rolling-summary fidelity.
+Never mix standalone local data with connected state or another product.
+Trusted server product/host configuration must scope tokens, cookies, Origin/CORS,
+Auth0 and per-product device selection; a URL or caller-provided app ID is not
+authorization. Require independent consent/retention, parity, privacy and staged
+rollout acceptance before enabling another app. No frontend runtime changes or
+Alcogram companion enablement are included in these documentation updates.
