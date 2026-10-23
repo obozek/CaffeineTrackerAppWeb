@@ -1,6 +1,11 @@
 # CaffeineTrackerAppWeb
 Web pages for Caffeine Tracker App
 
+Companion decisions and current progress live in the private Worker's
+[canonical design](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)
+and [interactive roadmap](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion-roadmap.html).
+Read [AGENTS.md](AGENTS.md) for contributor rules; the dated characterizations below are evidence, not live task status.
+
 ## Companion model characterization (R02)
 
 Run `npm test` for the existing standalone tests and the companion baseline.
