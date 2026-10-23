@@ -1,6 +1,11 @@
 # CaffeineTrackerAppWeb
 Web pages for Caffeine Tracker App
 
+Companion decisions and current progress live in the private Worker's
+[canonical design](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)
+and [interactive roadmap](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion-roadmap.html).
+Read [AGENTS.md](AGENTS.md) for contributor rules; the dated characterizations below are evidence, not live task status.
+
 ## Companion model characterization (R02)
 
 Run `npm test` for the existing standalone tests and the companion baseline.
@@ -49,3 +54,11 @@ The cross-zone graph includes carry-in absorption and drinks on both sides of
 the DST jump, with independent analytic sample levels. Review regression proof:
 a temporary mutant that adds the browser timezone offset to graph calculation
 timestamps previously passed 81/81 under UTC; the strengthened test rejects it.
+
+## Future companion products
+
+Caffeine is the first companion target. Alcogram and other apps are deferred R24,
+with product-scoped access and separate model/graph/editor adapters. Follow the
+[canonical integration contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/companion-product-integration.md)
+for migration, origin, privacy and acceptance gates. Standalone browser data must
+stay separate from connected data. No additional product is enabled by this plan.

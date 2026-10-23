@@ -3,13 +3,15 @@
 Keep the standalone tracker compatible. Companion tests must not silently
 change local storage, model settings, event normalization, or graph behavior.
 
+See [README](README.md) for repository context and characterization evidence.
+
 ## Companion roadmap synchronization
 
 The canonical companion contract and roadmap live in the private
 [CaffeineTrackerCodeWorker repository](https://github.com/obozek/CaffeineTrackerCodeWorker):
-`docs/caffeine-tracker-web-companion.md` and
-`docs/caffeine-tracker-web-companion-roadmap.html`. Read their latest applicable
-PR/branch before companion implementation; do not replace current decisions
+[canonical design](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md) and
+[interactive roadmap](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion-roadmap.html).
+Read their latest applicable PR/branch before companion implementation; do not replace current decisions
 with an older main-branch copy.
 
 - Every companion PR must update the canonical decisions, task status/evidence,
@@ -25,3 +27,6 @@ with an older main-branch copy.
   dependencies; keep each PR buildable/testable and preserve older clients.
 - Keep the roadmap restricted to the owner/collaborators. Do not publish it,
   provision cloud resources, merge PRs, or collect telemetry without authorization.
+- Future product work follows deferred R24 in the canonical Worker's
+  [product integration contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/companion-product-integration.md).
+  Keep access product-scoped and model/UI adapters product-owned; Caffeine acceptance does not enable Alcogram.
