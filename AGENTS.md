@@ -25,8 +25,6 @@ with an older main-branch copy.
   dependencies; keep each PR buildable/testable and preserve older clients.
 - Keep the roadmap restricted to the owner/collaborators. Do not publish it,
   provision cloud resources, merge PRs, or collect telemetry without authorization.
-
-- Follow deferred R24 and `docs/companion-product-integration.md` in the canonical
-  Worker repository for future Alcogram/other-app integration. Keep shared access
-  product-scoped and product DTO/model/graph/editor policy separate; do not infer
-  authorization from a frontend app ID or enable another app from Caffeine tests.
+- Future product work follows deferred R24 in the canonical Worker's
+  `docs/companion-product-integration.md`. Keep access product-scoped and model/UI
+  adapters product-owned; Caffeine acceptance does not enable Alcogram.
