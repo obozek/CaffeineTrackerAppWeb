@@ -5,6 +5,13 @@ change local storage, model settings, event normalization, or graph behavior.
 
 See [README](README.md) for repository context and characterization evidence.
 
+## Documentation ownership
+
+Keep README as the stable entry point. Store dated model/graph results in
+[characterization evidence](docs/companion-model-characterization.md) and current
+PR/task status in the canonical companion roadmap. Contract docs describe behavior;
+implementation-specific PR links and merge instructions belong in progress evidence.
+
 ## Companion roadmap synchronization
 
 The canonical companion contract and roadmap live in the private
