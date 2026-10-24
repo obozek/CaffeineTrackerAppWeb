@@ -1,9 +1,10 @@
 # Caffeine Web Tracker Implementation Specification
 
-Status: implementation plan with user decisions captured. This document is
-planning-only; no tracker implementation code has been written yet.
+Original implementation specification for the standalone browser tracker. It
+records product/design decisions, not live implementation or task status. See
+[README](../README.md) for repository entry points and current check commands.
 
-Source brief: `assets/caffeine-web-tracker-brief.md`
+Source brief: [web tracker brief](caffeine-web-tracker-brief.md).
 
 ## Objective
 
@@ -15,17 +16,14 @@ persist user data locally, smart-sort drinks by usage, support future same-day
 intake scheduling, support kg and lb body-weight entry, support all existing
 site languages, and respect the site's existing light/dark theme toggle.
 
-## Current Repository Constraints
+## Design Constraints
 
 - The site is plain static HTML, CSS, and JavaScript.
-- There is no package manager, bundler, framework, or test runner configured.
-- Existing tests use a zero-dependency Node script pattern:
-  `node assets/halflife-wizard.test.js`.
+- The browser runtime is static; automated check commands are documented in
+  [README](../README.md#development).
 - The current homepage is a marketing page for the Garmin app.
 - The existing theme switcher writes `html[data-theme="light"]`,
   `html[data-theme="dark"]`, or removes the attribute for auto mode.
-- Existing local changes include untracked `.idea/` files and the brief itself;
-  implementation must not touch unrelated files.
 
 ## Resolved Product Decisions
 
