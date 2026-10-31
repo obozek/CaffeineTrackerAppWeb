@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src https://worker.caffeinetracker.app https://staging.caffeinetracker.app; base-uri 'none'; form-action 'none'">
+  <title>Connect your watch · Caffeine Tracker</title>
+  <script src="assets/companion-config.js"></script>
+  <script src="assets/companion.js"></script>
+  <link rel="stylesheet" href="assets/companion.css">
+</head>
+<body>
+  <header><a href="index.html">Caffeine Tracker</a><span>Watch companion</span></header>
+  <main>
+    <section class="connection" aria-live="polite" aria-atomic="true">
+      <span id="connection-badge" class="badge">Connecting</span>
+      <h1 id="connection-title">Connecting to your watch</h1>
+      <p id="connection-message">Please keep this page open for a moment.</p>
+      <p id="connection-detail" class="detail"></p>
+      <button id="connection-action" type="button" hidden>Disconnect this browser</button>
+    </section>
+    <p class="privacy">Drinks stay on your watch. Your purchases and Premium work independently of this connection.</p>
+    <noscript><p>Enable JavaScript to connect to your watch.</p></noscript>
+  </main>
+  <footer><a href="privacy.html">Privacy</a><a href="how-it-works.html">Help</a></footer>
+</body>
+</html>
