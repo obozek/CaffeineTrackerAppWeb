@@ -47,3 +47,11 @@ fragment removal, reload, same-tab replacement, replay, expiry and logout withou
 provisioning or making live API calls. These are local browser results, not
 physical Garmin transport acceptance. This first connection page is English;
 localized companion UI remains a rollout requirement.
+
+For a separately authorized staging check, prepare a new local static artifact:
+`node scripts/build-companion-preview.js /tmp/companion-preview-new`.
+It enables only that copy and selects the staging API; it never publishes or
+changes normal files. Serve it only at an approved HTTPS origin, configure that
+exact Worker web origin, and build the isolated watch with its matching
+`--page-url https://<approved-host>/companion.html`. API origins are selected from
+the two product-owned staging/production values, never from browser URLs or input.
