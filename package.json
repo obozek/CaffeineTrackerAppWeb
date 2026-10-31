@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "test": "node --test assets/caffeine-tracker.test.js tests/companion-model-parity.test.js tests/companion-time-graph.test.js"
+    "test": "node --test assets/caffeine-tracker.test.js tests/companion-model-parity.test.js tests/companion-time-graph.test.js tests/companion-session.test.js"
   }
 }
