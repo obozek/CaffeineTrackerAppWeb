@@ -40,6 +40,10 @@ unchanged. `assets/companion-config.js` stays disabled until separately authoriz
 hosting/API activation and physical watch/phone acceptance. Backend contract and
 coordinated evidence live in the private Worker's canonical design/HTML roadmap.
 
+Requests carry `X-Caffeine-Companion: 1`; this also permits authenticated session
+reads when page and API share the staging origin and the browser omits `Origin`.
+The backend still rejects an explicit foreign Origin.
+
 Run `npm test` for the existing model/graph suite and session-client regressions.
 The coordinated Worker PR includes a real Chromium/local-D1 handoff check, run
 with `COMPANION_WEB_CHECKOUT` pointing to this checkout. It verifies cookie flags,

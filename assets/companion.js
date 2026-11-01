@@ -24,7 +24,8 @@
             const timer = setTimeout(() => controller.abort(), 15000);
             try {
                 const response = await fetcher(api.origin + path, { method, credentials: "include", cache: "no-store", signal: controller.signal,
-                    ...(body === undefined ? {} : { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }) });
+                    headers: { "X-Caffeine-Companion": "1", ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
+                    ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
                 if (closed) throw new Error("unavailable");
                 if (!response.ok) throw new Error(response.status === 401 ? "expired" : response.status === 429 ? "rate_limited" : "unavailable");
                 if (response.status === 204) return null;

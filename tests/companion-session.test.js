@@ -17,6 +17,8 @@ test('uses credentialed requests and never persists or returns the cookie secret
  await client.resume();
  assert.equal(calls[0].options.credentials,'include');assert.equal(calls[0].options.cache,'no-store');
  assert.equal(calls[1].options.method,'GET');assert.equal(calls[1].options.body,undefined);
+ assert.equal(calls[1].options.headers['X-Caffeine-Companion'],'1');
+ assert.equal(calls[0].options.headers['Content-Type'],'application/json');
  assert.equal(calls[0].url,config.apiOrigin+'/v1/guest/redeem');
 });
 test('disabled rollout performs no network requests',async()=>{
