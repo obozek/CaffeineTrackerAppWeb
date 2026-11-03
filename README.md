@@ -27,35 +27,24 @@ companion target; additional tracker apps require independent R24 acceptance.
 
 ## Optional watch session preview
 
-`companion.html` is a separate, default-off entry for a watch-authorized temporary
-session. The watch sends a single-use fragment; the page removes it immediately
-and redeems it for a host-only HttpOnly cookie. No account, local tracker storage,
-consumption write or data upload is involved. Refresh resumes only until the
-original ten-minute expiry. Reopening from the watch replaces the old session;
-this browser can disconnect without revoking the watch identity.
+`companion.html` is a separate, default-off connection page. Opening from the
+watch redeems a one-use fragment into a host-only HttpOnly cookie, removes the
+fragment immediately and permits refresh within the original ten-minute expiry.
+Reopening replaces the previous session; browser logout preserves watch identity.
+No account, local tracker storage, consumption write or data upload is involved.
+Today/settings remain unavailable; the first connection page is English.
 
-The preview shows connection status only. Today data and configuration screens
-remain the canonical roadmap's next slices. The existing standalone tracker is
-unchanged. `assets/companion-config.js` stays disabled until separately authorized
-hosting/API activation and physical watch/phone acceptance. Backend contract and
-coordinated evidence live in the private Worker's canonical design/HTML roadmap.
+Keep `assets/companion-config.js` disabled in the ordinary site. The backend's
+[canonical contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)
+owns activation, API/CORS origins and physical watch/phone acceptance. Requests
+carry `X-Caffeine-Companion: 1` for same-origin session reads; foreign origins
+remain rejected. `npm test` covers the session client and existing model/graph.
+The Worker suite exercises this HTML/JS in Chromium with real local D1; that is
+browser evidence, not physical Garmin acceptance.
 
-Requests carry `X-Caffeine-Companion: 1`; this also permits authenticated session
-reads when page and API share the staging origin and the browser omits `Origin`.
-The backend still rejects an explicit foreign Origin.
-
-Run `npm test` for the existing model/graph suite and session-client regressions.
-The coordinated Worker PR includes a real Chromium/local-D1 handoff check, run
-with `COMPANION_WEB_CHECKOUT` pointing to this checkout. It verifies cookie flags,
-fragment removal, reload, same-tab replacement, replay, expiry and logout without
-provisioning or making live API calls. These are local browser results, not
-physical Garmin transport acceptance. This first connection page is English;
-localized companion UI remains a rollout requirement.
-
-For a separately authorized staging check, prepare a new local static artifact:
-`node scripts/build-companion-preview.js /tmp/companion-preview-new`.
-It enables only that copy and selects the staging API; it never publishes or
-changes normal files. Serve it only at an approved HTTPS origin, configure that
-exact Worker web origin, and build the isolated watch with its matching
-`--page-url https://<approved-host>/companion.html`. API origins are selected from
-the two product-owned staging/production values, never from browser URLs or input.
+For an authorized preview, run
+`node scripts/build-companion-preview.js /tmp/companion-preview-new [API_ORIGIN]`.
+It creates only a new local artifact with absolute links to the main site and
+one approved staging/production API origin; staging is the default. Match the
+Worker's web origin and isolated watch `--page-url` before authorized hosting.
+The builder never publishes or changes normal files.

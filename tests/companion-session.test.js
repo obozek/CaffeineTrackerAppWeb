@@ -12,7 +12,7 @@ test('removes all fragments immediately and accepts only the one-use handoff for
  assert.equal(takeHandoff({hash:'',pathname:'/companion.html'},history),null);
 });
 test('uses credentialed requests and never persists or returns the cookie secret',async()=>{
- const calls=[];const client=createClient(config,async(url,options)=>{calls.push({url,options});return {ok:true,status:200,json:async()=>data}},()=>1000000);
+ const calls=[];const client=createClient(config,async(url,options)=>{calls.push({url,options});return {ok:true,status:200,json:async()=>data}});
  assert.deepEqual(await client.redeem({sessionId:id,handoffSecret:secret}),data);
  await client.resume();
  assert.equal(calls[0].options.credentials,'include');assert.equal(calls[0].options.cache,'no-store');
@@ -33,7 +33,7 @@ test('rejects malformed, expired, wrong-product and sliding-expiry responses',as
 });
 test('serializes requests and cancels pending work when leaving',async()=>{
  let signal;let release;
- const client=createClient(config,async(url,options)=>{signal=options.signal;return new Promise(resolve=>{release=()=>resolve({ok:true,status:200,json:async()=>data})})},()=>1000000);
+ const client=createClient(config,async(url,options)=>{signal=options.signal;return new Promise(resolve=>{release=()=>resolve({ok:true,status:200,json:async()=>data})})});
  const pending=client.resume();await assert.rejects(client.resume(),/busy/);client.close();assert.equal(signal.aborted,true);release();await assert.rejects(pending,/unavailable/);
  await assert.rejects(client.resume(),/unavailable/);
 });
