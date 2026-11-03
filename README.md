@@ -24,3 +24,27 @@ Read [AGENTS.md](AGENTS.md) for contributor rules.
 
 Standalone browser data stays separate from connected data. Caffeine is the first
 companion target; additional tracker apps require independent R24 acceptance.
+
+## Optional watch session preview
+
+`companion.html` is a separate, default-off connection page. Opening from the
+watch redeems a one-use fragment into a host-only HttpOnly cookie, removes the
+fragment immediately and permits refresh within the original ten-minute expiry.
+Reopening replaces the previous session; browser logout preserves watch identity.
+No account, local tracker storage, consumption write or data upload is involved.
+Today/settings remain unavailable; the first connection page is English.
+
+Keep `assets/companion-config.js` disabled in the ordinary site. The backend's
+[canonical contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)
+owns activation, API/CORS origins and physical watch/phone acceptance. Requests
+carry `X-Caffeine-Companion: 1` for same-origin session reads; foreign origins
+remain rejected. `npm test` covers the session client and existing model/graph.
+The Worker suite exercises this HTML/JS in Chromium with real local D1; that is
+browser evidence, not physical Garmin acceptance.
+
+For an authorized preview, run
+`node scripts/build-companion-preview.js /tmp/companion-preview-new [API_ORIGIN]`.
+It creates only a new local artifact with absolute links to the main site and
+one approved staging/production API origin; staging is the default. Match the
+Worker's web origin and isolated watch `--page-url` before authorized hosting.
+The builder never publishes or changes normal files.
