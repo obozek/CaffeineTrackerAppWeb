@@ -44,8 +44,6 @@
     const storageFactory = env.CaffeineTrackerStorage;
     const i18n = env.CaffeineTrackerI18n;
 
-    if (!core || !storageFactory || !i18n) return;
-
     function escapeHtml(value) {
         return String(value)
             .replace(/&/g, "&amp;")
@@ -124,8 +122,8 @@
     }
 
     function renderGraph(graph, options) {
-        const width = 720;
-        const height = 330;
+        const width = options.compact ? 420 : 720;
+        const height = options.compact ? 254 : 330;
         const plot = { left: 38, right: 14, top: 16, bottom: 30 };
         const plotWidth = width - plot.left - plot.right;
         const plotHeight = height - plot.top - plot.bottom;
@@ -163,24 +161,32 @@
         const labels = [];
 
         for (let hour = 0; hour <= 24; hour += 2) {
-            const time = localHourSec(startSec, hour);
+            const time = options.formatTime ? startSec + duration * hour / 24 : localHourSec(startSec, hour);
             const x = xFor(time);
             grid.push(`<line class="ct-graph-grid" x1="${x.toFixed(2)}" y1="${plot.top}" x2="${x.toFixed(2)}" y2="${height - plot.bottom}"></line>`);
 
             if (hour < 24 && hour % 4 === 0) {
-                labels.push(`<text class="ct-graph-label" x="${x.toFixed(2)}" y="${height - 8}" text-anchor="middle">${escapeHtml(core.formatTime(time, locale))}</text>`);
+                const label = options.formatTime ? options.formatTime(time) : core.formatTime(time, locale);
+                labels.push(`<text class="ct-graph-label" x="${x.toFixed(2)}" y="${height - 8}" text-anchor="middle">${escapeHtml(label)}</text>`);
             }
         }
 
+        const thresholdLabelPositions = [];
         const thresholds = [
             { value: graph.thresholds.sleep, label: dict.thresholdStimulated, className: "ct-threshold-stimulated" },
             { value: graph.thresholds.optimal, label: dict.thresholdHigh, className: "ct-threshold-high" },
             { value: graph.thresholds.max, label: dict.thresholdMax, className: "ct-threshold-max" },
-        ].map(function (threshold) {
+            ...(options.formatTime ? [{ value: graph.thresholds.belowAt, label: "Your threshold", className: "ct-threshold-personal" }] : []),
+        ].filter(threshold => !options.formatTime || (threshold.value > 0 && threshold.value < graph.maxLevel &&
+            (threshold.className !== "ct-threshold-personal" || ![graph.thresholds.sleep, graph.thresholds.optimal, graph.thresholds.max].includes(threshold.value))))
+            .map(function (threshold) {
             const y = yFor(threshold.value);
+            const showLabel = !options.formatTime ||
+                (y - plot.top >= 10 && thresholdLabelPositions.every(position => Math.abs(position - y) >= 16));
+            if (showLabel) thresholdLabelPositions.push(y);
             return [
                 `<line class="${threshold.className}" x1="${plot.left}" y1="${y.toFixed(2)}" x2="${width - plot.right}" y2="${y.toFixed(2)}"></line>`,
-                `<text class="ct-threshold-label ${threshold.className}" x="${plot.left + 4}" y="${(y - 4).toFixed(2)}">${escapeHtml(threshold.label)}</text>`,
+                showLabel ? `<text class="ct-threshold-label ${threshold.className}" x="${plot.left + 4}" y="${(y - 4).toFixed(2)}">${escapeHtml(threshold.label)}</text>` : "",
             ].join("");
         }).join("");
 
@@ -188,6 +194,13 @@
         const nowLine = nowSec >= startSec && nowSec <= endSec
             ? `<line class="ct-now-line" x1="${nowX.toFixed(2)}" y1="${plot.top}" x2="${nowX.toFixed(2)}" y2="${height - plot.bottom}"></line>`
             : "";
+
+        const markers = (graph.markers || []).map(event =>
+            `<circle class="ct-dose-marker${event.time > nowSec ? " ct-dose-future" : ""}" cx="${xFor(event.time).toFixed(2)}" cy="${height - plot.bottom}" r="4"><title>${escapeHtml(options.formatTime(event.time))} · ${event.mg} mg</title></circle>`).join("");
+        const cursor = options.formatTime
+            ? `<line class="ct-graph-cursor" data-plot-start="${plot.left}" data-plot-width="${plotWidth}" x1="${plot.left}" x2="${plot.left}" y1="${plot.top}" y2="${height - plot.bottom}"></line>`
+            : "";
+        const units = options.formatTime ? `<text class="ct-graph-label" x="${plot.left + 4}" y="${plot.top - 3}">${graph.maxLevel.toLocaleString(undefined, { maximumFractionDigits: 2 })} mg/L</text>` : "";
 
         return `
             <svg class="ct-graph" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(options.ariaLabel)}" preserveAspectRatio="none">
@@ -198,6 +211,9 @@
                 <path class="ct-caffeine-curve" d="${pathFor(solidPoints)}"></path>
                 <path class="ct-caffeine-curve ct-caffeine-curve-future" d="${pathFor(futurePoints)}"></path>
                 ${nowLine}
+                ${markers}
+                ${cursor}
+                ${units}
                 ${labels.join("")}
             </svg>
         `;
@@ -661,6 +677,9 @@
             return null;
         }
     }
+
+    env.CaffeineTrackerGraph = Object.freeze({ renderGraph });
+    if (!core || !storageFactory || !i18n) return;
 
     env.document.addEventListener("DOMContentLoaded", function () {
         env.document.querySelectorAll("[data-caffeine-tracker]").forEach(init);

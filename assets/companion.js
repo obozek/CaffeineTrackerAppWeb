@@ -31,6 +31,7 @@
                 segment.fromSec >= day.endSec || (index > 0 && segment.fromSec <= segments[index - 1].fromSec)) ||
             !model || model.id !== "caffeine-constant-absorption-v1" ||
             !finite(model.halfLifeMinutes) || model.halfLifeMinutes <= 0 || ![20, 30, 45, 60].includes(model.absorptionMinutes) ||
+            !finite(model.apparentVolumeLiters) || model.apparentVolumeLiters <= 0 ||
             !finite(model.belowAtThresholdMgPerL) ||
             !Array.isArray(snapshot.events) || snapshot.events.length > 50 ||
             snapshot.events.some(event => !unix(event?.time) || !finite(event?.mg) || event.mg < 0) ||
@@ -105,14 +106,26 @@
         const purchaseNote = privacy.textContent;
         const refresh = document.getElementById("today-refresh");
         const events = document.getElementById("today-events");
+        const more = document.getElementById("today-more");
+        const collapsedLimit = 5;
         const settings = document.getElementById("settings-draft");
         const changes = document.getElementById("settings-changes");
-        let model;
+        const graph = document.getElementById("today-graph");
+        const scrub = document.getElementById("today-scrub");
+        const estimate = document.getElementById("today-estimate");
+        let model, graphState, lastRead = -Infinity;
 
         function clearToday() {
             today.hidden = true;
             content.hidden = true;
             events.replaceChildren();
+            events.dataset.collapsed = "true";
+            updateHistoryButton();
+            graph.replaceChildren();
+            graphState = null;
+            lastRead = -Infinity;
+            estimate.textContent = "";
+            scrub.removeAttribute("aria-valuetext");
             status.textContent = "";
             document.getElementById("today-title").textContent = "Today";
             document.getElementById("today-day").textContent = "";
@@ -129,6 +142,53 @@
             refresh.disabled = false;
         }
 
+        function selectTime() {
+            if (!graphState) return;
+            const { day, data, cursor } = graphState;
+            const ratio = Number(scrub.value) / Number(scrub.max);
+            const seconds = day.startSec + ratio * (day.endSec - day.startSec);
+            const label = watchTime(seconds, day.offsetSegments) + " · " + data.levelAt(seconds).toFixed(2) + " mg/L";
+            estimate.textContent = label;
+            scrub.setAttribute("aria-valuetext", label);
+            const x = Number(cursor.dataset.plotStart) + Number(cursor.dataset.plotWidth) * ratio;
+            cursor.setAttribute("x1", x);
+            cursor.setAttribute("x2", x);
+        }
+
+        function renderGraph(snapshot, now) {
+            const day = snapshot.watchDay;
+            const data = root.CaffeineTrackerCore.graphFromWatchSnapshot(snapshot, now);
+            const formatTime = seconds => watchTime(seconds, day.offsetSegments);
+            const offsets = day.offsetSegments.map(({ offsetSeconds }) => {
+                const minutes = Math.round(Math.abs(offsetSeconds) / 60);
+                return "UTC" + (offsetSeconds < 0 ? "−" : "+") +
+                    String(Math.floor(minutes / 60)).padStart(2, "0") + ":" + String(minutes % 60).padStart(2, "0");
+            });
+            document.getElementById("today-offset").textContent = "Watch time · " + offsets.join(" → ");
+            graph.innerHTML = root.CaffeineTrackerGraph.renderGraph(data, {
+                startSec: day.startSec, endSec: day.endSec, nowSec: now, formatTime,
+                compact: root.matchMedia("(max-width: 580px)").matches,
+                dict: { thresholdStimulated: "Sleep", thresholdHigh: "High", thresholdMax: "Max" },
+                ariaLabel: "Estimated caffeine level by watch time. Solid for elapsed time, dashed for projected time.",
+            });
+            graphState = { day, data, cursor: graph.querySelector(".ct-graph-cursor") };
+            scrub.value = String(Math.max(0, Math.min(1440, Math.floor((now - day.startSec) / 60))));
+            selectTime();
+        }
+        scrub.addEventListener("input", selectTime);
+
+        function updateHistoryButton() {
+            const collapsed = events.dataset.collapsed === "true";
+            const count = events.childElementCount;
+            more.hidden = count <= collapsedLimit;
+            more.textContent = collapsed ? "Show all " + count + " drinks" : "Show fewer drinks";
+            more.setAttribute("aria-expanded", String(!collapsed));
+        }
+        more.addEventListener("click", () => {
+            events.dataset.collapsed = String(events.dataset.collapsed !== "true");
+            updateHistoryButton();
+        });
+
         function renderToday(data) {
             if (!data.snapshot) {
                 clearToday();
@@ -138,9 +198,10 @@
             }
             const { watchDay, watchDisplay, capturedAt } = data.snapshot;
             const clockSkew = Math.abs(data.receivedAt - capturedAt) > 600;
-            const stale = clockSkew || data.serverTime - data.receivedAt >= 7200 || data.serverTime >= watchDay.endSec;
+            const pastDay = data.serverTime >= watchDay.endSec;
+            const stale = data.serverTime - data.receivedAt >= 7200 || pastDay;
             const synced = new Date(data.receivedAt * 1000).toLocaleString();
-            document.getElementById("today-title").textContent = stale ? "Last watch day" : "Today";
+            document.getElementById("today-title").textContent = pastDay ? "Last watch day" : "Today";
             document.getElementById("today-day").textContent = watchDay.date;
             status.textContent = (clockSkew ? "Watch time differs from server time. " : stale ? "Stale snapshot. " : "") +
                 "Last synced " + synced + ".";
@@ -150,17 +211,26 @@
                 ? "Snapshot captured " + new Date(capturedAt * 1000).toLocaleString()
                 : "Watch’s cached reading from " + new Date(watchDisplay.cachedAt * 1000).toLocaleString();
             events.replaceChildren();
+            const reference = clockSkew ? capturedAt : data.serverTime;
+            renderGraph(data.snapshot, reference);
             const rows = data.snapshot.events.filter(event => event.time >= watchDay.startSec && event.time < watchDay.endSec);
+            const logged = rows.filter(event => event.time <= reference);
+            const scheduled = rows.length - logged.length;
+            const total = logged.reduce((sum, event) => sum + event.mg, 0);
+            document.getElementById("today-total").textContent = total.toLocaleString(undefined, { maximumFractionDigits: 2 }) + " mg";
+            document.getElementById("today-count").textContent = logged.length + (logged.length === 1 ? " drink" : " drinks") +
+                (scheduled ? " · " + scheduled + " scheduled" : "");
             document.getElementById("today-empty").hidden = rows.length !== 0;
-            for (const event of rows) {
+            for (const event of rows.reverse()) {
                 const row = document.createElement("li");
                 const time = document.createElement("span");
-                time.textContent = watchTime(event.time, watchDay.offsetSegments) + (event.time > capturedAt ? " · scheduled at capture" : "");
+                time.textContent = watchTime(event.time, watchDay.offsetSegments) + (event.time > reference ? " · scheduled" : "");
                 const amount = document.createElement("strong");
                 amount.textContent = event.mg.toLocaleString(undefined, { maximumFractionDigits: 3 }) + " mg";
                 row.append(time, amount);
                 events.append(row);
             }
+            updateHistoryButton();
             const previousModel = model;
             model = data.snapshot.model;
             if (previousModel &&
@@ -186,6 +256,7 @@
             try {
                 const data = await client.today();
                 if (generation !== current || !session || data === null) return;
+                lastRead = Date.now();
                 today.hidden = false;
                 detail.textContent = "Read-only snapshot from your watch.";
                 renderToday(data);
@@ -203,6 +274,11 @@
             }
         }
         refresh.addEventListener("click", () => { if (session) void loadToday(generation); });
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden && session?.destination === "today" && Date.now() - lastRead >= 15000) {
+                void loadToday(generation);
+            }
+        });
         settings.addEventListener("submit", event => event.preventDefault());
         settings.addEventListener("reset", () => { changes.textContent = "Matches the watch snapshot."; });
         settings.addEventListener("input", () => {

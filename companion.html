@@ -8,6 +8,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src https://worker.caffeinetracker.app https://staging.caffeinetracker.app; base-uri 'none'; form-action 'none'">
   <title>Connect your watch · Caffeine Tracker</title>
   <script src="assets/companion-config.js"></script>
+  <script src="assets/caffeine-tracker-core.js"></script>
+  <script src="assets/caffeine-tracker-ui.js"></script>
   <script src="assets/companion.js"></script>
   <link rel="stylesheet" href="assets/companion.css">
 </head>
@@ -21,11 +23,22 @@
       </div>
       <p id="today-status" class="detail" role="status"></p>
       <div id="today-content" hidden>
-        <p id="today-reading" class="reading"></p>
-        <p id="today-captured" class="detail"></p>
+        <div class="today-metrics">
+          <div><span class="metric-label">Watch reading</span><p id="today-reading" class="reading"></p><p id="today-captured" class="detail"></p></div>
+          <div><span class="metric-label">Logged caffeine</span><p id="today-total" class="reading"></p><p id="today-count" class="detail"></p></div>
+        </div>
+        <figure class="today-figure">
+          <div class="graph-heading"><h3>Caffeine through the day</h3><span id="today-offset" class="detail"></span></div>
+          <div id="today-graph"></div>
+          <div class="graph-key"><span>Elapsed</span><span>Projected</span><span>Drink</span></div>
+          <label class="graph-scrubber" for="today-scrub">Explore the curve <output id="today-estimate" for="today-scrub"></output></label>
+          <input id="today-scrub" type="range" min="0" max="1440" step="1" value="0">
+          <figcaption class="detail">Estimates use the latest synced drinks, including caffeine left from earlier days.</figcaption>
+        </figure>
         <h3>Drinks · watch time</h3>
         <p id="today-empty" class="detail" hidden>No drinks in this watch day.</p>
-        <ul id="today-events" class="drink-list"></ul>
+        <ul id="today-events" class="drink-list" data-collapsed="true"></ul>
+        <button id="today-more" class="secondary" type="button" aria-controls="today-events" aria-expanded="false" hidden>Show all drinks</button>
         <details class="settings">
           <summary>Adjust settings · draft</summary>
           <p class="detail">Start with the watch’s latest settings and review your changes. This draft stays in this tab.</p>

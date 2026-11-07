@@ -14,3 +14,38 @@
 .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.7rem}
 .fields label{display:grid;gap:.4rem;font-size:.9rem;font-weight:600}
 .fields select,.fields input{width:100%;min-height:44px;padding:.45rem;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:.5rem;font:inherit}
+
+main:has(.today:not([hidden])){width:min(100% - 1.5rem,54rem);padding:clamp(1rem,4vw,2.5rem) 0}
+.today{padding:clamp(1rem,4vw,2.25rem)}
+.today-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;margin:1.1rem 0}
+.today-metrics>div{background:var(--paper);border:1px solid var(--line);border-radius:1rem;padding:.85rem}
+.metric-label{font-weight:650;color:var(--muted);font-size:.84rem}
+.today-metrics .reading{font-size:clamp(1.05rem,4vw,2rem);margin:.2rem 0;line-height:1.25;font-variant-numeric:tabular-nums}
+.today-metrics .detail{margin:.35rem 0 0;font-size:.8rem;line-height:1.45}
+.today-figure{margin:1rem 0 1.5rem;padding:clamp(.65rem,2vw,1.1rem);border-radius:1rem;background:#221c17;color:#fff6ee}
+.graph-heading{display:flex;align-items:baseline;justify-content:space-between;gap:.4rem 1rem;flex-wrap:wrap;margin-bottom:.35rem}
+.graph-heading h3{margin:0;font-size:1rem}
+.today-figure .detail{color:#d8c6b5;font-size:.79rem}
+.today-figure figcaption{margin-top:.5rem}
+.ct-graph{display:block;width:100%;height:auto}
+.ct-graph-bg{fill:#181511}
+.ct-graph-grid{stroke:#493b31}
+.ct-graph-axis{stroke:#8a7361}
+.ct-graph-label,.ct-threshold-label{fill:#e8d6c6;stroke:none!important;font-size:14px}
+.ct-threshold-stimulated,.ct-threshold-high,.ct-threshold-max,.ct-threshold-personal{stroke:#9d7959;stroke-dasharray:4 4}
+.ct-caffeine-curve{fill:none;stroke:#ffbf7e;stroke-width:2.5}
+.ct-caffeine-curve-future{stroke-dasharray:5 5}
+.ct-now-line{stroke:#e4bfa0;stroke-dasharray:2 3}
+.ct-graph-cursor{stroke:#b5e9d2;stroke-width:1.5;pointer-events:none}
+.ct-dose-marker{fill:#8be2be;stroke:#181511;stroke-width:1}
+.ct-dose-future{fill:#181511;stroke:#8be2be;stroke-width:2}
+.graph-key,.graph-scrubber{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;font-size:.78rem}
+.graph-key span::before{content:"";display:inline-block;width:.8rem;margin-right:.3rem;vertical-align:middle;border-top:2px solid #ffbf7e}
+.graph-key span:nth-child(2)::before{border-top-style:dashed}
+.graph-key span:nth-child(3)::before{width:.43rem;height:.43rem;border:0;border-radius:50%;background:#8be2be}
+.graph-scrubber{margin-top:.8rem;justify-content:space-between;font-size:.86rem;font-weight:650}
+#today-estimate{color:#b5e9d2;font-variant-numeric:tabular-nums}
+#today-scrub{display:block;width:100%;height:44px;margin:0;accent-color:#8be2be}
+#today-scrub:focus-visible{outline:2px solid #8be2be;outline-offset:2px}
+.drink-list[data-collapsed=true] li:nth-child(n+6){display:none}
+#today-more{margin-top:.65rem}

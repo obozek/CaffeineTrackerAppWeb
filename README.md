@@ -33,9 +33,11 @@ fragment immediately and permits refresh within the original ten-minute expiry.
 Redeeming a new link replaces the previous session; browser logout preserves
 watch identity. No account or standalone tracker storage is involved. A separate,
 default-off Today endpoint supplies the latest authenticated watch snapshot when
-enabled. The English preview shows the watch’s cached reading, sync time and
-watch-day dose list. Settings controls are a tab-local draft with no submission
-or watch apply path. The connected graph is separate follow-up work.
+enabled. Today shows the watch’s cached reading, sync time, doses and an
+interactive estimate of the caffeine curve. The graph uses the watch’s effective
+model and time offsets and shows upcoming values as a projection. Refresh or
+return to the tab to fetch the latest uploaded snapshot. Settings controls stay
+in a tab-local draft until the revision-checked watch apply flow is implemented.
 
 Keep `assets/companion-config.js` disabled in the ordinary site. The backend's
 [canonical contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)
