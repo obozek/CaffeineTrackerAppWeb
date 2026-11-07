@@ -44,3 +44,21 @@ test('classifies expired access, rate limits and explicit logout',async()=>{
  const client=createClient(config,async(url,options)=>{assert.equal(options.method,'DELETE');assert.equal(options.body,'{}');return{ok:true,status:204}});
  assert.equal(await client.logout(),null);
 });
+
+test("formats watch time through an offset transition independent of browser zone", () => {
+    const { watchTime } = require("../assets/companion.js");
+    const midnight = Date.UTC(2026, 9, 25) / 1000;
+    const offsets = [{ fromSec: midnight, offsetSeconds: 7200 }, { fromSec: midnight + 3600, offsetSeconds: 3600 }];
+    assert.equal(watchTime(midnight + 1800, offsets), "02:30");
+    assert.equal(watchTime(midnight + 5400, offsets), "02:30");
+});
+
+test("keeps old session-only deployments compatible and rejects malformed Today data", async () => {
+    const { createClient, readToday } = require("../assets/companion.js");
+    const legacy = createClient({ enabled: true, apiOrigin: "https://staging.caffeinetracker.app" },
+        async () => new Response(null, { status: 404 }));
+    assert.equal(await legacy.today(), null);
+    assert.throws(() => readToday({ serverTime: 100, snapshot: { schemaVersion: 1 } }), /invalid_response/);
+    const empty = { serverTime: 100, snapshot: null, receivedAt: null, expiresAt: null };
+    assert.deepEqual(readToday(empty), empty);
+});

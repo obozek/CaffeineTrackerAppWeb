@@ -30,9 +30,12 @@ companion target; additional tracker apps require independent R24 acceptance.
 `companion.html` is a separate, default-off connection page. Opening from the
 watch redeems a one-use fragment into a host-only HttpOnly cookie, removes the
 fragment immediately and permits refresh within the original ten-minute expiry.
-Reopening replaces the previous session; browser logout preserves watch identity.
-No account, local tracker storage, consumption write or data upload is involved.
-Today/settings remain unavailable; the first connection page is English.
+Redeeming a new link replaces the previous session; browser logout preserves
+watch identity. No account or standalone tracker storage is involved. A separate,
+default-off Today endpoint supplies the latest authenticated watch snapshot when
+enabled. The English preview shows the watch’s cached reading, sync time and
+watch-day dose list. Settings controls are a tab-local draft with no submission
+or watch apply path. The connected graph is separate follow-up work.
 
 Keep `assets/companion-config.js` disabled in the ordinary site. The backend's
 [canonical contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)
