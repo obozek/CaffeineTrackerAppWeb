@@ -8,12 +8,74 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src https://worker.caffeinetracker.app https://staging.caffeinetracker.app; base-uri 'none'; form-action 'none'">
   <title>Connect your watch · Caffeine Tracker</title>
   <script src="assets/companion-config.js"></script>
+  <script src="assets/caffeine-tracker-core.js"></script>
+  <script src="assets/caffeine-tracker-graph.js"></script>
   <script src="assets/companion.js"></script>
   <link rel="stylesheet" href="assets/companion.css">
 </head>
 <body>
   <header><a href="index.html">Caffeine Tracker</a><span>Watch companion</span></header>
   <main>
+    <section id="watch-today" class="connection today" aria-labelledby="today-title" hidden>
+      <div class="today-heading">
+        <div><span class="badge">From your watch</span><h2 id="today-title">Today</h2><p id="today-day" class="detail"></p></div>
+        <button id="today-refresh" type="button" class="secondary">Refresh</button>
+      </div>
+      <p id="today-status" class="detail" role="status"></p>
+      <div id="today-content" hidden>
+        <nav class="workspace-nav" aria-label="Watch companion">
+          <button type="button" data-watch-pane="today" aria-controls="watch-pane-today" aria-pressed="true">Today</button>
+          <button type="button" data-watch-pane="history" aria-controls="watch-pane-history" aria-pressed="false">History</button>
+          <button type="button" data-watch-pane="settings" aria-controls="watch-pane-settings" aria-pressed="false">Settings</button>
+        </nav>
+        <div id="watch-pane-today">
+        <div class="today-metrics">
+          <div><span class="metric-label">Watch reading</span><p id="today-reading" class="reading"></p><p id="today-captured" class="detail"></p></div>
+          <div><span class="metric-label">Logged caffeine</span><p id="today-total" class="reading"></p><p id="today-count" class="detail"></p></div>
+        </div>
+        <figure class="today-figure">
+          <div class="graph-heading"><h3>Caffeine through the day</h3><span id="today-offset" class="detail"></span></div>
+          <div id="today-graph"></div>
+          <div class="graph-key"><span>Elapsed</span><span>Projected</span><span>Drink</span></div>
+          <label class="graph-scrubber" for="today-scrub">Explore the curve <output id="today-estimate" for="today-scrub"></output></label>
+          <input id="today-scrub" type="range" min="0" max="1440" step="1" value="0">
+          <figcaption class="detail">Estimates use the latest synced drinks, including caffeine left from earlier days.</figcaption>
+        </figure>
+        <h3>Drinks · watch time</h3>
+        <p id="today-empty" class="detail" hidden>No drinks in this watch day.</p>
+        <ul id="today-events" class="drink-list" data-collapsed="true"></ul>
+        <div class="history-actions">
+          <button id="today-more" class="secondary" type="button" aria-controls="today-events" aria-expanded="false" hidden>Show all drinks</button>
+          <button id="open-watch-history" class="secondary" type="button">Open History</button>
+        </div>
+        </div>
+        <section id="watch-pane-history" aria-labelledby="watch-history-heading" hidden>
+          <div class="history-heading">
+            <div><h3 id="watch-history-heading">Drink history</h3><p id="history-note" class="detail"></p></div>
+            <label>Day<select id="history-day"></select></label>
+          </div>
+          <div id="history-days"></div>
+        </section>
+        <section id="watch-pane-settings" aria-labelledby="watch-settings-heading" hidden>
+          <h3 id="watch-settings-heading">Watch settings</h3>
+          <dl id="watch-settings-values" class="watch-settings-values"></dl>
+          <p id="watch-settings-note" class="detail"></p>
+        <details class="settings" open>
+          <summary>Review changes · draft</summary>
+          <p class="detail">Start with the watch’s latest settings and review your changes. This draft stays in this tab.</p>
+          <form id="settings-draft">
+            <div class="fields">
+              <label>Half-life<select name="halfLifeMinutes" required></select></label>
+              <label>Absorption<select name="absorptionMinutes" required></select></label>
+              <label>Below-at threshold (mg/L)<input name="belowAtThresholdMgPerL" type="number" min="0.1" max="1.5" step="0.1" required></label>
+            </div>
+            <p id="settings-changes" class="detail" aria-live="polite"></p>
+            <button type="reset" class="secondary">Reset draft</button>
+          </form>
+        </details>
+        </section>
+      </div>
+    </section>
     <section class="connection" aria-live="polite" aria-atomic="true">
       <span id="connection-badge" class="badge">Connecting</span>
       <h1 id="connection-title">Connecting to your watch</h1>
@@ -21,7 +83,7 @@
       <p id="connection-detail" class="detail"></p>
       <button id="connection-action" type="button" hidden>Disconnect this browser</button>
     </section>
-    <p class="privacy">Drinks stay on your watch. Your purchases and Premium work independently of this connection.</p>
+    <p id="connection-privacy" class="privacy">Purchases and Premium work independently of this connection.</p>
     <noscript><p>Enable JavaScript to connect to your watch.</p></noscript>
   </main>
   <footer><a href="privacy.html">Privacy</a><a href="how-it-works.html">Help</a></footer>

@@ -11,8 +11,12 @@ function buildPreview(output, apiOrigin = 'https://staging.caffeinetracker.app')
     fs.mkdirSync(path.join(output, 'assets'));
     let html = fs.readFileSync(path.join(root, 'companion.html'), 'utf8');
     for (const name of ['index.html', 'privacy.html', 'how-it-works.html']) html = html.replace('href="' + name + '"', 'href="https://www.caffeinetracker.app/' + name + '"');
+    const graphScripts = ['caffeine-tracker-core.js', 'caffeine-tracker-graph.js'];
+    for (const name of graphScripts) html = html.replace('  <script src="assets/' + name + '"></script>\n', '');
     fs.writeFileSync(path.join(output, 'companion.html'), html);
-    for (const name of ['companion.js', 'companion.css']) fs.copyFileSync(path.join(root, 'assets', name), path.join(output, 'assets', name));
+    const scripts = [...graphScripts, 'companion.js'].map(name => fs.readFileSync(path.join(root, 'assets', name), 'utf8'));
+    fs.writeFileSync(path.join(output, 'assets/companion.js'), scripts.join('\n'));
+    fs.copyFileSync(path.join(root, 'assets/companion.css'), path.join(output, 'assets/companion.css'));
     fs.writeFileSync(path.join(output, 'assets/companion-config.js'), 'window.CaffeineCompanionConfig=Object.freeze(' + JSON.stringify({ enabled: true, apiOrigin }) + ');\n');
     fs.writeFileSync(path.join(output, 'fixture.json'), JSON.stringify({ apiOrigin, sourceRevision: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(), scope: 'Local artifact only; approved hosting/origin and watch page URL must match before use.' }, null, 2) + '\n');
 }

@@ -92,3 +92,22 @@ test("standalone annotation includes carry-in and events beyond the graph end", 
         assert.equal(graph.belowAtTime, eventTime + 1800 + 515 * 60);
     }
 });
+
+test("connected graph preserves exact watch volume, absorption, duplicates and previous-day carry-in", () => {
+    const startSec = 86400;
+    const event = { time: startSec + 600, mg: 512.5 };
+    const earlier = { time: startSec - 600, mg: 1 };
+    const model = { halfLifeMinutes: 300, absorptionMinutes: 20, apparentVolumeLiters: 0.8 };
+    const peakTime = event.time + 1200;
+    const graph = core.graphFromWatchSnapshot({
+        model, watchDay: { startSec, endSec: startSec + 86400 }, events: [earlier, event, event],
+    }, event.time + 301);
+    assert.equal(graph.markers.length, 2);
+    assert.ok(graph.levelAt(startSec) > 0);
+    const k = Math.log(2) / 300;
+    const peak = (1025 * (1 - Math.exp(-k * 20)) / (k * 20) +
+        (1 - Math.exp(-k * 20)) / (k * 20) * Math.exp(-k * 20)) / 0.8;
+    assert.ok(Math.abs(graph.levelAt(peakTime) - peak) < 1e-8);
+    assert.ok(Math.abs(graph.maxLevel - peak * 1.25) < 1e-8);
+    assert.ok(graph.points.some(point => point.time === event.time + 301));
+});

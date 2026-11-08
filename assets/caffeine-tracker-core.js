@@ -215,12 +215,15 @@
         const absorption = normalizeAbsorptionMinutes(absorptionMinutes);
 
         if (!normalized || !Number.isFinite(target) || halfLife <= 0) return 0;
-        if (normalized.time > target) return 0;
+        return remainingMg(normalized, target, LN2 / halfLife, absorption);
+    }
 
-        const elapsedMinutes = (target - normalized.time) / SECONDS_PER_MINUTE;
+    function remainingMg(event, timeSec, eliminationRate, absorption) {
+        if (event.time > timeSec) return 0;
+
+        const elapsedMinutes = (timeSec - event.time) / SECONDS_PER_MINUTE;
         const absorbedMinutes = Math.min(elapsedMinutes, absorption);
-        const eliminationRate = LN2 / halfLife;
-        const amountDuringAbsorption = normalized.mg *
+        const amountDuringAbsorption = event.mg *
             (1 - Math.exp(-eliminationRate * absorbedMinutes)) /
             (eliminationRate * absorption);
 
@@ -359,6 +362,32 @@
                 belowAt: settings.belowAtThresholdMgPerL,
             },
             belowAtTime: lowerThanTime(opts.events, settings.belowAtThresholdMgPerL, settings.halfLifeMinutes, settings.weightKg, settings.absorptionMinutes),
+        };
+    }
+
+    // Companion inputs are validated at the API boundary and have already
+    // been normalized by the watch. Preserve doses, duplicates and volume.
+    function graphFromWatchSnapshot(snapshot, now) {
+        const { model, watchDay, events } = snapshot;
+        const { startSec, endSec } = watchDay;
+        const rate = LN2 / model.halfLifeMinutes;
+        const levelAt = time => events.reduce((sum, event) =>
+            sum + remainingMg(event, time, rate, model.absorptionMinutes), 0) / model.apparentVolumeLiters;
+        const markers = events.filter(event => event.time >= startSec && event.time < endSec);
+        const times = new Set(Array.from({ length: 241 }, (_, index) =>
+            startSec + (endSec - startSec) * index / 240));
+        for (const event of events) {
+            const peak = event.time + model.absorptionMinutes * SECONDS_PER_MINUTE;
+            if (peak >= startSec && peak <= endSec) times.add(peak);
+        }
+        for (const event of markers) times.add(event.time);
+        if (now >= startSec && now <= endSec) times.add(now);
+        const points = [...times].sort((a, b) => a - b).map(time => ({ time, level: levelAt(time) }));
+        const maxLevel = Math.max(...points.map(point => point.level));
+        return {
+            points, markers, levelAt,
+            maxLevel: maxLevel > 1 ? maxLevel * 1.25 : 1,
+            thresholds: { ...THRESHOLDS, belowAt: model.belowAtThresholdMgPerL },
         };
     }
 
@@ -575,6 +604,7 @@
         currentLevelFromCache,
         lowerThanTime,
         graphDataForRange,
+        graphFromWatchSnapshot,
         normalizeDrinkName,
         uniqueDrinkName,
         normalizeCustomDrink,

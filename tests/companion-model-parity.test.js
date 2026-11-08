@@ -33,3 +33,22 @@ test("standalone graph samples an end-inclusive grid", () => {
     // Connected sample-grid alignment is future work; preserve local behavior.
     assert.notDeepEqual(graph.points.map(point => point.time), [0, 21600, 43200, 64800]);
 });
+
+test("connected graph estimates agree with every Garmin golden sample", () => {
+    for (const fixture of data.fixtures) {
+        const graph = core.graphFromWatchSnapshot({
+            model: {
+                halfLifeMinutes: fixture.halfLifeMinutes,
+                absorptionMinutes: fixture.absorptionMinutes,
+                apparentVolumeLiters: fixture.apparentVolumeLiters > 0 ? fixture.apparentVolumeLiters : 1,
+            },
+            watchDay: { startSec: 0, endSec: 86400 },
+            events: fixture.events,
+        }, 0);
+        for (const sample of fixture.samples) {
+            const actual = graph.levelAt(sample.time);
+            assert.ok(Math.abs(actual - sample.levelMgPerL) <= data.toleranceMgPerL,
+                `${fixture.id} at ${sample.time}: expected watch ${sample.levelMgPerL}, got ${actual}`);
+        }
+    }
+});
