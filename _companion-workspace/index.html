@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>Caffeine Tracker · Companion workspace preview</title>
+  <link rel="stylesheet" href="workspace.css">
+  <script defer src="caffeine-tracker-core.js"></script>
+  <script defer src="caffeine-tracker-graph.js"></script>
+  <script defer src="workspace.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">≈</span><div>Caffeine<br><strong>Tracker</strong></div></div>
+      <nav id="navigation" aria-label="Workspace"></nav>
+      <p class="rail-note">WORKSPACE PREVIEW<br><span>Sample data · this browser</span></p>
+    </aside>
+    <main>
+      <div class="topbar"><div class="eyebrow">CAFFEINE TRACKER <span> / </span> COMPANION</div><span class="preview-badge">Local preview</span></div>
+      <section id="screen" aria-labelledby="screen-title"></section>
+      <p id="notice" role="status" class="notice"></p>
+    </main>
+  </div>
+  <dialog id="editor" aria-labelledby="editor-title"><form id="editor-form"></form></dialog>
+</body>
+</html>

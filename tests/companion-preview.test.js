@@ -25,3 +25,20 @@ test('rejects unapproved API origins before creating output',()=>{
  const temp=fs.mkdtempSync(path.join(os.tmpdir(),'companion-preview-'));
  try{const output=path.join(temp,'preview');assert.throws(()=>buildPreview(output,'https://evil.example'),/approved/);assert.equal(fs.existsSync(output),false)}finally{fs.rmSync(temp,{recursive:true,force:true})}
 });
+
+test('packages the workspace separately with no connected configuration', () => {
+    const { buildWorkspace } = require('../scripts/build-workspace-preview.js');
+    const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'companion-workspace-'));
+    try {
+        const output = path.join(temp, 'preview');
+        buildWorkspace(output);
+        assert.deepEqual(fs.readdirSync(output).sort(),
+            ['caffeine-tracker-core.js', 'caffeine-tracker-graph.js', 'index.html', 'workspace.css', 'workspace.js']);
+        const page = fs.readFileSync(path.join(output, 'index.html'), 'utf8');
+        assert.match(page, /Local preview/);
+        assert.match(page, /default-src 'none'/);
+        assert.throws(() => buildWorkspace(output), /EEXIST/);
+    } finally {
+        fs.rmSync(temp, { recursive: true, force: true });
+    }
+});
