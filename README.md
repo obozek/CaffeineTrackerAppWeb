@@ -57,3 +57,18 @@ It creates only a new local artifact with absolute links to the main site and
 one approved staging/production API origin; staging is the default. Match the
 Worker's web origin and isolated watch `--page-url` before authorized hosting.
 The builder never publishes or changes normal files.
+
+## Local editing workspace prototype
+
+Prepare the browser-only workspace with sample data in a new directory.
+
+```sh
+node scripts/build-workspace-preview.js /tmp/caffeine-workspace
+python3 -m http.server 45418 --bind 127.0.0.1 --directory /tmp/caffeine-workspace
+```
+
+Open `http://127.0.0.1:45418/` to try Today, drink logging, retained history
+editing, custom drinks and settings. This prototype stores changes under its own
+browser storage key. It has no watch API and its source templates are excluded
+from the site's normal build. The staging companion uses its separate build
+script and public file allowlist.
