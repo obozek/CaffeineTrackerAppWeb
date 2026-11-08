@@ -23,6 +23,12 @@
       </div>
       <p id="today-status" class="detail" role="status"></p>
       <div id="today-content" hidden>
+        <nav class="workspace-nav" aria-label="Watch companion">
+          <button type="button" data-watch-pane="today" aria-controls="watch-pane-today" aria-pressed="true">Today</button>
+          <button type="button" data-watch-pane="history" aria-controls="watch-pane-history" aria-pressed="false">History</button>
+          <button type="button" data-watch-pane="settings" aria-controls="watch-pane-settings" aria-pressed="false">Settings</button>
+        </nav>
+        <div id="watch-pane-today">
         <div class="today-metrics">
           <div><span class="metric-label">Watch reading</span><p id="today-reading" class="reading"></p><p id="today-captured" class="detail"></p></div>
           <div><span class="metric-label">Logged caffeine</span><p id="today-total" class="reading"></p><p id="today-count" class="detail"></p></div>
@@ -38,9 +44,24 @@
         <h3>Drinks · watch time</h3>
         <p id="today-empty" class="detail" hidden>No drinks in this watch day.</p>
         <ul id="today-events" class="drink-list" data-collapsed="true"></ul>
-        <button id="today-more" class="secondary" type="button" aria-controls="today-events" aria-expanded="false" hidden>Show all drinks</button>
-        <details class="settings">
-          <summary>Adjust settings · draft</summary>
+        <div class="history-actions">
+          <button id="today-more" class="secondary" type="button" aria-controls="today-events" aria-expanded="false" hidden>Show all drinks</button>
+          <button id="open-watch-history" class="secondary" type="button">Open History</button>
+        </div>
+        </div>
+        <section id="watch-pane-history" aria-labelledby="watch-history-heading" hidden>
+          <div class="history-heading">
+            <div><h3 id="watch-history-heading">Drink history</h3><p id="history-note" class="detail"></p></div>
+            <label>Day<select id="history-day"></select></label>
+          </div>
+          <div id="history-days"></div>
+        </section>
+        <section id="watch-pane-settings" aria-labelledby="watch-settings-heading" hidden>
+          <h3 id="watch-settings-heading">Watch settings</h3>
+          <dl id="watch-settings-values" class="watch-settings-values"></dl>
+          <p id="watch-settings-note" class="detail"></p>
+        <details class="settings" open>
+          <summary>Review changes · draft</summary>
           <p class="detail">Start with the watch’s latest settings and review your changes. This draft stays in this tab.</p>
           <form id="settings-draft">
             <div class="fields">
@@ -52,6 +73,7 @@
             <button type="reset" class="secondary">Reset draft</button>
           </form>
         </details>
+        </section>
       </div>
     </section>
     <section class="connection" aria-live="polite" aria-atomic="true">

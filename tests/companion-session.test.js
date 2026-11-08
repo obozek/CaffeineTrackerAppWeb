@@ -62,3 +62,48 @@ test("keeps old session-only deployments compatible and rejects malformed Today 
     const empty = { serverTime: 100, snapshot: null, receivedAt: null, expiresAt: null };
     assert.deepEqual(readToday(empty), empty);
 });
+
+test("retained history preserves duplicates and the watch date across UTC midnight", () => {
+    const { retainedHistory } = require("../assets/companion.js");
+    const midnight = Date.UTC(2026, 10, 8) / 1000;
+    const day = {
+        date: "2026-11-08", startSec: midnight - 3600, endSec: midnight + 82800,
+        offsetSegments: [{ fromSec: midnight - 3600, offsetSeconds: 3600 }],
+    };
+    const previous = { time: midnight - 3700, mg: 30, offsetSeconds: 3600 };
+    const first = { time: midnight - 1800, mg: 65, offsetSeconds: 3600 };
+    const later = { time: midnight + 3600, mg: 20, offsetSeconds: 3600 };
+    const history = retainedHistory({ schemaVersion: 2, watchDay: day, events: [previous, first, first, later] }, midnight);
+    assert.deepEqual(history.map(group => [group.date, group.total, group.entries.length]), [
+        ["2026-11-08", 130, 3], ["2026-11-07", 30, 1],
+    ]);
+    assert.deepEqual(history[0].entries.map(entry => [entry.time, entry.scheduled]), [
+        ["02:00", true], ["00:30", false], ["00:30", false],
+    ]);
+    const older = retainedHistory({ schemaVersion: 1, watchDay: day, events: [previous, first] }, midnight);
+    assert.deepEqual(older.map(group => [group.date, group.usesWatchTime]), [
+        ["2026-11-08", true], ["2026-11-07", false],
+    ]);
+});
+
+test("validates the extra settings and offsets only in an extended snapshot", () => {
+    const { readToday } = require("../assets/companion.js");
+    const day = Date.UTC(2026, 10, 8) / 1000;
+    const snapshot = {
+        schemaVersion: 2, capturedAt: day,
+        model: { id: "caffeine-constant-absorption-v1", halfLifeMinutes: 300, absorptionMinutes: 20,
+            apparentVolumeLiters: 49, belowAtThresholdMgPerL: 0.6 },
+        watchDay: { date: "2026-11-08", startSec: day, endSec: day + 86400, offsetSegments: [{ fromSec: day, offsetSeconds: 0 }] },
+        events: [{ time: day, mg: 95, offsetSeconds: 0 }],
+        watchDisplay: { cachedLevelMgPerL: null, cachedAt: null },
+        watchSettings: { smartSorting: true, bedtimeOverrideMinutes: null, effectiveBedtimeMinutes: 1380,
+            bedtimeBufferMinutes: 60, backgroundIntervalMinutes: 15 },
+    };
+    const response = { serverTime: day, receivedAt: day, expiresAt: day + 1, snapshot };
+    assert.deepEqual(readToday(response), response);
+    assert.doesNotThrow(() => readToday({ ...response, snapshot: { ...snapshot, watchSettings: null } }));
+    assert.throws(() => readToday({ ...response, snapshot: { ...snapshot, events: [{ time: day, mg: 95 }] } }), /invalid_response/);
+    assert.throws(() => readToday({ ...response, snapshot: { ...snapshot,
+        watchSettings: { ...snapshot.watchSettings, backgroundIntervalMinutes: 10 },
+    } }), /invalid_response/);
+});

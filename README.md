@@ -38,6 +38,10 @@ interactive estimate of the caffeine curve. The graph uses the watch’s effecti
 model and time offsets and shows upcoming values as a projection. Refresh or
 return to the tab to fetch the latest uploaded snapshot. Settings controls stay
 in a tab-local draft until the revision-checked watch apply flow is implemented.
+History shows the retained doses grouped by day. Older snapshots only specify
+the watch’s offset for Today, so earlier dates are labeled UTC. The extended
+snapshot supplies a local offset per event and adds effective bedtime, bedtime
+buffer, smart drink sorting and background refresh to Settings.
 
 Keep `assets/companion-config.js` disabled in the ordinary site. The backend's
 [canonical contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)

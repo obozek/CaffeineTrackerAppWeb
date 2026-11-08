@@ -22,7 +22,7 @@
         const display = snapshot?.watchDisplay;
         const model = snapshot?.model;
         if (!unix(data.receivedAt) || !unix(data.expiresAt) || data.expiresAt <= data.serverTime ||
-            snapshot?.schemaVersion !== 1 || !unix(snapshot.capturedAt) ||
+            ![1, 2].includes(snapshot?.schemaVersion) || !unix(snapshot.capturedAt) ||
             !day || !/^\d{4}-\d{2}-\d{2}$/.test(day.date) || !unix(day.startSec) || day.endSec !== day.startSec + 86400 ||
             !Array.isArray(day.offsetSegments) || day.offsetSegments.length < 1 || day.offsetSegments.length > 2 ||
             day.offsetSegments[0]?.fromSec !== day.startSec ||
@@ -39,7 +39,21 @@
                 (!finite(display.cachedLevelMgPerL) || display.cachedLevelMgPerL < 0 || !unix(display.cachedAt)))) {
             throw new Error("invalid_response");
         }
+        if (snapshot.schemaVersion === 2 &&
+            ((snapshot.watchSettings !== null && !validWatchSettings(snapshot.watchSettings)) || snapshot.events.some(event =>
+                !Number.isInteger(event.offsetSeconds) || Math.abs(event.offsetSeconds) > 86400))) {
+            throw new Error("invalid_response");
+        }
         return data;
+    }
+
+    function validWatchSettings(settings) {
+        const minuteOfDay = value => Number.isInteger(value) && value >= 0 && value < 1440;
+        return settings && typeof settings.smartSorting === "boolean" &&
+            [0, 30, 60, 90, 120].includes(settings.bedtimeBufferMinutes) &&
+            [5, 15, 30].includes(settings.backgroundIntervalMinutes) &&
+            minuteOfDay(settings.effectiveBedtimeMinutes) &&
+            (settings.bedtimeOverrideMinutes === null || settings.bedtimeOverrideMinutes === settings.effectiveBedtimeMinutes);
     }
 
     function watchTime(seconds, segments) {
@@ -49,6 +63,26 @@
             offset = segment.offsetSeconds;
         }
         return new Date((seconds + offset) * 1000).toISOString().slice(11, 16);
+    }
+
+    function retainedHistory(snapshot, now) {
+        const { events, watchDay, schemaVersion } = snapshot;
+        const groups = new Map();
+        for (const event of [...events].reverse()) {
+            const insideWatchDay = event.time >= watchDay.startSec && event.time < watchDay.endSec;
+            const usesWatchTime = schemaVersion === 2 || insideWatchDay;
+            const stamp = new Date((event.time + (schemaVersion === 2 ? event.offsetSeconds : 0)) * 1000).toISOString();
+            const date = insideWatchDay && schemaVersion === 1 ? watchDay.date : stamp.slice(0, 10);
+            const key = date + (usesWatchTime ? "" : "-utc");
+            const group = groups.get(key) || { key, date, usesWatchTime, entries: [], total: 0 };
+            const scheduled = event.time > now;
+            const time = schemaVersion === 1 && insideWatchDay
+                ? watchTime(event.time, watchDay.offsetSegments) : stamp.slice(11, 16);
+            group.entries.push({ time, mg: event.mg, scheduled });
+            if (!scheduled) group.total += event.mg;
+            groups.set(key, group);
+        }
+        return [...groups.values()];
     }
 
     function createClient(config, fetcher) {
@@ -86,7 +120,7 @@
             close: () => { closed = true; if (controller) controller.abort(); }
         };
     }
-    const exported = { takeHandoff, createClient, readToday, watchTime };
+    const exported = { takeHandoff, createClient, readToday, watchTime, retainedHistory };
     if (typeof module !== "undefined" && module.exports) { module.exports = exported; return; }
     // Consume before loading styles/images or rendering. Never write secrets to
     // storage, DOM, logs, URL query parameters or analytics.
@@ -113,12 +147,37 @@
         const graph = document.getElementById("today-graph");
         const scrub = document.getElementById("today-scrub");
         const estimate = document.getElementById("today-estimate");
-        let model, graphState, lastRead = -Infinity;
+        const historyDays = document.getElementById("history-days");
+        const historyDay = document.getElementById("history-day");
+        const historyNote = document.getElementById("history-note");
+        const values = document.getElementById("watch-settings-values");
+        const settingsNote = document.getElementById("watch-settings-note");
+        const paneButtons = [...document.querySelectorAll("[data-watch-pane]")];
+        let model, graphState, history = [], lastRead = -Infinity;
+        function showPane(name) {
+            for (const button of paneButtons) {
+                const selected = button.dataset.watchPane === name;
+                document.getElementById(button.getAttribute("aria-controls")).hidden = !selected;
+                button.setAttribute("aria-pressed", String(selected));
+            }
+        }
+        for (const button of paneButtons) button.addEventListener("click", () => showPane(button.dataset.watchPane));
+        document.getElementById("open-watch-history").addEventListener("click", () => {
+            showPane("history");
+            paneButtons.find(button => button.dataset.watchPane === "history").focus();
+        });
 
         function clearToday() {
             today.hidden = true;
             content.hidden = true;
             events.replaceChildren();
+            historyDays.replaceChildren();
+            historyDay.replaceChildren();
+            historyNote.textContent = "";
+            values.replaceChildren();
+            settingsNote.textContent = "";
+            history = [];
+            showPane("today");
             events.dataset.collapsed = "true";
             updateHistoryButton();
             graph.replaceChildren();
@@ -136,7 +195,7 @@
             settings.elements.absorptionMinutes.replaceChildren();
             settings.elements.belowAtThresholdMgPerL.defaultValue = "";
             settings.elements.belowAtThresholdMgPerL.value = "";
-            settings.closest("details").open = false;
+            settings.closest("details").open = true;
             changes.textContent = "";
             model = null;
             refresh.disabled = false;
@@ -189,6 +248,79 @@
             updateHistoryButton();
         });
 
+        const dose = mg => mg.toLocaleString(undefined, { maximumFractionDigits: 3 }) + " mg";
+
+        function drinkRow(time, mg, scheduled) {
+            const row = document.createElement("li");
+            const label = document.createElement("span");
+            label.textContent = time + (scheduled ? " · scheduled" : "");
+            const amount = document.createElement("strong");
+            amount.textContent = dose(mg);
+            row.append(label, amount);
+            return row;
+        }
+
+        function renderHistory() {
+            historyDays.replaceChildren();
+            const visible = historyDay.value ? history.filter(day => day.key === historyDay.value) : history;
+            if (!visible.length) {
+                const empty = document.createElement("p");
+                empty.className = "detail";
+                empty.textContent = "The watch snapshot has no retained drinks.";
+                historyDays.append(empty);
+            }
+            for (const day of visible) {
+                const group = document.createElement("section");
+                group.className = "history-group";
+                const heading = document.createElement("h4");
+                heading.textContent = day.date + (day.usesWatchTime ? " · Watch time" : " · UTC");
+                const total = document.createElement("p");
+                total.className = "detail";
+                total.textContent = day.entries.length + (day.entries.length === 1 ? " entry" : " entries") +
+                    " · " + dose(day.total) + " logged";
+                const list = document.createElement("ul");
+                list.className = "drink-list";
+                list.append(...day.entries.map(entry => drinkRow(entry.time, entry.mg, entry.scheduled)));
+                group.append(heading, total, list);
+                historyDays.append(group);
+            }
+        }
+        historyDay.addEventListener("change", renderHistory);
+
+        function renderSettings(snapshot) {
+            const settings = snapshot.watchSettings;
+            const clock = minutes => String(Math.floor(minutes / 60)).padStart(2, "0") + ":" +
+                String(minutes % 60).padStart(2, "0");
+            const items = [
+                ["Caffeine half-life", snapshot.model.halfLifeMinutes + " min"],
+                ["Absorption time", snapshot.model.absorptionMinutes + " min"],
+                ["Personal threshold", snapshot.model.belowAtThresholdMgPerL.toLocaleString() + " mg/L"],
+                ["Effective model volume", snapshot.model.apparentVolumeLiters.toLocaleString(undefined, { maximumFractionDigits: 1 }) + " L"],
+            ];
+            if (settings) items.push(
+                ["Bedtime", clock(settings.effectiveBedtimeMinutes) +
+                    (settings.bedtimeOverrideMinutes === null ? " · profile or watch default" : " · watch override")],
+                ["Bedtime buffer", settings.bedtimeBufferMinutes + " min"],
+                ["Sort drinks by use", settings.smartSorting ? "On" : "Off"],
+                ["Watch background refresh", settings.backgroundIntervalMinutes + " min"],
+            );
+            values.replaceChildren();
+            for (const [label, value] of items) {
+                const item = document.createElement("div");
+                const name = document.createElement("dt");
+                const observed = document.createElement("dd");
+                name.textContent = label;
+                observed.textContent = value;
+                item.append(name, observed);
+                values.append(item);
+            }
+            settingsNote.textContent = settings
+                ? "Background refresh updates the watch’s local display and complication."
+                : snapshot.schemaVersion === 1
+                    ? "A newer watch build can also share bedtime, bedtime buffer, drink sorting and background refresh."
+                    : "Additional settings were unavailable in this watch snapshot.";
+        }
+
         function renderToday(data) {
             if (!data.snapshot) {
                 clearToday();
@@ -222,14 +354,17 @@
                 (scheduled ? " · " + scheduled + " scheduled" : "");
             document.getElementById("today-empty").hidden = rows.length !== 0;
             for (const event of rows.reverse()) {
-                const row = document.createElement("li");
-                const time = document.createElement("span");
-                time.textContent = watchTime(event.time, watchDay.offsetSegments) + (event.time > reference ? " · scheduled" : "");
-                const amount = document.createElement("strong");
-                amount.textContent = event.mg.toLocaleString(undefined, { maximumFractionDigits: 3 }) + " mg";
-                row.append(time, amount);
-                events.append(row);
+                events.append(drinkRow(watchTime(event.time, watchDay.offsetSegments), event.mg, event.time > reference));
             }
+            const previousDay = historyDay.value;
+            history = retainedHistory(data.snapshot, reference);
+            historyDay.replaceChildren(new Option("All retained days", ""), ...history.map(day =>
+                new Option(day.date + (day.usesWatchTime ? "" : " UTC"), day.key)));
+            if (history.some(day => day.key === previousDay)) historyDay.value = previousDay;
+            historyNote.textContent = "Time and caffeine amount for entries still stored on your watch. " +
+                (data.snapshot.schemaVersion === 1 ? "Earlier dates are shown in UTC." : "Times follow the watch’s time zone.");
+            renderHistory();
+            renderSettings(data.snapshot);
             updateHistoryButton();
             const previousModel = model;
             model = data.snapshot.model;
@@ -260,7 +395,7 @@
                 today.hidden = false;
                 detail.textContent = "Read-only snapshot from your watch.";
                 renderToday(data);
-                privacy.textContent = "Today shows a temporary read-only copy from your watch. " + purchaseNote;
+                privacy.textContent = "This session shows a temporary copy of recent entries and settings from your watch. " + purchaseNote;
             } catch (error) {
                 if (generation !== current || !session) return;
                 if (error.message === "expired") { problem("expired"); return; }
