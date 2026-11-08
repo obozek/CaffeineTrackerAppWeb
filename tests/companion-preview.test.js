@@ -13,8 +13,9 @@ test('prepares an isolated staging artifact while leaving the public configurati
   assert.match(fs.readFileSync(path.join(output,'companion.html'),'utf8'),/https:\/\/www.caffeinetracker.app\/privacy.html/);
   const page=fs.readFileSync(path.join(output,'companion.html'),'utf8');
   const bundle=fs.readFileSync(path.join(output,'assets/companion.js'),'utf8');
-  assert.doesNotMatch(page,/src="assets\/caffeine-tracker-(core|ui)\.js"/);
+  assert.doesNotMatch(page,/src="assets\/caffeine-tracker-(core|graph|ui)\.js"/);
   assert.ok(bundle.includes('graphFromWatchSnapshot'));
+  assert.doesNotMatch(bundle,/\[data-caffeine-tracker\]/);
   assert.ok(bundle.indexOf('env.CaffeineTrackerGraph') < bundle.indexOf('function takeHandoff'));
   assert.throws(()=>buildPreview(output),/EEXIST/);
   assert.equal(fs.readFileSync(path.join(__dirname,'../assets/companion-config.js'),'utf8'),original);assert.match(original,/enabled: false/);

@@ -11,7 +11,7 @@ function buildPreview(output, apiOrigin = 'https://staging.caffeinetracker.app')
     fs.mkdirSync(path.join(output, 'assets'));
     let html = fs.readFileSync(path.join(root, 'companion.html'), 'utf8');
     for (const name of ['index.html', 'privacy.html', 'how-it-works.html']) html = html.replace('href="' + name + '"', 'href="https://www.caffeinetracker.app/' + name + '"');
-    const graphScripts = ['caffeine-tracker-core.js', 'caffeine-tracker-ui.js'];
+    const graphScripts = ['caffeine-tracker-core.js', 'caffeine-tracker-graph.js'];
     for (const name of graphScripts) html = html.replace('  <script src="assets/' + name + '"></script>\n', '');
     fs.writeFileSync(path.join(output, 'companion.html'), html);
     const scripts = [...graphScripts, 'companion.js'].map(name => fs.readFileSync(path.join(root, 'assets', name), 'utf8'));
