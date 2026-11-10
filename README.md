@@ -43,6 +43,13 @@ the watch’s offset for Today, so earlier dates are labeled UTC. The extended
 snapshot supplies a local offset per event and adds effective bedtime, bedtime
 buffer, smart drink sorting and background refresh to Settings.
 
+An explicitly enabled write-capable snapshot unlocks **Add drink**, **My drinks**
+and saving one watch setting at a time. The session shows whether the latest
+change is waiting, has reached the watch, or was confirmed. Select **Sync from
+web** on the watch, then **Refresh** in the browser. The browser preserves the
+standalone tracker’s local history. Connected changes use the watch’s own
+catalog, Premium rules and storage.
+
 Keep `assets/companion-config.js` disabled in the ordinary site. The backend's
 [canonical contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)
 owns activation, API/CORS origins and physical watch/phone acceptance. Requests

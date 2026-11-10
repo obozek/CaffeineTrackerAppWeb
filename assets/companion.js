@@ -22,7 +22,7 @@
         const display = snapshot?.watchDisplay;
         const model = snapshot?.model;
         if (!unix(data.receivedAt) || !unix(data.expiresAt) || data.expiresAt <= data.serverTime ||
-            ![1, 2].includes(snapshot?.schemaVersion) || !unix(snapshot.capturedAt) ||
+            ![1, 2, 3].includes(snapshot?.schemaVersion) || !unix(snapshot.capturedAt) ||
             !day || !/^\d{4}-\d{2}-\d{2}$/.test(day.date) || !unix(day.startSec) || day.endSec !== day.startSec + 86400 ||
             !Array.isArray(day.offsetSegments) || day.offsetSegments.length < 1 || day.offsetSegments.length > 2 ||
             day.offsetSegments[0]?.fromSec !== day.startSec ||
@@ -39,9 +39,19 @@
                 (!finite(display.cachedLevelMgPerL) || display.cachedLevelMgPerL < 0 || !unix(display.cachedAt)))) {
             throw new Error("invalid_response");
         }
-        if (snapshot.schemaVersion === 2 &&
+        if (snapshot.schemaVersion >= 2 &&
             ((snapshot.watchSettings !== null && !validWatchSettings(snapshot.watchSettings)) || snapshot.events.some(event =>
                 !Number.isInteger(event.offsetSeconds) || Math.abs(event.offsetSeconds) > 86400))) {
+            throw new Error("invalid_response");
+        }
+        if (snapshot.schemaVersion === 3 && (!Array.isArray(snapshot.availablePresets) ||
+            snapshot.availablePresets.length > 7 || snapshot.availablePresets.some(name => typeof name !== "string"))) {
+            throw new Error("invalid_response");
+        }
+        if (snapshot.schemaVersion === 3 && snapshot.customDrinks !== null &&
+            (!Array.isArray(snapshot.customDrinks) || snapshot.customDrinks.length > 32 ||
+                snapshot.customDrinks.some(drink => typeof drink?.name !== "string" ||
+                    !Number.isInteger(drink.mg) || drink.mg < 0 || drink.mg > 500))) {
             throw new Error("invalid_response");
         }
         return data;
@@ -70,8 +80,8 @@
         const groups = new Map();
         for (const event of [...events].reverse()) {
             const insideWatchDay = event.time >= watchDay.startSec && event.time < watchDay.endSec;
-            const usesWatchTime = schemaVersion === 2 || insideWatchDay;
-            const stamp = new Date((event.time + (schemaVersion === 2 ? event.offsetSeconds : 0)) * 1000).toISOString();
+            const usesWatchTime = schemaVersion >= 2 || insideWatchDay;
+            const stamp = new Date((event.time + (schemaVersion >= 2 ? event.offsetSeconds : 0)) * 1000).toISOString();
             const date = insideWatchDay && schemaVersion === 1 ? watchDay.date : stamp.slice(0, 10);
             const key = date + (usesWatchTime ? "" : "-utc");
             const group = groups.get(key) || { key, date, usesWatchTime, entries: [], total: 0 };
@@ -101,11 +111,20 @@
                     headers: { "X-Caffeine-Companion": "1", ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
                     ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
                 if (closed) throw new Error("unavailable");
-                if (response.status === 404 && path === "/v1/guest/today") return null;
+                if (response.status === 404 && ["/v1/guest/today", "/v1/guest/changes"].includes(path)) return null;
+                if (response.status === 409) throw new Error("change_conflict");
                 if (!response.ok) throw new Error(response.status === 401 ? "expired" : response.status === 429 ? "rate_limited" : "unavailable");
                 if (response.status === 204) return null;
                 const data = await response.json();
                 if (closed) throw new Error("unavailable");
+                if (path === "/v1/guest/changes") {
+                    if (!data || (data.change !== null && (!data.change || typeof data.change.id !== "string" ||
+                        !["drink", "custom", "setting"].includes(data.change.kind) ||
+                        !["queued", "offered", "applied", "conflict", "premium", "invalid", "interrupted", "expired", "unconfirmed"].includes(data.change.state)))) {
+                        throw new Error("invalid_response");
+                    }
+                    return data;
+                }
                 if (path === "/v1/guest/today") return readToday(data);
                 if (data.protocolVersion !== 1 || data.appId !== "caffeine" || !destinations.includes(data.destination) ||
                     !Number.isSafeInteger(data.serverTime) || data.serverTime < 0 || !Number.isSafeInteger(data.expiresAt) || data.expiresAt <= data.serverTime || data.expiresAt > data.serverTime + 600) throw new Error("invalid_response");
@@ -116,6 +135,8 @@
             redeem: handoff => request("/v1/guest/redeem", "POST", handoff),
             resume: () => request("/v1/guest/session", "GET"),
             today: () => request("/v1/guest/today", "GET"),
+            changes: () => request("/v1/guest/changes", "GET"),
+            sendChange: change => request("/v1/guest/changes", "POST", change),
             logout: () => request("/v1/guest/session", "DELETE", {}),
             close: () => { closed = true; if (controller) controller.abort(); }
         };
@@ -154,6 +175,186 @@
         const settingsNote = document.getElementById("watch-settings-note");
         const paneButtons = [...document.querySelectorAll("[data-watch-pane]")];
         let model, graphState, history = [], lastRead = -Infinity;
+        const changeStatus = document.getElementById("watch-change-status");
+        const addForm = document.getElementById("watch-add-form");
+        const customForm = document.getElementById("watch-custom-form");
+        const settingForm = document.getElementById("watch-setting-form");
+        const picker = document.getElementById("watch-drink-picker");
+        const customList = document.getElementById("watch-custom-list");
+        const customNote = document.getElementById("watch-custom-note");
+        const settingValue = document.getElementById("watch-setting-value");
+        const changeForms = [addForm, customForm, settingForm];
+        let writable, workspaceSnapshot, workspaceClock, currentChange, retry, picks = [];
+        let busyChange = false;
+
+        const changeLabels = {
+            queued: "Waiting for watch · On the watch, open Phone → Sync from web. Then tap Refresh here.",
+            offered: "Received by the watch · Waiting for confirmation. Tap Refresh to check.",
+            applied: "Synced to watch · The watch confirmed the save.",
+            conflict: "The watch has different data or the name is already in use. Refresh and try again.",
+            premium: "This change requires Premium on your watch.",
+            invalid: "The watch rejected the change. Check the values and try again.",
+            interrupted: "The watch couldn’t verify the save. Check the watch before retrying.",
+            expired: "This change expired before the watch received it.",
+            unconfirmed: "The session ended before the watch confirmed the save. Check the watch before retrying.",
+        };
+
+        function setChangeStatus(message) {
+            changeStatus.textContent = message || "";
+            delete changeStatus.dataset.state;
+            changeStatus.hidden = !message;
+        }
+
+        function showChange(result) {
+            if (result && result.id === retry?.request.id) retry = null;
+            currentChange = result;
+            const kind = result && { drink: "Drink", custom: "Custom drink", setting: "Setting" }[result.kind];
+            setChangeStatus(result ? kind + " · " + changeLabels[result.state] : null);
+            if (result) changeStatus.dataset.state = result.state;
+            updateChangeButtons();
+        }
+
+        function updateChangeButtons() {
+            const pending = currentChange && ["queued", "offered"].includes(currentChange.state);
+            for (const form of changeForms) {
+                form.querySelector("button").disabled = !writable || busyChange || Boolean(pending) ||
+                    (form === customForm && workspaceSnapshot?.customDrinks === null);
+            }
+        }
+
+        function settingFields(snapshot) {
+            const model = snapshot.model;
+            const watch = snapshot.watchSettings;
+            return [
+                ["halfLifeMinutes", "Caffeine half-life", model.halfLifeMinutes, [180, 240, 300, 360, 480, 600], " min"],
+                ["absorptionMinutes", "Absorption time", model.absorptionMinutes, [20, 30, 45, 60], " min"],
+                ["thresholdTenths", "Personal threshold", Math.round(model.belowAtThresholdMgPerL * 10), null],
+                ...(watch ? [
+                    ["bedtimeOverrideMinutes", "Bedtime", watch.bedtimeOverrideMinutes, null],
+                    ["bedtimeBufferMinutes", "Bedtime buffer", watch.bedtimeBufferMinutes, [0, 30, 60, 90, 120], " min"],
+                    ["smartSorting", "Sort drinks by use", watch.smartSorting, [false, true]],
+                ] : []),
+            ];
+        }
+
+        function drawSettingInput() {
+            const field = settingFields(workspaceSnapshot).find(item => item[0] === settingForm.elements.field.value);
+            const [key, title, initial, choices, unit] = field;
+            const label = document.createElement("label");
+            label.textContent = title;
+            const input = document.createElement(choices ? "select" : "input");
+            input.name = "desired";
+            if (choices) {
+                input.replaceChildren(...choices.map(value => new Option(unit ? value + unit : value ? "On" : "Off", String(value))));
+                input.value = String(initial);
+            } else if (key === "thresholdTenths") {
+                input.type = "number"; input.min = "0.1"; input.max = "1.5"; input.step = "0.1";
+                input.required = true; input.value = String(initial / 10);
+            } else {
+                input.type = "time";
+                if (initial !== null) input.value = String(Math.floor(initial / 60)).padStart(2, "0") + ":" + String(initial % 60).padStart(2, "0");
+                label.append(document.createTextNode(" · leave blank to use the watch default"));
+            }
+            label.append(input);
+            settingValue.replaceChildren(label);
+        }
+
+        function renderWorkspace(snapshot, serverTime) {
+            const previous = workspaceSnapshot;
+            workspaceSnapshot = snapshot;
+            workspaceClock = { serverTime, elapsedAt: performance.now() };
+            for (const button of paneButtons) {
+                if (["add", "custom"].includes(button.dataset.watchPane)) button.hidden = !writable;
+            }
+            settingForm.hidden = !writable;
+            settings.closest("details").hidden = writable;
+            if (!writable) {
+                if (["add", "custom"].some(pane => !document.getElementById("watch-pane-" + pane).hidden)) showPane("today");
+                showChange(null);
+                return;
+            }
+            const catalog = snapshot.customDrinks;
+            const selection = picks[Number(picker.value)];
+            picks = [...root.CaffeineTrackerCore.PRESET_DRINKS.filter(drink => snapshot.availablePresets.includes(drink.name)), ...(catalog || [])];
+            picker.replaceChildren(new Option("Choose a drink", ""), ...picks.map((drink, index) =>
+                new Option(drink.name + " · " + dose(drink.mg), String(index))));
+            const index = selection ? picks.findIndex(drink => drink.name === selection.name && drink.mg === selection.mg) : -1;
+            if (index >= 0) picker.value = String(index);
+            customNote.hidden = catalog !== null;
+            customNote.textContent = catalog === null ? "This watch catalog is outside the sharing limits. Manage it on the watch." : "";
+            customList.replaceChildren(...(catalog || []).map(drink => drinkRow(drink.name, drink.mg, false)));
+            const selected = settingForm.elements.field.value;
+            const fields = settingFields(snapshot);
+            settingForm.elements.field.replaceChildren(...fields.map(([key, name]) => new Option(name, key)));
+            if (fields.some(([key]) => key === selected)) settingForm.elements.field.value = selected;
+            if (!previous || !selected || JSON.stringify(settingFields(previous)) !== JSON.stringify(fields)) drawSettingInput();
+            updateChangeButtons();
+        }
+
+        settingForm.elements.field.addEventListener("change", drawSettingInput);
+        async function submitChange(operation) {
+            if (!session || !writable || busyChange || refresh.disabled) return;
+            const current = generation;
+            const key = JSON.stringify(operation);
+            const request = retry?.key === key ? retry.request : { id: root.crypto.randomUUID(), operation };
+            retry = { key, request };
+            busyChange = true;
+            refresh.disabled = action.disabled = true;
+            updateChangeButtons();
+            try {
+                const result = await client.sendChange(request);
+                if (generation !== current || !session) return;
+                retry = null;
+                showChange(result.change);
+            } catch (error) {
+                if (generation !== current || !session) return;
+                if (error.message === "expired") { problem("expired"); return; }
+                setChangeStatus(error.message === "change_conflict"
+                    ? "A change may already be waiting. Tap Refresh to check its status."
+                    : "The request could not be confirmed. Retry the same change or tap Refresh.");
+            } finally {
+                if (generation === current) {
+                    busyChange = false;
+                    refresh.disabled = action.disabled = false;
+                    updateChangeButtons();
+                }
+            }
+        }
+
+        addForm.addEventListener("submit", event => {
+            event.preventDefault();
+            if (!picker.value || !workspaceClock) return;
+            const drink = picks[Number(picker.value)];
+            const previous = retry?.request.operation;
+            const time = previous?.kind === "drink" && previous.name === drink.name && previous.mg === drink.mg
+                ? previous.time : workspaceClock.serverTime + Math.floor((performance.now() - workspaceClock.elapsedAt) / 1000);
+            void submitChange({ kind: "drink", name: drink.name, mg: drink.mg, time });
+        });
+        customForm.addEventListener("submit", event => {
+            event.preventDefault();
+            const name = customForm.elements.name.value.trim();
+            if (!name || new TextEncoder().encode(name).length > 64) {
+                setChangeStatus("Enter a drink name of up to 64 UTF-8 bytes.");
+                return;
+            }
+            void submitChange({ kind: "custom", name, mg: Number(customForm.elements.mg.value) });
+        });
+        settingForm.addEventListener("submit", event => {
+            event.preventDefault();
+            const field = settingForm.elements.field.value;
+            const expected = settingFields(workspaceSnapshot).find(item => item[0] === field)[2];
+            const raw = settingForm.elements.desired.value;
+            let value = Number(raw);
+            if (field === "smartSorting") value = raw === "true";
+            else if (field === "thresholdTenths") value = Math.round(value * 10);
+            else if (field === "bedtimeOverrideMinutes") {
+                const [hours, minutes] = raw.split(":").map(Number);
+                value = raw ? hours * 60 + minutes : null;
+            }
+            if (value === expected) { setChangeStatus("Choose a different value to send."); return; }
+            void submitChange({ kind: "setting", field, expected, value });
+        });
+
         function showPane(name) {
             for (const button of paneButtons) {
                 const selected = button.dataset.watchPane === name;
@@ -177,6 +378,17 @@
             values.replaceChildren();
             settingsNote.textContent = "";
             history = [];
+            writable = false;
+            workspaceSnapshot = workspaceClock = retry = null;
+            busyChange = false;
+            for (const form of changeForms) form.reset();
+            picker.replaceChildren(new Option("Choose a drink", ""));
+            customList.replaceChildren();
+            customNote.hidden = true;
+            customNote.textContent = "";
+            settingValue.replaceChildren();
+            picks = [];
+            showChange(null);
             showPane("today");
             events.dataset.collapsed = "true";
             updateHistoryButton();
@@ -227,7 +439,8 @@
             graph.innerHTML = root.CaffeineTrackerGraph.renderGraph(data, {
                 startSec: day.startSec, endSec: day.endSec, nowSec: now, formatTime,
                 compact: root.matchMedia("(max-width: 580px)").matches,
-                dict: { thresholdStimulated: "Sleep", thresholdHigh: "High", thresholdMax: "Max" },
+                watchStyle: true,
+                dict: { thresholdStimulated: "Stimulated", thresholdHigh: "High", thresholdMax: "Max" },
                 ariaLabel: "Estimated caffeine level by watch time. Solid for elapsed time, dashed for projected time.",
             });
             graphState = { day, data, cursor: graph.querySelector(".ct-graph-cursor") };
@@ -393,8 +606,13 @@
                 if (generation !== current || !session || data === null) return;
                 lastRead = Date.now();
                 today.hidden = false;
-                detail.textContent = "Read-only snapshot from your watch.";
+                detail.textContent = "Latest snapshot from your watch.";
+                const changes = data.snapshot?.schemaVersion === 3 ? await client.changes() : null;
+                if (generation !== current || !session) return;
+                writable = changes !== null;
                 renderToday(data);
+                if (data.snapshot) renderWorkspace(data.snapshot, data.serverTime);
+                if (writable) showChange(changes.change);
                 privacy.textContent = "This session shows a temporary copy of recent entries and settings from your watch. " + purchaseNote;
             } catch (error) {
                 if (generation !== current || !session) return;
