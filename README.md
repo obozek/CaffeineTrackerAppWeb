@@ -36,19 +36,22 @@ default-off Today endpoint supplies the latest authenticated watch snapshot when
 enabled. Today shows the watch’s cached reading, sync time, doses and an
 interactive estimate of the caffeine curve. The graph uses the watch’s effective
 model and time offsets and shows upcoming values as a projection. Refresh or
-return to the tab to fetch the latest uploaded snapshot. Settings controls stay
-in a tab-local draft until the revision-checked watch apply flow is implemented.
+return to the tab to fetch the latest uploaded snapshot. Read-only sessions can
+review setting changes in a tab-local draft.
 History shows the retained doses grouped by day. Older snapshots only specify
 the watch’s offset for Today, so earlier dates are labeled UTC. The extended
 snapshot supplies a local offset per event and adds effective bedtime, bedtime
 buffer, smart drink sorting and background refresh to Settings.
 
 An explicitly enabled write-capable snapshot unlocks **Add drink**, **My drinks**
-and saving one watch setting at a time. The session shows whether the latest
-change is waiting, has reached the watch, or was confirmed. Select **Sync from
-web** on the watch, then **Refresh** in the browser. The browser preserves the
-standalone tracker’s local history. Connected changes use the watch’s own
-catalog, Premium rules and storage.
+and **Edit** on each supported watch setting. Send one change at a time. When
+the browser shows **Waiting for watch**, select **Phone → Sync from web** on
+the watch, then **Check sync** in the status card. **Synced to watch** means the
+watch confirmed the save. **Refresh data** fetches the latest watch snapshot.
+A rejected save keeps the form so the user can review it. If a watch setting
+changes during editing, the user must reopen the editor with the latest value.
+Connected changes use the watch’s catalog, Premium rules and storage. The
+browser preserves the standalone tracker’s local history.
 
 Keep `assets/companion-config.js` disabled in the ordinary site. The backend's
 [canonical contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)

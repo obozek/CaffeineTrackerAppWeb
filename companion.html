@@ -18,8 +18,8 @@
   <main>
     <section id="watch-today" class="connection today" aria-labelledby="today-title" hidden>
       <div class="today-heading">
-        <div><span class="badge">From your watch</span><h2 id="today-title">Today</h2><p id="today-day" class="detail"></p></div>
-        <button id="today-refresh" type="button" class="secondary">Refresh</button>
+        <div><h2 id="today-title">Your watch</h2><p id="today-day" class="detail"></p></div>
+        <button id="today-refresh" type="button" class="secondary">Refresh data</button>
       </div>
       <p id="today-status" class="detail" role="status"></p>
       <div id="today-content" hidden>
@@ -30,7 +30,14 @@
           <button type="button" data-watch-pane="custom" aria-controls="watch-pane-custom" aria-pressed="false" hidden>My drinks</button>
           <button type="button" data-watch-pane="settings" aria-controls="watch-pane-settings" aria-pressed="false">Settings</button>
         </nav>
-        <aside id="watch-change-status" class="change-status" role="status" hidden></aside>
+        <div id="watch-change-announcement" class="visually-hidden" role="status"></div>
+        <section id="watch-change-status" class="change-status" aria-labelledby="watch-change-title" hidden>
+          <div>
+            <h3 id="watch-change-title" tabindex="-1"></h3>
+            <p id="watch-change-detail" class="detail"></p>
+          </div>
+          <button id="watch-change-check" class="secondary" type="button" hidden>Check sync</button>
+        </section>
         <div id="watch-pane-today">
         <div class="today-metrics">
           <div><span class="metric-label">Watch reading</span><p id="today-reading" class="reading"></p><p id="today-captured" class="detail"></p></div>
@@ -39,7 +46,7 @@
         <figure class="today-figure">
           <div class="graph-heading"><h3>Caffeine through the day</h3><span id="today-offset" class="detail"></span></div>
           <div id="today-graph"></div>
-          <div class="graph-key"><span>Elapsed</span><span>Projected</span><span>Drink</span></div>
+          <div class="graph-key"><span>Elapsed</span><span>Projected</span><span>Drink</span><span>Now</span></div>
           <label class="graph-scrubber" for="today-scrub">Explore the curve <output id="today-estimate" for="today-scrub"></output></label>
           <input id="today-scrub" type="range" min="0" max="1440" step="1" value="0">
           <figcaption class="detail">Estimates use the latest synced drinks, including caffeine left from earlier days.</figcaption>
@@ -61,31 +68,38 @@
         </section>
         <section id="watch-pane-add" hidden>
           <h3>Add a drink to your watch</h3>
-          <p class="detail">Choose a drink from your watch catalog. The time is recorded when you send it.</p>
+          <p class="detail">Pick a drink. It’s logged at the time you send it, once you sync on the watch.</p>
           <form id="watch-add-form" class="change-form">
             <label>Drink<select id="watch-drink-picker" required><option value="">Choose a drink</option></select></label>
             <button type="submit">Send drink to watch</button>
           </form>
         </section>
         <section id="watch-pane-custom" hidden>
-          <h3>My drinks on the watch</h3>
-          <ul id="watch-custom-list" class="drink-list"></ul>
-          <p id="watch-custom-note" class="detail" hidden></p>
+          <h3>Create a custom drink</h3>
+          <p class="detail">Requires Premium on your watch. Sync to add it to your drink list.</p>
           <form id="watch-custom-form" class="change-form">
             <label>Custom drink name<input name="name" required maxlength="64"></label>
             <label>Caffeine (mg)<input name="mg" type="number" min="0" max="500" step="1" required></label>
             <button type="submit">Send custom drink to watch</button>
+            <p id="watch-custom-error" class="form-note" role="alert" hidden></p>
           </form>
+          <h3>Your custom drinks</h3>
+          <ul id="watch-custom-list" class="drink-list"></ul>
+          <p id="watch-custom-note" class="detail" hidden></p>
         </section>
         <section id="watch-pane-settings" aria-labelledby="watch-settings-heading" hidden>
           <h3 id="watch-settings-heading">Watch settings</h3>
+          <p id="watch-settings-edit-note" class="detail" hidden>Choose Edit next to a setting. Send and sync one change at a time.</p>
+          <form id="watch-setting-form" class="change-form setting-editor" hidden>
+            <div id="watch-setting-value"></div>
+            <p id="watch-setting-error" class="form-note" role="alert" hidden></p>
+            <div class="form-actions">
+              <button type="submit">Send setting to watch</button>
+              <button type="button" id="watch-setting-cancel" class="secondary">Cancel</button>
+            </div>
+          </form>
           <dl id="watch-settings-values" class="watch-settings-values"></dl>
           <p id="watch-settings-note" class="detail"></p>
-          <form id="watch-setting-form" class="change-form" hidden>
-            <label>Setting<select name="field"></select></label>
-            <div id="watch-setting-value"></div>
-            <button type="submit">Send setting to watch</button>
-          </form>
         <details class="settings" open>
           <summary>Review changes · draft</summary>
           <p class="detail">Start with the watch’s latest settings and review your changes. This draft stays in this tab.</p>
@@ -102,11 +116,12 @@
         </section>
       </div>
     </section>
-    <section class="connection" aria-live="polite" aria-atomic="true">
+    <section class="connection session-card" aria-live="polite" aria-atomic="true">
       <span id="connection-badge" class="badge">Connecting</span>
       <h1 id="connection-title">Connecting to your watch</h1>
       <p id="connection-message">Please keep this page open for a moment.</p>
       <p id="connection-detail" class="detail"></p>
+      <p id="connection-duration" class="detail" hidden>Access ends ten minutes after connecting.</p>
       <button id="connection-action" type="button" hidden>Disconnect this browser</button>
     </section>
     <p id="connection-privacy" class="privacy">Purchases and Premium work independently of this connection.</p>
