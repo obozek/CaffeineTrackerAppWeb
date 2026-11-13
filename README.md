@@ -44,10 +44,19 @@ snapshot supplies a local offset per event and adds effective bedtime, bedtime
 buffer, smart drink sorting and background refresh to Settings.
 
 An explicitly enabled write-capable snapshot unlocks **Add drink**, **My drinks**
-and **Edit** on each supported watch setting. Send one change at a time. When
-the browser shows **Waiting for watch**, select **Phone → Sync from web** on
-the watch, then **Check sync** in the status card. **Synced to watch** means the
-watch confirmed the save. **Refresh data** fetches the latest watch snapshot.
+and **Edit** on each supported watch setting. Send one change at a time.
+Choose **Now** or a local date/time within the last 48 hours. A schema 4
+snapshot supplies the exact order from the watch’s drink ranker, including
+custom drinks. Older snapshots keep their original catalog order.
+
+While Caffeine is open on the watch, the isolated automatic-sync build checks
+for browser changes every minute. A pending status refreshes every five
+seconds while the browser tab is visible, and stops after a terminal result
+or session end. **Phone → Sync from web** and **Check sync** remain immediate
+manual actions. **Synced to watch** means the watch confirmed the save.
+**Refresh data** fetches the latest watch snapshot. The background-capable
+build advertises bounded upload retries every five minutes during the guest
+window. Browser changes apply when the watch app opens.
 A rejected save keeps the form so the user can review it. If a watch setting
 changes during editing, the user must reopen the editor with the latest value.
 Connected changes use the watch’s catalog, Premium rules and storage. The

@@ -30,6 +30,7 @@
           <button type="button" data-watch-pane="custom" aria-controls="watch-pane-custom" aria-pressed="false" hidden>My drinks</button>
           <button type="button" data-watch-pane="settings" aria-controls="watch-pane-settings" aria-pressed="false">Settings</button>
         </nav>
+        <p id="watch-sync-note" class="detail"></p>
         <div id="watch-change-announcement" class="visually-hidden" role="status"></div>
         <section id="watch-change-status" class="change-status" aria-labelledby="watch-change-title" hidden>
           <div>
@@ -68,10 +69,14 @@
         </section>
         <section id="watch-pane-add" hidden>
           <h3>Add a drink to your watch</h3>
-          <p class="detail">Pick a drink. It’s logged at the time you send it, once you sync on the watch.</p>
+          <p class="detail">Choose your drink and when you had it. The watch confirms when it’s saved.</p>
           <form id="watch-add-form" class="change-form">
             <label>Drink<select id="watch-drink-picker" required><option value="">Choose a drink</option></select></label>
+            <p id="watch-drink-order-note" class="detail"></p>
+            <label>When<select id="watch-drink-when"><option value="now">Now</option><option value="choose">Choose date and time</option></select></label>
+            <label id="watch-drink-time-field" hidden>Date and time<input id="watch-drink-time" type="datetime-local" step="60"><span class="detail">Your phone/browser’s local time · within the last 48 hours.</span></label>
             <button type="submit">Send drink to watch</button>
+            <p id="watch-add-error" class="form-note" role="alert" hidden></p>
           </form>
         </section>
         <section id="watch-pane-custom" hidden>
