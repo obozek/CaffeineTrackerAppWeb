@@ -107,3 +107,28 @@ test("validates the extra settings and offsets only in an extended snapshot", ()
         watchSettings: { ...snapshot.watchSettings, backgroundIntervalMinutes: 10 },
     } }), /invalid_response/);
 });
+
+test("connected drinks follow the watch's combined preset/custom order", () => {
+    const { watchDrinks } = require("../assets/companion.js");
+    const presets = [{ name: "Espresso", mg: 64 }, { name: "Black Tea 240ml", mg: 45 }];
+    const snapshot = {
+        schemaVersion: 4, availablePresets: ["Espresso", "Black Tea 240ml"],
+        customDrinks: [{ name: "Travel coffee", mg: 90 }], drinkOrder: [2, 1, 0],
+    };
+    assert.deepEqual(watchDrinks(snapshot, presets).map(drink => drink.name),
+        ["Travel coffee", "Black Tea 240ml", "Espresso"]);
+    assert.deepEqual(watchDrinks({ ...snapshot, schemaVersion: 3 }, presets).map(drink => drink.name),
+        ["Espresso", "Black Tea 240ml", "Travel coffee"]);
+    assert.deepEqual(watchDrinks({ ...snapshot, customDrinks: null, drinkOrder: null }, presets), presets);
+});
+
+test("a chosen drink time uses the browser timezone and the watch's 48-hour limit", () => {
+    const { drinkTime } = require("../assets/companion.js");
+    const now = Math.floor(new Date(2026, 10, 13, 15, 0).getTime() / 1000);
+    assert.equal(drinkTime("2026-11-13T14:35", now), Math.floor(new Date(2026, 10, 13, 14, 35).getTime() / 1000));
+    assert.equal(drinkTime("2026-11-11T15:00", now), now - 172800);
+    assert.throws(() => drinkTime("2026-11-11T14:59", now), /time_range/);
+    assert.throws(() => drinkTime("2026-11-13T15:01", now), /time_range/);
+    assert.throws(() => drinkTime("2026-02-30T12:00", now), /invalid_time/);
+    assert.throws(() => drinkTime("", now), /invalid_time/);
+});

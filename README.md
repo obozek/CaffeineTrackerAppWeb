@@ -36,12 +36,31 @@ default-off Today endpoint supplies the latest authenticated watch snapshot when
 enabled. Today shows the watch’s cached reading, sync time, doses and an
 interactive estimate of the caffeine curve. The graph uses the watch’s effective
 model and time offsets and shows upcoming values as a projection. Refresh or
-return to the tab to fetch the latest uploaded snapshot. Settings controls stay
-in a tab-local draft until the revision-checked watch apply flow is implemented.
+return to the tab to fetch the latest uploaded snapshot. Read-only sessions can
+review setting changes in a tab-local draft.
 History shows the retained doses grouped by day. Older snapshots only specify
 the watch’s offset for Today, so earlier dates are labeled UTC. The extended
 snapshot supplies a local offset per event and adds effective bedtime, bedtime
 buffer, smart drink sorting and background refresh to Settings.
+
+An explicitly enabled write-capable snapshot unlocks **Add drink**, **My drinks**
+and **Edit** on each supported watch setting. Send one change at a time.
+Choose **Now** or a local date/time within the last 48 hours. A schema 4
+snapshot supplies the exact order from the watch’s drink ranker, including
+custom drinks. Older snapshots keep their original catalog order.
+
+While Caffeine is open on the watch, the isolated automatic-sync build checks
+for browser changes every minute. A pending status refreshes every five
+seconds while the browser tab is visible, and stops after a terminal result
+or session end. **Phone → Sync from web** and **Check sync** remain immediate
+manual actions. **Synced to watch** means the watch confirmed the save.
+**Refresh data** fetches the latest watch snapshot. The background-capable
+build advertises bounded upload retries every five minutes during the guest
+window. Browser changes apply when the watch app opens.
+A rejected save keeps the form so the user can review it. If a watch setting
+changes during editing, the user must reopen the editor with the latest value.
+Connected changes use the watch’s catalog, Premium rules and storage. The
+browser preserves the standalone tracker’s local history.
 
 Keep `assets/companion-config.js` disabled in the ordinary site. The backend's
 [canonical contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)

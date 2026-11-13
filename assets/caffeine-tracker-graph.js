@@ -67,13 +67,22 @@
             }
         }
 
+        if (options.watchStyle) {
+            for (let i = 1; i <= 4; i += 1) {
+                const level = graph.maxLevel * i / 4;
+                const y = yFor(level).toFixed(2);
+                grid.push(`<line class="ct-level-grid" x1="${plot.left}" y1="${y}" x2="${width - plot.right}" y2="${y}"></line>`);
+                labels.push(`<text class="ct-graph-label ct-level-label" x="${plot.left - 4}" y="${y}" dominant-baseline="central" text-anchor="end">${Math.round(level * 10) / 10}</text>`);
+            }
+        }
+
         const thresholdLabelPositions = [];
         const thresholds = [
             { value: graph.thresholds.sleep, label: dict.thresholdStimulated, className: "ct-threshold-stimulated" },
             { value: graph.thresholds.optimal, label: dict.thresholdHigh, className: "ct-threshold-high" },
             { value: graph.thresholds.max, label: dict.thresholdMax, className: "ct-threshold-max" },
-            ...(options.formatTime ? [{ value: graph.thresholds.belowAt, label: "Your threshold", className: "ct-threshold-personal" }] : []),
-        ].filter(threshold => !options.formatTime || (threshold.value > 0 && threshold.value < graph.maxLevel &&
+            ...(options.formatTime && !options.watchStyle ? [{ value: graph.thresholds.belowAt, label: "Your threshold", className: "ct-threshold-personal" }] : []),
+        ].filter(threshold => !options.formatTime || (threshold.value > 0 && threshold.value <= graph.maxLevel &&
             (threshold.className !== "ct-threshold-personal" || ![graph.thresholds.sleep, graph.thresholds.optimal, graph.thresholds.max].includes(threshold.value))))
             .map(function (threshold) {
             const y = yFor(threshold.value);
@@ -91,12 +100,14 @@
             ? `<line class="ct-now-line" x1="${nowX.toFixed(2)}" y1="${plot.top}" x2="${nowX.toFixed(2)}" y2="${height - plot.bottom}"></line>`
             : "";
 
-        const markers = (graph.markers || []).map(event =>
-            `<circle class="ct-dose-marker${event.time > nowSec ? " ct-dose-future" : ""}" cx="${xFor(event.time).toFixed(2)}" cy="${height - plot.bottom}" r="4"><title>${escapeHtml(options.formatTime(event.time))} · ${event.mg} mg</title></circle>`).join("");
+        const markers = (graph.markers || []).map(event => {
+            const y = options.watchStyle ? yFor(graph.levelAt(event.time)).toFixed(2) : height - plot.bottom;
+            return `<circle class="ct-dose-marker${event.time > nowSec ? " ct-dose-future" : ""}" cx="${xFor(event.time).toFixed(2)}" cy="${y}" r="4"><title>${escapeHtml(options.formatTime(event.time))} · ${event.mg} mg</title></circle>`;
+        }).join("");
         const cursor = options.formatTime
             ? `<line class="ct-graph-cursor" data-plot-start="${plot.left}" data-plot-width="${plotWidth}" x1="${plot.left}" x2="${plot.left}" y1="${plot.top}" y2="${height - plot.bottom}"></line>`
             : "";
-        const units = options.formatTime ? `<text class="ct-graph-label" x="${plot.left + 4}" y="${plot.top - 3}">${graph.maxLevel.toLocaleString(undefined, { maximumFractionDigits: 2 })} mg/L</text>` : "";
+        const units = options.formatTime ? `<text class="ct-graph-label" x="${plot.left + 4}" y="${plot.top - 3}">${options.watchStyle ? "mg/L" : graph.maxLevel.toLocaleString(undefined, { maximumFractionDigits: 2 }) + " mg/L"}</text>` : "";
 
         return `
             <svg class="ct-graph" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(options.ariaLabel)}" preserveAspectRatio="none">
