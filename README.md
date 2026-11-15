@@ -12,6 +12,11 @@ npm test
 
 Read [AGENTS.md](AGENTS.md) for contributor rules.
 
+Connected DTO validation, transport and patch rules live in
+`assets/companion-protocol.js`; `assets/companion.js` owns the DOM, visible session,
+drafts and focus. The preview builder bundles both into the existing public
+script, preserving the four-file deployment contract.
+
 ## Documentation
 
 | Document | Purpose |
@@ -24,6 +29,9 @@ Read [AGENTS.md](AGENTS.md) for contributor rules.
 
 Standalone browser data stays separate from connected data. Caffeine is the first
 companion target; additional tracker apps require independent R24 acceptance.
+Schema 5 sharing includes retained literal drink names along with amounts/times,
+custom definitions and settings in the temporary server copy. It does not export
+raw storage keys, unlock/device codes or watch credentials to the browser.
 
 ## Optional watch session preview
 

@@ -59,12 +59,12 @@ button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visibl
 .drink-list li strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .drink-list .record-button { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; text-align: left; background: transparent; color: var(--ink); border: 0; padding: .15rem 0; font-weight: 450; border-radius: .35rem; }
 .record-button .record-copy { display: grid; gap: .25rem; min-width: 0; }
-.record-button .record-name { font-weight: 650; }
+.record-button .record-name { font-weight: 650; white-space: pre-wrap; }
 .record-button small { font-size: .78rem; color: var(--muted); }
 .record-button .record-amount { display: flex; align-items: center; gap: .65rem; flex-shrink: 0; }
 .record-button .record-amount::after { content: "›"; font-size: 1.4rem; color: var(--muted); }
 div.record-button .record-amount::after { content: none; }
-.record-button .record-pending { color: var(--focus); }
+.record-button .record-pending { color: var(--ink); font-weight: 600; }
 .drink-list[data-collapsed=true] li:nth-child(n+6) { display: none; }
 .history-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
 .history-heading { display: flex; justify-content: space-between; align-items: start; gap: 1rem; flex-wrap: wrap; }
@@ -139,7 +139,7 @@ footer { justify-content: center; margin-top: auto; }
 .record-details { margin: 1rem 0 1.5rem; }
 .record-details > div { padding: .85rem 0; border-bottom: 1px solid var(--line); }
 .record-details dt { color: var(--muted); font-size: .8rem; }
-.record-details dd { margin: .35rem 0 0; overflow-wrap: anywhere; font-weight: 650; }
+.record-details dd { margin: .35rem 0 0; overflow-wrap: anywhere; white-space: pre-wrap; font-weight: 650; }
 .reorder-list { list-style: none; padding: 0; margin: 0; }
 .reorder-list li { display: flex; align-items: center; gap: .75rem; padding: .75rem 0; border-bottom: 1px solid var(--line); }
 .reorder-list .reorder-copy { flex: 1; min-width: 0; overflow-wrap: anywhere; }
@@ -165,7 +165,7 @@ footer { justify-content: center; margin-top: auto; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 @media (prefers-color-scheme: dark) {
-  :root { --ink: #f2e7dd; --paper: #191612; --card: #24201b; --muted: #c6b6a7; --accent: #a16c45; --line: #443a31; --focus: #d8a87b; }
+  :root { --ink: #f2e7dd; --paper: #191612; --card: #24201b; --muted: #c6b6a7; --accent: #9c6540; --line: #443a31; --focus: #d8a87b; }
   .danger.secondary { color: #ffb2aa; border-color: #955d58; }
 }
 

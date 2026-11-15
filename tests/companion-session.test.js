@@ -23,7 +23,7 @@ test('an unchanged displayed time remains unchanged when the browser timezone ch
   const now=Math.floor(Date.now()/1000), original={name:'Coffee',mg:64,time:now-3600};
   const displayed=localDateTime(new Date(original.time*1000));
   process.env.TZ='America/New_York';
-  assert.deepEqual(recordPatch(original,{name:'Corrected coffee',mg:'64',time:displayed},now,86400,displayed),{name:'Corrected coffee'});
+  assert.deepEqual(recordPatch(original,{name:'Corrected coffee',mg:'64',time:displayed},now,86400,{time:displayed}),{name:'Corrected coffee'});
  } finally { if(prior===undefined) delete process.env.TZ; else process.env.TZ=prior; }
 });
 test('save recovery retains the exact write epoch with its original request',()=>{
@@ -34,18 +34,27 @@ test('save recovery retains the exact write epoch with its original request',()=
  assert.equal(recovery.prepare(operation,null,0,'new-epoch').request.writeEpoch,id);
 });
 test('management patches and retained request bodies keep duplicate identities and nested values separate',()=>{
- const { createSaveRecovery, recordPatch, loggableDrink }=require('../assets/companion.js');
+ const { createSaveRecovery, recordPatch, loggableDrink, authoredDrink }=require('../assets/companion.js');
  const original={name:'',mg:900.125};
  assert.deepEqual(recordPatch(original,{name:'Corrected',mg:String(original.mg)}),{name:'Corrected'});
  assert.deepEqual(recordPatch(original,{name:'',mg:'50'}),{mg:50});
  assert.equal(loggableDrink(original),false);
  assert.equal(loggableDrink({name:'Legacy',mg:90.5}),false);
  assert.equal(loggableDrink({name:'Espresso',mg:64}),true);
+ assert.deepEqual(authoredDrink({name:' Coffee ',mg:'0'}),{name:'Coffee',mg:0});
+ for (const mg of ['',null,undefined,0.5,-1,501]) assert.throws(()=>authoredDrink({name:'Coffee',mg}),/invalid_amount/);
+ assert.throws(()=>authoredDrink({name:'bad\u0001name',mg:64}),/invalid_name/);
  const recovery=createSaveRecovery(()=>id), patch={name:'Corrected'};
  const attempt=recovery.prepare({kind:'eventUpdate',eventId:id,expectedRevision:1,patch},null,0,id);
  patch.name='Changed after sending';
  assert.equal(attempt.request.operation.patch.name,'Corrected');
  assert.equal(Object.isFrozen(attempt.request.operation.patch),true);
+});
+test('unchanged displayed legacy names preserve CR/LF literals when another field changes',()=>{
+ const { recordPatch }=require('../assets/companion.js');
+ const original={name:'Brew\r\nLegacy',mg:40};
+ assert.deepEqual(recordPatch(original,{name:'BrewLegacy',mg:'45'},0,0,{name:'BrewLegacy'}),{mg:45});
+ assert.deepEqual(recordPatch(original,{name:'Renamed legacy',mg:'40'},0,0,{name:'BrewLegacy'}),{name:'Renamed legacy'});
 });
 test('reconciliation is an explicit cookie request and stale write epochs have their own error',async()=>{
  const calls=[];
