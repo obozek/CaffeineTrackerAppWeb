@@ -29,14 +29,19 @@
         const locale = options.locale;
         const dict = options.dict;
         const duration = Math.max(endSec - startSec, 1);
+        const sleepThreshold = options.sleepThreshold && Number.isFinite(graph.thresholds.belowAt) && graph.thresholds.belowAt > 0
+            ? graph.thresholds.belowAt : null;
+        // Keep the chosen sleep target visible even on an empty/low chart.
+        // This is display headroom only; calculation inputs and samples stay intact.
+        const maxLevel = sleepThreshold === null ? graph.maxLevel : Math.max(graph.maxLevel, sleepThreshold * 1.2);
 
         function xFor(timeSec) {
             return plot.left + ((timeSec - startSec) / duration) * plotWidth;
         }
 
         function yFor(level) {
-            const clamped = Math.max(0, Math.min(level, graph.maxLevel));
-            return plot.top + ((graph.maxLevel - clamped) / graph.maxLevel) * plotHeight;
+            const clamped = Math.max(0, Math.min(level, maxLevel));
+            return plot.top + ((maxLevel - clamped) / maxLevel) * plotHeight;
         }
 
         function pathFor(points) {
@@ -69,7 +74,7 @@
 
         if (options.watchStyle) {
             for (let i = 1; i <= 4; i += 1) {
-                const level = graph.maxLevel * i / 4;
+                const level = maxLevel * i / 4;
                 const y = yFor(level).toFixed(2);
                 grid.push(`<line class="ct-level-grid" x1="${plot.left}" y1="${y}" x2="${width - plot.right}" y2="${y}"></line>`);
                 labels.push(`<text class="ct-graph-label ct-level-label" x="${plot.left - 4}" y="${y}" dominant-baseline="central" text-anchor="end">${Math.round(level * 10) / 10}</text>`);
@@ -95,6 +100,15 @@
             ].join("");
         }).join("");
 
+        // Put the personal sleep target on the opposite side from fixed watch
+        // levels, so coincident/nearby thresholds remain independently readable.
+        const sleepLine = sleepThreshold === null ? "" : (() => {
+            const y = yFor(sleepThreshold);
+            const label = "Sleep threshold · " + sleepThreshold.toLocaleString(locale, { maximumFractionDigits: 1 }) + " mg/L";
+            return `<line class="ct-threshold-sleep" x1="${plot.left}" y1="${y.toFixed(2)}" x2="${width - plot.right}" y2="${y.toFixed(2)}"></line>` +
+                `<text class="ct-threshold-label ct-threshold-sleep" x="${width - plot.right - 4}" y="${(y - 4).toFixed(2)}" text-anchor="end">${escapeHtml(label)}</text>`;
+        })();
+
         const nowX = xFor(nowSec);
         const nowLine = nowSec >= startSec && nowSec <= endSec
             ? `<line class="ct-now-line" x1="${nowX.toFixed(2)}" y1="${plot.top}" x2="${nowX.toFixed(2)}" y2="${height - plot.bottom}"></line>`
@@ -114,6 +128,7 @@
                 <rect class="ct-graph-bg" x="0" y="0" width="${width}" height="${height}" rx="8"></rect>
                 ${grid.join("")}
                 ${thresholds}
+                ${sleepLine}
                 <line class="ct-graph-axis" x1="${plot.left}" y1="${height - plot.bottom}" x2="${width - plot.right}" y2="${height - plot.bottom}"></line>
                 <path class="ct-caffeine-curve" d="${pathFor(solidPoints)}"></path>
                 <path class="ct-caffeine-curve ct-caffeine-curve-future" d="${pathFor(futurePoints)}"></path>

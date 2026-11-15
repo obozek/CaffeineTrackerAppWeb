@@ -178,3 +178,12 @@ footer { justify-content: center; margin-top: auto; }
 #today-scrub:focus-visible{outline:2px solid #ffe361;outline-offset:2px}
 
 .graph-key span:nth-child(4)::before { width: .15rem; height: .65rem; border: 0; background: #78aaff; }
+
+.ct-threshold-sleep { stroke: #b8adff; stroke-width: 1.5; stroke-dasharray: 2 4; }
+.ct-threshold-label.ct-threshold-sleep { fill: #d3cbff; stroke: #17191f !important; stroke-width: 3px; paint-order: stroke; stroke-linejoin: round; }
+.graph-levels { display: flex; flex-wrap: wrap; gap: .35rem .9rem; list-style: none; padding: 0; margin: .8rem 0 .25rem; color: #c8ccd6; font-size: .75rem; }
+.graph-levels li { --level-color: #b8adff; display: flex; align-items: center; gap: .35rem; }
+.graph-levels li::before { content: ""; display: inline-block; width: .7rem; border-top: 2px dashed var(--level-color); }
+.graph-levels [data-level=stimulated] { --level-color: #55b780; }
+.graph-levels [data-level=high] { --level-color: #ffa953; }
+.graph-levels [data-level=max] { --level-color: #fc7777; }

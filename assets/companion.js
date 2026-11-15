@@ -326,7 +326,7 @@
             return [
                 ["halfLifeMinutes", "Caffeine half-life", model.halfLifeMinutes, [180, 240, 300, 360, 480, 600], " min"],
                 ["absorptionMinutes", "Absorption time", model.absorptionMinutes, [20, 30, 45, 60], " min"],
-                ["thresholdTenths", "Personal threshold", Math.round(model.belowAtThresholdMgPerL * 10), null],
+                ["thresholdTenths", "Sleep threshold", Math.round(model.belowAtThresholdMgPerL * 10), null],
                 ...(watch ? [
                     ["bedtimeOverrideMinutes", "Bedtime", watch.bedtimeOverrideMinutes, null],
                     ["bedtimeBufferMinutes", "Bedtime buffer", watch.bedtimeBufferMinutes, [0, 30, 60, 90, 120], " min"],
@@ -657,6 +657,7 @@
             events.dataset.collapsed = "true";
             updateHistoryButton();
             graph.replaceChildren();
+            document.getElementById("today-thresholds").replaceChildren();
             graphState = null;
             lastRead = -Infinity;
             estimate.textContent = "";
@@ -704,9 +705,21 @@
                 startSec: day.startSec, endSec: day.endSec, nowSec: now, formatTime,
                 compact: root.matchMedia("(max-width: 580px)").matches,
                 watchStyle: true,
+                sleepThreshold: true,
                 dict: { thresholdStimulated: "Stimulated", thresholdHigh: "High", thresholdMax: "Max" },
                 ariaLabel: "Estimated caffeine level by watch time. Solid for elapsed time, dashed for projected time.",
             });
+            const levels = document.getElementById("today-thresholds");
+            levels.replaceChildren(...[
+                ["sleep", "Sleep threshold", data.thresholds.belowAt],
+                ["stimulated", "Stimulated", data.thresholds.sleep],
+                ["high", "High", data.thresholds.optimal],
+                ["max", "Max", data.thresholds.max],
+            ].map(([key, label, value]) => {
+                const item = document.createElement("li"); item.dataset.level = key;
+                item.textContent = label + " · " + value.toLocaleString(undefined, { maximumFractionDigits: 1 }) + " mg/L";
+                return item;
+            }));
             graphState = { day, data, cursor: graph.querySelector(".ct-graph-cursor") };
             scrub.value = String(Math.max(0, Math.min(1440, Math.floor((now - day.startSec) / 60))));
             selectTime();
@@ -776,7 +789,7 @@
             const items = [
                 ["Caffeine half-life", snapshot.model.halfLifeMinutes + " min"],
                 ["Absorption time", snapshot.model.absorptionMinutes + " min"],
-                ["Personal threshold", snapshot.model.belowAtThresholdMgPerL.toLocaleString() + " mg/L"],
+                ["Sleep threshold", snapshot.model.belowAtThresholdMgPerL.toLocaleString() + " mg/L"],
                 ["Effective model volume", snapshot.model.apparentVolumeLiters.toLocaleString(undefined, { maximumFractionDigits: 1 }) + " L"],
             ];
             if (settings) items.push(
@@ -966,7 +979,7 @@
             const fields = [
                 ["Half-life", "halfLifeMinutes", "min", model.halfLifeMinutes],
                 ["Absorption", "absorptionMinutes", "min", model.absorptionMinutes],
-                ["Threshold", "belowAtThresholdMgPerL", "mg/L", Number(model.belowAtThresholdMgPerL.toFixed(1))],
+                ["Sleep threshold", "belowAtThresholdMgPerL", "mg/L", Number(model.belowAtThresholdMgPerL.toFixed(1))],
             ];
             const edits = fields.flatMap(([label, key, unit, initial]) => {
                 const value = Number(settings.elements[key].value);

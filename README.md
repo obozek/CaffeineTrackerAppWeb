@@ -34,7 +34,11 @@ Redeeming a new link replaces the previous session; browser logout preserves
 watch identity. No account or standalone tracker storage is involved. A separate,
 default-off Today endpoint supplies the latest authenticated watch snapshot when
 enabled. Today shows the watch’s cached reading, sync time, doses and an
-interactive estimate of the caffeine curve. The graph uses the watch’s effective
+interactive estimate of the caffeine curve. The synced **Sleep threshold** is
+shown as a labeled purple line alongside the fixed watch level lines, with all
+values in a readable legend. The connected chart adds vertical headroom only
+when needed to keep that sleep target visible, including empty days. Its
+calculation inputs, samples, markers and standalone chart behavior are unchanged. The graph uses the watch’s effective
 model and time offsets and shows upcoming values as a projection. Refresh or
 return to the tab to fetch the latest uploaded snapshot. Read-only sessions can
 review setting changes in a tab-local draft.
