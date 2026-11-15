@@ -43,9 +43,26 @@ the watch’s offset for Today, so earlier dates are labeled UTC. The extended
 snapshot supplies a local offset per event and adds effective bedtime, bedtime
 buffer, smart drink sorting and background refresh to Settings.
 
-An explicitly enabled write-capable snapshot unlocks **Add drink**, **My drinks**
-and **Edit** on each supported watch setting. Send one change at a time.
-Choose **Now** or a local date/time within the last 48 hours. A schema 4
+The workspace has three destinations: **Today**, **History** and **Settings**.
+An enabled write-capable snapshot adds a prominent **Add drink** action.
+It opens a native modal, presented as a bottom sheet on phones, with tappable
+drinks and one editable local date/time initially set to now. No separate
+Now/custom mode is required. Sending returns to Today with the pending status;
+only a watch receipt shows **Synced to watch**. A rejected or uncertain save
+keeps its draft behind **Review change**. Escape/Close return focus to the
+opener; expiry/disconnect clears and closes the editor.
+
+The intake window covers the past 48 hours. Watch builds advertising
+`futureDrinkSeconds: 86400` also accept the next 24 hours. Scheduled values
+stay intact on refresh, and validation explains out-of-range/invalid local
+times without clamping them. Older watch builds retain past-time entry and
+explain the update needed for scheduling. Native date/time controls use the
+phone/browser's timezone and locale.
+
+Create a custom drink from the add sheet or **Settings → My drinks**.
+Supported setting edits open the same focused modal, keeping the latest watch
+value as the expected value. Watch-only model details are collapsed separately.
+Send one change at a time. A schema 4
 snapshot supplies the exact order from the watch’s drink ranker, including
 custom drinks. Older snapshots keep their original catalog order.
 
@@ -54,7 +71,9 @@ for browser changes every minute. A pending status refreshes every five
 seconds while the browser tab is visible, and stops after a terminal result
 or session end. **Phone → Sync from web** and **Check sync** remain immediate
 manual actions. **Synced to watch** means the watch confirmed the save.
-**Refresh data** fetches the latest watch snapshot. The background-capable
+**Refresh** fetches the latest watch snapshot. After an applied receipt, up to
+three bounded two-second refreshes fetch the changed data; they stop when it
+appears, the tab hides or the session ends. There is no idle polling. The background-capable
 build advertises bounded upload retries every five minutes during the guest
 window. Browser changes apply when the watch app opens.
 A rejected save keeps the form so the user can review it. If a watch setting
