@@ -83,9 +83,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visibl
 .settings summary, .sync-help summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-size: .85rem; font-weight: 600; }
 .settings summary::before, .sync-help summary::before { content: "+"; margin-right: .5rem; }
 .settings[open] summary::before, .sync-help[open] summary::before { content: "−"; }
-.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: .75rem; }
-.fields label { display: grid; gap: .3rem; font-size: .85rem; }
-.fields input, .fields select { min-width: 0; width: 100%; min-height: 44px; padding: .5rem; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: .5rem; font: inherit; }
 .badge { display: inline-flex; align-items: center; gap: .4rem; border-radius: 2rem; padding: .35rem .65rem; background: var(--paper); color: var(--muted); font-size: .75rem; font-weight: 650; }
 .badge::before { content: ""; width: .4rem; height: .4rem; border-radius: 50%; background: #6c8a58; }
 .session-card h1 { margin: 1rem 0; }

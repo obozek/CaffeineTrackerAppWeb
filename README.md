@@ -40,8 +40,8 @@ values in a readable legend. The connected chart adds vertical headroom only
 when needed to keep that sleep target visible, including empty days. Its
 calculation inputs, samples, markers and standalone chart behavior are unchanged. The graph uses the watch’s effective
 model and time offsets and shows upcoming values as a projection. Refresh or
-return to the tab to fetch the latest uploaded snapshot. Read-only sessions can
-review setting changes in a tab-local draft.
+return to the tab to fetch the latest uploaded snapshot. Read-only sessions show
+the synced settings with an explicit read-only note.
 History shows the retained doses grouped by day. Older snapshots only specify
 the watch’s offset for Today, so earlier dates are labeled UTC. The extended
 snapshot supplies a local offset per event and adds effective bedtime, bedtime
@@ -52,8 +52,8 @@ An enabled write-capable snapshot adds a prominent **Add drink** action.
 It opens a native modal, presented as a bottom sheet on phones, with tappable
 drinks and one editable local date/time initially set to now. No separate
 Now/custom mode is required. Sending returns to Today with the pending status;
-only a watch receipt shows **Synced to watch**. A rejected or uncertain save
-keeps its draft behind **Review change**. Escape/Close return focus to the
+only a watch receipt shows **Synced to watch**. A rejected save keeps its draft
+behind **Review change**. Escape/Close return focus to the
 opener; expiry/disconnect clears and closes the editor.
 
 The intake window covers the past 48 hours. Watch builds advertising
@@ -65,13 +65,15 @@ phone/browser's timezone and locale.
 
 Create a custom drink from the add sheet or **Settings → My drinks**.
 Supported setting edits open the same focused modal, keeping the latest watch
-value as the expected value. Watch-only model details are collapsed separately.
-Send one change at a time. A schema 4
+value as the expected value. Legacy values outside the writable contract remain
+visible with guidance to adjust them on the watch. Watch-only model details are
+collapsed separately. Send one change at a time. A schema 4
 snapshot supplies the exact order from the watch’s drink ranker, including
 custom drinks. Older snapshots keep their original catalog order.
 
-While Caffeine is open on the watch, the isolated automatic-sync build checks
-for browser changes every minute. A pending status refreshes every five
+The isolated automatic-sync build checks for browser changes every minute on
+the watch’s main graph, summaries or Phone menu. It waits while watch History or
+an editor is open. A pending status refreshes every five
 seconds while the browser tab is visible, and stops after a terminal result
 or session end. **Phone → Sync from web** and **Check sync** remain immediate
 manual actions. **Synced to watch** means the watch confirmed the save.
@@ -79,11 +81,25 @@ manual actions. **Synced to watch** means the watch confirmed the save.
 three bounded two-second refreshes fetch the changed data; they stop when it
 appears, the tab hides or the session ends. There is no idle polling. The background-capable
 build advertises bounded upload retries every five minutes during the guest
-window. Browser changes apply when the watch app opens.
-A rejected save keeps the form so the user can review it. If a watch setting
+window. Browser changes apply in the eligible foreground screens.
+If a watch setting
 changes during editing, the user must reopen the editor with the latest value.
 Connected changes use the watch’s catalog, Premium rules and storage. The
 browser preserves the standalone tracker’s local history.
+
+If sending cannot be confirmed, new saves pause. Keep this tab open and use
+**Check sync**. When no receipt is found, **Retry same save** resends the original
+ID and unchanged payload, preserving any later draft edits. An interrupted or
+unconfirmed watch result requires reviewing the watch’s History or setting,
+then **I checked the watch**. That action checks the latest status before
+allowing a deliberate new save; it leaves the old outcome unknown and never
+replays it. This acknowledgement is per change and lasts only in the current tab.
+
+Requests and drafts stay in memory. Reloading loses the original uncertain
+request ID and payload; reconnecting relies on the server’s latest change
+status. Safe late-response recovery across a hard reload remains an acceptance
+boundary, separate from the exact-ID retry verified within the current tab.
+No connected watch data is written to browser storage.
 
 Keep `assets/companion-config.js` disabled in the ordinary site. The backend's
 [canonical contract](https://github.com/obozek/CaffeineTrackerCodeWorker/blob/main/docs/caffeine-tracker-web-companion.md)
