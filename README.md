@@ -74,6 +74,8 @@ only a watch receipt shows **Synced to watch**. A rejected save keeps its draft
 behind **Review change**. Escape, Close and browser Back return focus to the
 opener; reload discards unsent drafts and normalizes the sheet’s own same-page
 history entry. Expiry/disconnect clears and closes the editor.
+Session end or watch replacement clears the last intake total and drink count
+along with the other private readouts and drafts.
 
 The intake window covers the past 48 hours. Watch builds advertising
 `futureDrinkSeconds: 86400` also accept the next 24 hours. Scheduled values

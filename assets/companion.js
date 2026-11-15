@@ -865,6 +865,8 @@
             privacy.textContent = purchaseNote;
             document.getElementById("today-reading").textContent = "";
             document.getElementById("today-captured").textContent = "";
+            document.getElementById("today-total").textContent = "";
+            document.getElementById("today-count").textContent = "";
             refresh.disabled = checkSync.disabled = false;
         }
 
