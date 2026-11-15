@@ -43,7 +43,7 @@
 
     <div class="card legal">
       <h1>Privacy Policy</h1>
-      <p class="muted"><b>Last updated:</b> January 2, 2026</p>
+      <p class="muted"><b>Last updated:</b> November 15, 2026</p>
 
       <p>
         This Privacy Policy explains how <b>Caffeine Tracker</b> (“we”, “us”) collects, uses, and shares information when you use:
@@ -62,7 +62,24 @@
         The App is designed to work primarily offline on your watch. Your caffeine entries and settings are stored locally on the device (and may be synced by Garmin
         according to your Garmin account and device settings).
       </p>
-      <p><b>We do not directly receive your health data.</b> We do not run our own analytics in the App and we do not collect personal data from the App servers-side.</p>
+      <p>Without an optional companion connection, we do not receive your watch's caffeine entries or settings. We do not run our own analytics in the App.</p>
+
+      <h2 id="watch-companion">Optional watch companion</h2>
+      <p>
+        When the companion is available and you choose to connect it, your watch sends a temporary copy of its recent drink names,
+        caffeine amounts and times, saved custom drinks, and effective settings to our connection service on Cloudflare.
+        It also sends the app version, random connection and record identifiers, and caffeine model values used for the graph,
+        including a value derived from your Garmin profile weight or the app's fallback weight. This lets the connected browser show your watch data and send back changes you request.
+      </p>
+      <p>
+        A companion connection does not require an account or a purchase. Ordinary offline logging and purchased unlocks work independently.
+        The companion uses a short-lived session cookie to authenticate the browser; it does not save your watch's drink data in the browser's persistent storage.
+        Connecting does not subscribe you to marketing or enable usage analytics.
+      </p>
+      <p>
+        <b>Disconnect this browser</b> ends that browser session. Disconnecting from the watch revokes the watch connection and removes its active cloud copy and queued changes.
+        Neither action deletes entries stored on your watch. The cloud copy is a temporary view of recent watch data, not a history backup.
+      </p>
 
       <h2>What data the Website / purchase flow processes</h2>
       <p>When you buy an unlock, you are redirected to Stripe Checkout / Stripe Payment Link.</p>
@@ -80,6 +97,7 @@
 
       <h2>How we use your information</h2>
       <ul>
+        <li>To provide the optional watch connection and apply the changes you request through it</li>
         <li>To deliver the unlock code you purchased</li>
         <li>To provide customer support (e.g., resend unlock code, fix wrong App Code)</li>
         <li>To comply with legal obligations (accounting, tax, fraud prevention)</li>
@@ -108,12 +126,14 @@
       <ul>
         <li><b>Stripe</b> — payment processing and checkout</li>
         <li><b>Email delivery provider</b> (if used) — to send unlock codes and support emails</li>
-        <li><b>Hosting/DNS</b> (e.g., GitHub Pages, Cloudflare) — to serve the Website</li>
+        <li><b>Hosting/DNS</b> (e.g., GitHub Pages, Cloudflare) — to serve the Website. Cloudflare also hosts the optional companion connection service and its temporary watch-data copy.</li>
       </ul>
       <p>We do not sell your personal data.</p>
 
-      <h2>Data retention</h2>
+      <h2 id="data-retention">Data retention</h2>
       <ul>
+        <li><b>Companion watch data</b>: the latest cloud copy replaces the previous one and is available for up to 72 hours after it is first received. Retrying the same upload does not extend that period. Expired copies become inaccessible and are removed by scheduled cleanup; cleanup can take longer when work is queued.</li>
+        <li><b>Companion changes and connection records</b>: pending changes stop being available when the connection expires and are removed by scheduled cleanup. Change-result records become eligible for cleanup 72 hours after expiry to handle delayed confirmations. Connection identifiers and revocation records can remain after disconnect to prevent revoked access; contact us to request their deletion.</li>
         <li><b>App Code + email + purchase record</b>: retained as long as needed to deliver the unlock, provide support, and meet accounting/legal requirements.</li>
         <li>If you request deletion, we can delete support records where legally possible, but we may need to keep invoices/transaction records for legal compliance.</li>
       </ul>
