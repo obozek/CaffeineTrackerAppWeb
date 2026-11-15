@@ -4,6 +4,21 @@ const { takeHandoff, createClient } = require('../assets/companion.js');
 const id='01234567-89ab-cdef-0123-456789abcdef', secret='a'.repeat(43);
 const config={enabled:true,apiOrigin:'https://worker.caffeinetracker.app'};
 const data={protocolVersion:1,appId:'caffeine',destination:'today',expiresAt:1600,serverTime:1000};
+test("an uncertain save retains its exact request and needs an explicit check before retry", () => {
+ const { createSaveRecovery } = require('../assets/companion.js');
+ let ids=0; const recovery=createSaveRecovery(()=>String(++ids));
+ const first=recovery.prepare({kind:'drink',name:'Espresso',mg:64,time:1000},'draft',2);
+ assert.equal(Object.isFrozen(first.request.operation),true);
+ assert.equal(recovery.pending,true); assert.equal(recovery.canRetry,false);
+ recovery.checked(null); assert.equal(recovery.canRetry,true);
+ assert.throws(()=>recovery.prepare({kind:'drink',name:'Espresso',mg:64,time:1001},'edited',3),/save_uncertain/);
+ const retry=recovery.prepare(first.request.operation,'draft',5);
+ assert.equal(retry.request.id,first.request.id); assert.equal(retry.priorCount,2); assert.equal(ids,1);
+ recovery.resolve({id:'unrelated',state:'applied'}); assert.equal(recovery.pending,true);
+ recovery.checked({id:'unrelated',state:'interrupted'}); assert.equal(recovery.canRetry,false);
+ recovery.resolve({id:first.request.id,state:'queued'}); assert.equal(recovery.pending,false);
+ assert.equal(recovery.prepare({kind:'custom',name:'Tea',mg:20},'next',0).request.id,'2');
+});
 test('removes all fragments immediately and accepts only the one-use handoff format',()=>{
  const replacements=[]; const history={replaceState:(...args)=>replacements.push(args)};
  assert.deepEqual(takeHandoff({hash:'#connect='+id+'.'+secret,pathname:'/companion.html',search:''},history),{sessionId:id,handoffSecret:secret});
@@ -20,6 +35,17 @@ test('uses credentialed requests and never persists or returns the cookie secret
  assert.equal(calls[1].options.headers['X-Caffeine-Companion'],'1');
  assert.equal(calls[0].options.headers['Content-Type'],'application/json');
  assert.equal(calls[0].url,config.apiOrigin+'/v1/guest/redeem');
+});
+test('save responses identify the submitted command and distinguish explicit rejection',async()=>{
+ const operation={kind:'drink',name:'Espresso',mg:64,time:1000};
+ for (const change of [null,{id:'other',kind:'drink',state:'queued'},{id:'request',kind:'custom',state:'queued'}]) {
+  const client=createClient(config,async()=>({ok:true,status:202,json:async()=>({change})}));
+  await assert.rejects(client.sendChange({id:'request',operation}),/invalid_response/);
+ }
+ for (const status of [400,413]) {
+  const client=createClient(config,async()=>({ok:false,status}));
+  await assert.rejects(client.sendChange({id:'request',operation}),/invalid_change/);
+ }
 });
 test('disabled rollout performs no network requests',async()=>{
  let calls=0; const client=createClient({...config,enabled:false},async()=>{calls++});
@@ -101,6 +127,10 @@ test("validates the extra settings and offsets only in an extended snapshot", ()
     };
     const response = { serverTime: day, receivedAt: day, expiresAt: day + 1, snapshot };
     assert.deepEqual(readToday(response), response);
+    for (const invalid of ["2026-02-30", "2026-13-01", "2026-00-12", "2026-02-29"]) {
+        assert.throws(() => readToday({ ...response, snapshot: { ...snapshot, watchDay: { ...snapshot.watchDay, date: invalid } } }), /invalid_response/);
+    }
+    assert.doesNotThrow(() => readToday({ ...response, snapshot: { ...snapshot, watchDay: { ...snapshot.watchDay, date: "2028-02-29" } } }));
     assert.doesNotThrow(() => readToday({ ...response, snapshot: { ...snapshot, watchSettings: null } }));
     assert.throws(() => readToday({ ...response, snapshot: { ...snapshot, events: [{ time: day, mg: 95 }] } }), /invalid_response/);
     assert.throws(() => readToday({ ...response, snapshot: { ...snapshot,
