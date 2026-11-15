@@ -54,7 +54,8 @@
                     !Number.isInteger(drink.mg) || drink.mg < 0 || drink.mg > 500))) {
             throw new Error("invalid_response");
         }
-        if (snapshot.schemaVersion === 4 && (!validDrinkOrder(snapshot) ||
+        if (snapshot.schemaVersion === 4 && ((snapshot.futureDrinkSeconds !== undefined && snapshot.futureDrinkSeconds !== 86400) ||
+            !validDrinkOrder(snapshot) ||
             snapshot.sync?.foregroundIntervalSeconds !== 60 ||
             ![null, 5].includes(snapshot.sync.backgroundIntervalMinutes))) throw new Error("invalid_response");
         return data;
@@ -75,12 +76,12 @@
         return (order ? order.map(index => drinks[index]) : drinks).filter(Boolean);
     }
 
-    function drinkTime(value, now) {
+    function drinkTime(value, now, futureSeconds = 0) {
         if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) throw new Error("invalid_time");
         const date = new Date(value);
         if (!Number.isFinite(date.getTime()) || localDateTime(date) !== value) throw new Error("invalid_time");
         const seconds = date.getTime() / 1000;
-        if (seconds < now - 172800 || seconds > now) throw new Error("time_range");
+        if (seconds < now - 172800 || seconds > now + futureSeconds) throw new Error("time_range");
         return seconds;
     }
 
@@ -216,10 +217,15 @@
         const addForm = document.getElementById("watch-add-form");
         const customForm = document.getElementById("watch-custom-form");
         const settingForm = document.getElementById("watch-setting-form");
-        const picker = document.getElementById("watch-drink-picker");
-        const when = document.getElementById("watch-drink-when");
+        const drinkChoices = document.getElementById("watch-drink-choices");
+        const editor = document.getElementById("watch-editor");
+        const editorTitle = document.getElementById("watch-editor-title");
+        const editorFeedback = document.getElementById("watch-editor-feedback");
+        const addOpen = document.getElementById("watch-add-open");
+        const reviewChange = document.getElementById("watch-change-review");
+        const customSection = document.getElementById("watch-custom-section");
+        let editorMode, editorReturn, selectedDrink = null, addDraftStarted = false;
         const timeInput = document.getElementById("watch-drink-time");
-        const timeField = document.getElementById("watch-drink-time-field");
         const addError = document.getElementById("watch-add-error");
         const customList = document.getElementById("watch-custom-list");
         const customNote = document.getElementById("watch-custom-note");
@@ -229,12 +235,12 @@
         const settingHint = document.getElementById("watch-settings-edit-note");
         const changeForms = [addForm, customForm, settingForm];
         let writable, workspaceSnapshot, workspaceClock, currentChange, retry, sent, settingEdit, picks = [];
-        let busyChange = false;
+        let busyChange = false, snapshotChecks = 0;
 
         const changeLabels = {
             queued: ["Waiting for watch", "On your watch, open Phone → Sync from web. Then tap Check sync here."],
             offered: ["Received by the watch", "Waiting for confirmation. Finish syncing on the watch, then tap Check sync."],
-            applied: ["Synced to watch", "Your watch confirmed the save. If the change hasn’t appeared yet, tap Refresh data."],
+            applied: ["Synced to watch", "Saved on your watch. The latest watch data will appear after it uploads."],
             conflict: ["Change wasn’t saved", "The watch data changed or the drink name is already in use. Refresh data and review your entry before sending again."],
             premium: ["Premium required", "This change requires Premium on your watch."],
             invalid: ["Change wasn’t saved", "The watch rejected this change. Check the values and try again."],
@@ -252,21 +258,20 @@
             changeStatus.dataset.state = state;
             changeStatus.hidden = !title;
             checkSync.hidden = !canCheck;
-            if (focusedCheck && checkSync.hidden && title) changeTitle.focus({ preventScroll: true });
+            reviewChange.hidden = !sent || ["queued", "offered", "applied"].includes(state);
+            if (focusedCheck && checkSync.hidden && title && !editor.open) changeTitle.focus({ preventScroll: true });
             if (changeAnnouncement.textContent !== announcement) changeAnnouncement.textContent = announcement;
         }
 
         function showChange(result) {
             if (result && result.id === retry?.request.id) retry = null;
             const operation = result && result.id === sent?.id ? sent.operation : null;
+            if (operation && result.state === "applied" && (currentChange?.id !== result.id || currentChange?.state !== "applied")) snapshotChecks = 3;
+            if (snapshotChecks && reflectsSave()) snapshotChecks = 0;
             if (operation && result.state === "applied" && (result.id !== currentChange?.id || pendingChange())) {
-                if (operation.kind === "drink" && picker.value) {
-                    const selected = picks[Number(picker.value)];
-                    if (selected?.name === operation.name && selected.mg === operation.mg && drinkDraftKey() === sent.draftKey) {
-                        picker.value = "";
-                        when.value = "now";
-                        timeField.hidden = true;
-                        timeInput.required = false;
+                if (operation.kind === "drink") {
+                    if (drinkDraftKey() === sent.draftKey) {
+                        addDraftStarted = false;
                         showFormError(addError);
                     }
                 } else if (operation.kind === "custom" &&
@@ -285,11 +290,15 @@
                     settingFields(workspaceSnapshot).find(field => field[0] === operation.field)?.[1]) || kind;
                 const [title, detail] = changeLabels[result.state];
                 const guidance = result.state === "queued" && workspaceSnapshot?.schemaVersion >= 4
-                    ? "Keep Caffeine open on your watch. It checks every minute. This status updates automatically. For an immediate sync, select Phone → Sync from web."
-                    : detail;
+                    ? "Open Caffeine on your watch. It checks automatically, within a minute. You can keep using this page."
+                    : result.state === "applied" && snapshotChecks ? "Saved on your watch. Updating the latest data…" : detail;
                 setChangeStatus(title, subject + " · " + guidance, result.state, pendingChange());
             } else {
                 setChangeStatus();
+            }
+            if (editor.open && result && !pendingChange() && result.state !== "applied") {
+                editorFeedback.hidden = false;
+                editorFeedback.textContent = changeLabels[result.state].join(". ");
             }
             updateChangeButtons();
         }
@@ -301,6 +310,10 @@
 
         function updateChangeButtons() {
             const pending = pendingChange();
+            addOpen.disabled = !writable || busyChange || refresh.disabled || pending;
+            document.getElementById("watch-custom-open").disabled = addOpen.disabled || workspaceSnapshot?.customDrinks === null;
+            reviewChange.disabled = busyChange || refresh.disabled || pending;
+            for (const button of values.querySelectorAll("button")) button.disabled = busyChange || pending;
             for (const form of changeForms) {
                 form.querySelector('button[type="submit"]').disabled = !writable || busyChange || refresh.disabled || pending ||
                     (form === addForm && !picks.length) || (form === customForm && workspaceSnapshot?.customDrinks === null);
@@ -313,7 +326,7 @@
             return [
                 ["halfLifeMinutes", "Caffeine half-life", model.halfLifeMinutes, [180, 240, 300, 360, 480, 600], " min"],
                 ["absorptionMinutes", "Absorption time", model.absorptionMinutes, [20, 30, 45, 60], " min"],
-                ["thresholdTenths", "Personal threshold", Math.round(model.belowAtThresholdMgPerL * 10), null],
+                ["thresholdTenths", "Sleep threshold", Math.round(model.belowAtThresholdMgPerL * 10), null],
                 ...(watch ? [
                     ["bedtimeOverrideMinutes", "Bedtime", watch.bedtimeOverrideMinutes, null],
                     ["bedtimeBufferMinutes", "Bedtime buffer", watch.bedtimeBufferMinutes, [0, 30, 60, 90, 120], " min"],
@@ -343,13 +356,15 @@
             label.append(input);
             settingValue.replaceChildren(label);
             showFormError(settingError);
-            settingForm.hidden = false;
+            openEditor("setting");
+            editorTitle.textContent = title;
             input.focus();
         }
 
         function closeSetting(returnFocus = false) {
             const field = settingEdit?.[0];
             settingEdit = null;
+            if (editorMode === "setting") closeEditor(returnFocus);
             settingForm.hidden = true;
             settingValue.replaceChildren();
             showFormError(settingError);
@@ -377,19 +392,19 @@
         function renderWorkspace(snapshot, serverTime) {
             workspaceSnapshot = snapshot;
             workspaceClock = { serverTime, elapsedAt: performance.now() };
-            for (const button of paneButtons) {
-                if (["add", "custom"].includes(button.dataset.watchPane)) button.hidden = !writable;
-            }
+            addOpen.hidden = !writable;
+            customSection.hidden = !writable;
+            document.getElementById("watch-sync-help").hidden = false;
             settingHint.hidden = !writable;
             settings.closest("details").hidden = writable;
             if (!writable) {
                 closeSetting();
-                if (["add", "custom"].some(pane => !document.getElementById("watch-pane-" + pane).hidden)) showPane("today");
+                closeEditor(false);
                 showChange(null);
                 return;
             }
             const catalog = snapshot.customDrinks;
-            const selection = picker.value ? picks[Number(picker.value)] : null;
+            const selection = selectedDrink;
             picks = watchDrinks(snapshot, root.CaffeineTrackerCore.PRESET_DRINKS);
             document.getElementById("watch-sync-note").textContent = snapshot.schemaVersion >= 4
                 ? "Browser changes sync every minute while Caffeine is open on your watch." +
@@ -401,15 +416,15 @@
                 ? "Only preset drinks are shared. Manage other drinks on your watch."
                 : snapshot.schemaVersion >= 4 ? "Drink order matches your watch’s latest sync."
                     : "Sync with the updated watch app to use its drink order.";
-            picker.replaceChildren(new Option(picks.length ? "Choose a drink" : "No drinks available from your watch", ""), ...picks.map((drink, index) =>
-                new Option(drink.name + " · " + dose(drink.mg), String(index))));
-            const index = selection ? picks.findIndex(drink => drink.name === selection.name && drink.mg === selection.mg) : -1;
-            if (index >= 0) picker.value = String(index);
+            selectedDrink = selection ? picks.find(drink => drink.name === selection.name && drink.mg === selection.mg) || null : picks[0] || null;
+            renderDrinkChoices();
+            updateTimeHint();
             customForm.hidden = catalog === null;
             customNote.hidden = Boolean(catalog?.length);
             customNote.textContent = catalog === null ? "This list is too large to share. Manage your custom drinks on the watch."
                 : "No custom drinks on your watch yet.";
             customList.replaceChildren(...(catalog || []).map(drink => drinkRow(drink.name, drink.mg, false)));
+            document.getElementById("watch-add-custom").hidden = catalog === null;
             updateChangeButtons();
         }
 
@@ -420,7 +435,9 @@
             const key = JSON.stringify(operation);
             const request = retry?.key === key ? retry.request : { id: root.crypto.randomUUID(), operation };
             retry = { key, request, draftKey };
-            sent = { ...request, draftKey };
+            sent = { ...request, draftKey, priorCount: operation.kind === "drink"
+                ? workspaceSnapshot.events.filter(event => event.time === operation.time && event.mg === operation.mg).length : 0 };
+            snapshotChecks = 0;
             busyChange = true;
             refresh.disabled = action.disabled = checkSync.disabled = true;
             setChangeStatus("Sending change", "Keep this page open while we send your change.");
@@ -431,11 +448,20 @@
                 if (!result) throw new Error("unavailable");
                 retry = null;
                 showChange(result.change);
+                if (pendingChange() || result.change?.state === "applied") {
+                    closeEditor(false);
+                    showPane("today");
+                    changeTitle.focus({ preventScroll: true });
+                    changeStatus.scrollIntoView({ block: "nearest", behavior: "smooth" });
+                }
             } catch (error) {
                 if (generation !== current || !session) return;
                 if (error.message === "expired") { problem("expired"); return; }
                 setChangeStatus(error.message === "change_conflict" ? "A change may already be waiting" : "Send couldn’t be confirmed",
-                    "Tap Check sync before sending the change again.", "unconfirmed", true);
+                    "Check sync before sending again, so the same change isn’t saved twice.", "unconfirmed", true);
+                closeEditor(false);
+                showPane("today");
+                changeTitle.focus();
             } finally {
                 if (generation === current) {
                     busyChange = false;
@@ -448,42 +474,113 @@
         }
 
         function drinkDraftKey() {
-            if (!picker.value) return null;
-            const drink = picks[Number(picker.value)];
-            return JSON.stringify([drink.name, drink.mg, when.value, when.value === "choose" ? timeInput.value : ""]);
+            return selectedDrink ? JSON.stringify([selectedDrink.name, selectedDrink.mg, timeInput.value]) : null;
         }
 
         const workspaceNow = () => workspaceClock.serverTime + Math.floor((performance.now() - workspaceClock.elapsedAt) / 1000);
-        when.addEventListener("change", () => {
-            timeField.hidden = when.value !== "choose";
-            timeInput.required = !timeField.hidden;
-            showFormError(addError);
-            if (!timeField.hidden && workspaceClock) {
-                const now = workspaceNow();
-                timeInput.min = localDateTime(new Date((now - 172800) * 1000));
-                timeInput.max = localDateTime(new Date(now * 1000));
-                if (!timeInput.value) timeInput.value = timeInput.max;
-                timeInput.focus();
+        const futureWindow = () => workspaceSnapshot?.futureDrinkSeconds || 0;
+
+        function updateTimeHint() {
+            if (!workspaceClock) return;
+            const now = workspaceNow();
+            timeInput.min = localDateTime(new Date((now - 172800) * 1000));
+            timeInput.max = localDateTime(new Date((now + futureWindow()) * 1000));
+            const zone = Intl.DateTimeFormat().resolvedOptions().timeZone.replaceAll("_", " ");
+            document.getElementById("watch-drink-time-note").textContent = "Your local time · " + zone + ". " +
+                (futureWindow() ? "Past 48 hours or next 24 hours." : "Past 48 hours. Update the watch test app to schedule future drinks.");
+            const scheduled = new Date(timeInput.value).getTime() / 1000 > now;
+            addForm.querySelector('[type="submit"]').textContent = scheduled ? "Schedule drink" : "Add drink";
+        }
+
+        function renderDrinkChoices() {
+            const focused = drinkChoices.contains(document.activeElement);
+            drinkChoices.replaceChildren(...picks.map((drink, index) => {
+                const label = document.createElement("label");
+                label.className = "drink-choice";
+                const radio = document.createElement("input");
+                radio.type = "radio"; radio.name = "drink"; radio.value = String(index);
+                radio.checked = drink === selectedDrink;
+                const name = document.createElement("span"); name.textContent = drink.name;
+                const amount = document.createElement("small"); amount.textContent = dose(drink.mg);
+                label.append(radio, name, amount);
+                radio.addEventListener("change", () => { selectedDrink = drink; showFormError(addError); });
+                return label;
+            }));
+            if (focused) drinkChoices.querySelector('input:checked')?.focus({ preventScroll: true });
+        }
+
+        function openEditor(mode, preserveDraft = false) {
+            if (!writable) return;
+            if (!editor.open) editorReturn = document.activeElement;
+            editorMode = mode;
+            document.getElementById("watch-pane-add").hidden = mode !== "drink";
+            document.getElementById("watch-pane-custom").hidden = mode !== "custom";
+            settingForm.hidden = mode !== "setting";
+            editorTitle.textContent = { drink: "Add a drink", custom: "Create a drink", setting: "Edit setting" }[mode];
+            editorFeedback.hidden = true;
+            if (mode === "drink") {
+                if (!addDraftStarted && !preserveDraft) {
+                    timeInput.value = localDateTime(new Date(workspaceNow() * 1000));
+                    addDraftStarted = true;
+                    selectedDrink = selectedDrink || picks[0] || null;
+                }
+                renderDrinkChoices();
+                updateTimeHint();
             }
+            if (!editor.open) editor.showModal();
+            editor.scrollTop = 0;
+            if (mode === "drink") (drinkChoices.querySelector('input:checked') || drinkChoices.querySelector('input'))?.focus({ preventScroll: true });
+            if (mode === "custom") customForm.elements.name.focus({ preventScroll: true });
+            updateChangeButtons();
+        }
+
+        function closeEditor(restore = true) {
+            if (editor.open) editor.close();
+            editorMode = null;
+            if (restore && editorReturn?.isConnected) editorReturn.focus({ preventScroll: true });
+        }
+        editor.addEventListener("cancel", event => { event.preventDefault(); closeEditor(); });
+        editor.addEventListener("keydown", event => {
+            if (event.key === "Escape") { event.preventDefault(); closeEditor(); }
         });
+        document.getElementById("watch-editor-close").addEventListener("click", () => closeEditor());
+        addOpen.addEventListener("click", () => openEditor("drink"));
+        document.getElementById("watch-custom-open").addEventListener("click", () => {
+            document.getElementById("watch-custom-back").hidden = true;
+            openEditor("custom");
+        });
+        document.getElementById("watch-add-custom").addEventListener("click", () => {
+            document.getElementById("watch-custom-back").hidden = false;
+            openEditor("custom");
+        });
+        document.getElementById("watch-custom-back").addEventListener("click", () => openEditor("drink", true));
+        reviewChange.addEventListener("click", () => {
+            if (!sent) return;
+            if (sent.operation.kind === "setting") {
+                if (!settingEdit) openSetting(settingFields(workspaceSnapshot).find(field => field[0] === sent.operation.field));
+                else openEditor("setting", true);
+            } else openEditor(sent.operation.kind, true);
+            editorFeedback.hidden = false;
+            editorFeedback.textContent = changeTitle.textContent + ". " + changeDetail.textContent;
+        });
+        timeInput.addEventListener("input", updateTimeHint);
+        addForm.noValidate = true;
         addForm.addEventListener("input", () => showFormError(addError));
         addForm.addEventListener("submit", event => {
             event.preventDefault();
-            if (!picker.value || !workspaceClock) return;
-            const drink = picks[Number(picker.value)];
+            if (!workspaceClock) return;
+            if (!selectedDrink) { showFormError(addError, "Choose a drink to continue."); return; }
             const draftKey = drinkDraftKey();
             let time;
-            try {
-                const now = workspaceNow();
-                time = when.value === "choose" ? drinkTime(timeInput.value, now)
-                    : retry?.draftKey === draftKey ? retry.request.operation.time : now;
-            } catch (error) {
+            try { time = drinkTime(timeInput.value, workspaceNow(), futureWindow()); }
+            catch (error) {
                 showFormError(addError, error.message === "time_range"
-                    ? "Choose a time within the last 48 hours, up to now."
-                    : "Enter a valid date and time.");
+                    ? futureWindow() ? "Choose a time in the past 48 hours or next 24 hours. Your entered time hasn’t changed."
+                        : "This watch build supports the past 48 hours. Update the test app to schedule future drinks."
+                    : "Enter a valid local date and time.");
                 return;
             }
-            void submitChange({ kind: "drink", name: drink.name, mg: drink.mg, time }, draftKey);
+            void submitChange({ kind: "drink", name: selectedDrink.name, mg: selectedDrink.mg, time }, draftKey);
         });
         customForm.addEventListener("submit", event => {
             event.preventDefault();
@@ -512,6 +609,7 @@
         });
 
         function showPane(name) {
+            document.getElementById("today-title").textContent = { today: "Today", history: "History", settings: "Settings" }[name];
             for (const button of paneButtons) {
                 const selected = button.dataset.watchPane === name;
                 document.getElementById(button.getAttribute("aria-controls")).hidden = !selected;
@@ -533,16 +631,21 @@
             historyDay.replaceChildren();
             historyNote.textContent = "";
             values.replaceChildren();
+            document.getElementById("watch-settings-advanced").replaceChildren();
             settingsNote.textContent = "";
             history = [];
             writable = false;
             workspaceSnapshot = workspaceClock = retry = sent = null;
-            busyChange = false;
+            busyChange = false; snapshotChecks = 0;
+            closeEditor(false);
+            editorFeedback.textContent = "";
+            editorFeedback.hidden = true;
             for (const form of changeForms) form.reset();
-            picker.replaceChildren(new Option("Choose a drink", ""));
+            selectedDrink = null; addDraftStarted = false;
+            addOpen.hidden = customSection.hidden = true;
+            document.getElementById("watch-sync-help").hidden = true;
+            drinkChoices.replaceChildren();
             customList.replaceChildren();
-            timeField.hidden = true;
-            timeInput.required = false;
             showFormError(addError);
             customNote.hidden = true;
             customNote.textContent = "";
@@ -554,6 +657,7 @@
             events.dataset.collapsed = "true";
             updateHistoryButton();
             graph.replaceChildren();
+            document.getElementById("today-thresholds").replaceChildren();
             graphState = null;
             lastRead = -Infinity;
             estimate.textContent = "";
@@ -568,7 +672,7 @@
             settings.elements.absorptionMinutes.replaceChildren();
             settings.elements.belowAtThresholdMgPerL.defaultValue = "";
             settings.elements.belowAtThresholdMgPerL.value = "";
-            settings.closest("details").open = true;
+            settings.closest("details").open = false;
             changes.textContent = "";
             model = null;
             refresh.disabled = checkSync.disabled = false;
@@ -601,9 +705,21 @@
                 startSec: day.startSec, endSec: day.endSec, nowSec: now, formatTime,
                 compact: root.matchMedia("(max-width: 580px)").matches,
                 watchStyle: true,
+                sleepThreshold: true,
                 dict: { thresholdStimulated: "Stimulated", thresholdHigh: "High", thresholdMax: "Max" },
                 ariaLabel: "Estimated caffeine level by watch time. Solid for elapsed time, dashed for projected time.",
             });
+            const levels = document.getElementById("today-thresholds");
+            levels.replaceChildren(...[
+                ["sleep", "Sleep threshold", data.thresholds.belowAt],
+                ["stimulated", "Stimulated", data.thresholds.sleep],
+                ["high", "High", data.thresholds.optimal],
+                ["max", "Max", data.thresholds.max],
+            ].map(([key, label, value]) => {
+                const item = document.createElement("li"); item.dataset.level = key;
+                item.textContent = label + " · " + value.toLocaleString(undefined, { maximumFractionDigits: 1 }) + " mg/L";
+                return item;
+            }));
             graphState = { day, data, cursor: graph.querySelector(".ct-graph-cursor") };
             scrub.value = String(Math.max(0, Math.min(1440, Math.floor((now - day.startSec) / 60))));
             selectTime();
@@ -647,7 +763,7 @@
                 const group = document.createElement("section");
                 group.className = "history-group";
                 const heading = document.createElement("h4");
-                heading.textContent = day.date + (day.usesWatchTime ? " · Watch time" : " · UTC");
+                heading.textContent = friendlyDay(day.date) + (day.usesWatchTime ? "" : " · UTC");
                 const total = document.createElement("p");
                 total.className = "detail";
                 total.textContent = day.entries.length + (day.entries.length === 1 ? " entry" : " entries") +
@@ -661,6 +777,11 @@
         }
         historyDay.addEventListener("change", renderHistory);
 
+        function friendlyDay(date) {
+            return new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric", timeZone: "UTC" })
+                .format(new Date(date + "T12:00:00Z"));
+        }
+
         function renderSettings(snapshot) {
             const settings = snapshot.watchSettings;
             const clock = minutes => String(Math.floor(minutes / 60)).padStart(2, "0") + ":" +
@@ -668,7 +789,7 @@
             const items = [
                 ["Caffeine half-life", snapshot.model.halfLifeMinutes + " min"],
                 ["Absorption time", snapshot.model.absorptionMinutes + " min"],
-                ["Personal threshold", snapshot.model.belowAtThresholdMgPerL.toLocaleString() + " mg/L"],
+                ["Sleep threshold", snapshot.model.belowAtThresholdMgPerL.toLocaleString() + " mg/L"],
                 ["Effective model volume", snapshot.model.apparentVolumeLiters.toLocaleString(undefined, { maximumFractionDigits: 1 }) + " L"],
             ];
             if (settings) items.push(
@@ -681,6 +802,8 @@
             const editButtons = writable ? new Map(settingFields(snapshot).map(field => [field[1], field])) : new Map();
             const focusedSetting = document.activeElement?.dataset.setting;
             values.replaceChildren();
+            const advanced = document.getElementById("watch-settings-advanced");
+            advanced.replaceChildren();
             for (const [label, value] of items) {
                 const item = document.createElement("div");
                 const name = document.createElement("dt");
@@ -699,7 +822,8 @@
                     button.addEventListener("click", () => openSetting(field));
                     item.append(button);
                 }
-                values.append(item);
+                if (["Effective model volume", "Watch background refresh"].includes(label)) advanced.append(item);
+                else values.append(item);
             }
             if (focusedSetting) values.querySelector(`[data-setting="${focusedSetting}"]`)?.focus({ preventScroll: true });
             settingsNote.textContent = settings
@@ -720,15 +844,15 @@
             const clockSkew = Math.abs(data.receivedAt - capturedAt) > 600;
             const pastDay = data.serverTime >= watchDay.endSec;
             const stale = data.serverTime - data.receivedAt >= 7200 || pastDay;
-            const synced = new Date(data.receivedAt * 1000).toLocaleString();
-            document.getElementById("today-day").textContent = (pastDay ? "Last watch day · " : "") + watchDay.date;
+            const synced = new Date(data.receivedAt * 1000).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+            document.getElementById("today-day").textContent = (pastDay ? "Last watch day · " : "") + friendlyDay(watchDay.date);
             status.textContent = (clockSkew ? "Watch time differs from server time. " : stale ? "Stale snapshot. " : "") +
-                "Last synced " + synced + ".";
+                "Synced " + synced + ".";
             document.getElementById("today-reading").textContent = watchDisplay.cachedLevelMgPerL === null
                 ? "No cached reading from the watch" : watchDisplay.cachedLevelMgPerL.toFixed(2) + " mg/L";
             document.getElementById("today-captured").textContent = watchDisplay.cachedAt === null
                 ? "Snapshot captured " + new Date(capturedAt * 1000).toLocaleString()
-                : "Watch’s cached reading from " + new Date(watchDisplay.cachedAt * 1000).toLocaleString();
+                : "From your watch · " + new Date(watchDisplay.cachedAt * 1000).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
             events.replaceChildren();
             const reference = clockSkew ? capturedAt : data.serverTime;
             renderGraph(data.snapshot, reference);
@@ -771,12 +895,24 @@
             content.hidden = false;
         }
 
+        function reflectsSave() {
+            if (!sent || !workspaceSnapshot) return false;
+            const op = sent.operation;
+            if (op.kind === "drink") return workspaceSnapshot.events.filter(event =>
+                event.time === op.time && event.mg === op.mg).length > sent.priorCount;
+            if (op.kind === "custom") return workspaceSnapshot.customDrinks?.some(drink => drink.name === op.name && drink.mg === op.mg);
+            return settingFields(workspaceSnapshot).find(field => field[0] === op.field)?.[2] === op.value;
+        }
+
         function scheduleChangeCheck() {
             clearTimeout(changeTimer);
-            if (session && pendingChange() && !document.hidden) {
+            if (session && (pendingChange() || snapshotChecks > 0) && !document.hidden) {
                 changeTimer = setTimeout(() => {
-                    if (session && !busyChange && !document.hidden) void loadToday(generation);
-                }, 5000);
+                    if (session && !busyChange && !document.hidden) {
+                        if (!pendingChange()) snapshotChecks -= 1;
+                        void loadToday(generation);
+                    }
+                }, pendingChange() ? 5000 : 2000);
             }
         }
 
@@ -843,7 +979,7 @@
             const fields = [
                 ["Half-life", "halfLifeMinutes", "min", model.halfLifeMinutes],
                 ["Absorption", "absorptionMinutes", "min", model.absorptionMinutes],
-                ["Threshold", "belowAtThresholdMgPerL", "mg/L", Number(model.belowAtThresholdMgPerL.toFixed(1))],
+                ["Sleep threshold", "belowAtThresholdMgPerL", "mg/L", Number(model.belowAtThresholdMgPerL.toFixed(1))],
             ];
             const edits = fields.flatMap(([label, key, unit, initial]) => {
                 const value = Number(settings.elements[key].value);
@@ -857,6 +993,7 @@
             delete detail.dataset.normal;
             action.hidden = state !== "Connected"; action.disabled = false;
             duration.hidden = state !== "Connected";
+            if (state !== "Connected") document.getElementById("watch-sync-help").hidden = true;
         }
         function problem(code) {
             clearTimeout(expiryTimer); session = null;
@@ -870,6 +1007,8 @@
         }
         function connected(data, current) {
             session = data; handoff = null;
+            duration.textContent = "Connected until " + new Date((Date.now() + (data.expiresAt - data.serverTime) * 1000))
+                .toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
             show("Connected", "Your watch is connected", "Your watch is connected for up to ten minutes. No account needed.", "Watch data and settings are not available in this preview.");
             expiryTimer = setTimeout(() => { if (generation === current) problem("expired"); }, Math.max(0, (data.expiresAt - data.serverTime) * 1000));
             if (data.destination === "today") void loadToday(current);

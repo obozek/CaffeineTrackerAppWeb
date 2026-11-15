@@ -106,6 +106,10 @@ test("validates the extra settings and offsets only in an extended snapshot", ()
     assert.throws(() => readToday({ ...response, snapshot: { ...snapshot,
         watchSettings: { ...snapshot.watchSettings, backgroundIntervalMinutes: 10 },
     } }), /invalid_response/);
+    const scheduled = { ...snapshot, schemaVersion: 4, availablePresets: [], customDrinks: [], drinkOrder: [],
+        sync: { foregroundIntervalSeconds: 60, backgroundIntervalMinutes: null }, futureDrinkSeconds: 86400 };
+    assert.equal(readToday({ ...response, snapshot: scheduled }).snapshot.futureDrinkSeconds, 86400);
+    assert.throws(() => readToday({ ...response, snapshot: { ...scheduled, futureDrinkSeconds: 86401 } }), /invalid_response/);
 });
 
 test("connected drinks follow the watch's combined preset/custom order", () => {
@@ -131,4 +135,28 @@ test("a chosen drink time uses the browser timezone and the watch's 48-hour limi
     assert.throws(() => drinkTime("2026-11-13T15:01", now), /time_range/);
     assert.throws(() => drinkTime("2026-02-30T12:00", now), /invalid_time/);
     assert.throws(() => drinkTime("", now), /invalid_time/);
+});
+
+test("a watch advertising scheduled drinks preserves future time within its bounded window", () => {
+    const { drinkTime } = require("../assets/companion.js");
+    const now = Math.floor(new Date(2026, 10, 15, 15, 0).getTime() / 1000);
+    assert.equal(drinkTime("2026-11-15T16:30", now, 86400), now + 5400);
+    assert.equal(drinkTime("2026-11-16T15:00", now, 86400), now + 86400);
+    assert.throws(() => drinkTime("2026-11-16T15:01", now, 86400), /time_range/);
+    assert.throws(() => drinkTime("2026-11-15T16:30", now), /time_range/);
+});
+
+test("invalid calendar days and spring clock gaps cannot turn into a different drink time", () => {
+    const { drinkTime } = require("../assets/companion.js");
+    const previous = process.env.TZ;
+    try {
+        process.env.TZ = "Europe/Prague";
+        const now = Math.floor(new Date("2026-03-29T01:00:00+01:00").getTime() / 1000);
+        assert.throws(() => drinkTime("2026-03-29T02:30", now, 86400), /invalid_time/);
+        assert.throws(() => drinkTime("2026-02-30T12:00", now, 86400), /invalid_time/);
+        assert.equal(drinkTime("2026-03-29T03:30", now, 86400), now + 5400);
+    } finally {
+        if (previous === undefined) delete process.env.TZ;
+        else process.env.TZ = previous;
+    }
 });

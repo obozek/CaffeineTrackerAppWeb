@@ -2,6 +2,43 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const { execFileSync } = require("node:child_process");
 const core = require("../assets/caffeine-tracker-core.js");
+const vm = require("node:vm");
+const fs = require("node:fs");
+const renderer = { CaffeineTrackerCore: core };
+vm.runInNewContext(fs.readFileSync(require.resolve("../assets/caffeine-tracker-graph.js"), "utf8"), renderer);
+
+test("the connected chart plots and labels the watch's sleep threshold alongside fixed levels", () => {
+    const graph = { maxLevel: 12, thresholds: { sleep: 1, optimal: 5, max: 10, belowAt: 0.6 },
+        points: [{ time: 0, level: 0 }, { time: 86400, level: 1 }], markers: [] };
+    const options = { startSec: 0, endSec: 86400, nowSec: 43200, watchStyle: true, sleepThreshold: true,
+        formatTime: () => "00:00", dict: { thresholdStimulated: "Stimulated", thresholdHigh: "High", thresholdMax: "Max" } };
+    for (const compact of [false, true]) {
+        const svg = renderer.CaffeineTrackerGraph.renderGraph(graph, { ...options, compact });
+        assert.match(svg, /class="ct-threshold-sleep"/);
+        assert.match(svg, /Sleep threshold · 0.6 mg\/L/);
+        assert.match(svg, /ct-threshold-stimulated/);
+        assert.match(svg, /ct-threshold-high/);
+        assert.match(svg, /ct-threshold-max/);
+        const height = compact ? 254 : 330;
+        const y = (16 + (12 - 0.6) / 12 * (height - 16 - 30)).toFixed(2);
+        assert.match(svg, new RegExp('class="ct-threshold-sleep"[^>]*y1="' + y + '"'));
+    }
+    const coincident = renderer.CaffeineTrackerGraph.renderGraph({ ...graph, thresholds: { ...graph.thresholds, belowAt: 1 } }, options);
+    assert.match(coincident, /Sleep threshold · 1 mg\/L/);
+    const ordinary = renderer.CaffeineTrackerGraph.renderGraph(graph, { ...options, sleepThreshold: false });
+    assert.doesNotMatch(ordinary, /ct-threshold-sleep/);
+    const curve = svg => [...svg.matchAll(/<path[^>]+d="([^"]*)"/g)].map(match => match[1]);
+    assert.deepEqual(curve(renderer.CaffeineTrackerGraph.renderGraph(graph, options)), curve(ordinary));
+    const empty = { ...graph, maxLevel: 1, thresholds: { ...graph.thresholds, belowAt: 1.5 } };
+    const before = JSON.stringify(empty);
+    const low = renderer.CaffeineTrackerGraph.renderGraph(empty, options);
+    assert.match(low, /Sleep threshold · 1.5 mg\/L/);
+    assert.match(low, /class="ct-threshold-sleep"[^>]+y1="63.33"/);
+    assert.equal(JSON.stringify(empty), before);
+    const retained = renderer.CaffeineTrackerGraph.renderGraph({ ...empty, thresholds: { ...empty.thresholds, belowAt: 10 } }, options);
+    assert.match(retained, /class="ct-threshold-high"/);
+    assert.match(retained, /class="ct-threshold-max"/);
+});
 
 // A fresh process gives Date/Intl an explicit browser-zone analogue without
 // mutating the test runner's timezone or relying on the developer's locale.
