@@ -4,6 +4,72 @@ const { takeHandoff, createClient } = require('../assets/companion.js');
 const id='01234567-89ab-cdef-0123-456789abcdef', secret='a'.repeat(43);
 const config={enabled:true,apiOrigin:'https://worker.caffeinetracker.app'};
 const data={protocolVersion:1,appId:'caffeine',destination:'today',expiresAt:1600,serverTime:1000};
+test('history patches preserve original seconds and legacy values until explicitly changed',()=>{
+ const { recordPatch, localDateTime }=require('../assets/companion.js');
+ const now=Math.floor(Date.now()/1000), original={name:'Legacy drink',mg:712.5,time:now-3600+17};
+ const initial={name:original.name,mg:String(original.mg),time:localDateTime(new Date(original.time*1000))};
+ assert.deepEqual(recordPatch(original,initial,now,86400),{});
+ assert.deepEqual(recordPatch(original,{...initial,name:'Corrected drink'},now,86400),{name:'Corrected drink'});
+ assert.throws(()=>recordPatch(original,{...initial,mg:'712.6'},now,86400),/invalid_amount/);
+ const moved=localDateTime(new Date((now-7200)*1000));
+ assert.deepEqual(recordPatch(original,{...initial,time:moved},now,86400),{time:new Date(moved).getTime()/1000});
+ assert.throws(()=>recordPatch(original,{...initial,name:'x'.repeat(65)},now,86400),/invalid_name/);
+});
+test('an unchanged displayed time remains unchanged when the browser timezone changes during editing',()=>{
+ const { recordPatch, localDateTime }=require('../assets/companion.js');
+ const prior=process.env.TZ;
+ try {
+  process.env.TZ='UTC';
+  const now=Math.floor(Date.now()/1000), original={name:'Coffee',mg:64,time:now-3600};
+  const displayed=localDateTime(new Date(original.time*1000));
+  process.env.TZ='America/New_York';
+  assert.deepEqual(recordPatch(original,{name:'Corrected coffee',mg:'64',time:displayed},now,86400,displayed),{name:'Corrected coffee'});
+ } finally { if(prior===undefined) delete process.env.TZ; else process.env.TZ=prior; }
+});
+test('save recovery retains the exact write epoch with its original request',()=>{
+ const { createSaveRecovery }=require('../assets/companion.js');
+ const recovery=createSaveRecovery(()=>id), operation={kind:'eventDelete',eventId:id,expectedRevision:1};
+ assert.equal(recovery.prepare(operation,null,0,id).request.writeEpoch,id);
+ recovery.checked(null);
+ assert.equal(recovery.prepare(operation,null,0,'new-epoch').request.writeEpoch,id);
+});
+test('management patches and retained request bodies keep duplicate identities and nested values separate',()=>{
+ const { createSaveRecovery, recordPatch, loggableDrink }=require('../assets/companion.js');
+ const original={name:'',mg:900.125};
+ assert.deepEqual(recordPatch(original,{name:'Corrected',mg:String(original.mg)}),{name:'Corrected'});
+ assert.deepEqual(recordPatch(original,{name:'',mg:'50'}),{mg:50});
+ assert.equal(loggableDrink(original),false);
+ assert.equal(loggableDrink({name:'Legacy',mg:90.5}),false);
+ assert.equal(loggableDrink({name:'Espresso',mg:64}),true);
+ const recovery=createSaveRecovery(()=>id), patch={name:'Corrected'};
+ const attempt=recovery.prepare({kind:'eventUpdate',eventId:id,expectedRevision:1,patch},null,0,id);
+ patch.name='Changed after sending';
+ assert.equal(attempt.request.operation.patch.name,'Corrected');
+ assert.equal(Object.isFrozen(attempt.request.operation.patch),true);
+});
+test('reconciliation is an explicit cookie request and stale write epochs have their own error',async()=>{
+ const calls=[];
+ const client=createClient(config,async(url,options)=>{calls.push({url,options});return {ok:true,status:200,json:async()=>({writeEpoch:id,sessionId:id,change:null})}});
+ assert.deepEqual(await client.reconcile(),{writeEpoch:id,sessionId:id,change:null});
+ assert.equal(calls[0].url,config.apiOrigin+'/v1/guest/changes/reconcile');
+ assert.equal(calls[0].options.body,'{}');
+ const stale=createClient(config,async()=>({ok:false,status:409,json:async()=>({error:'stale_write_session'})}));
+ await assert.rejects(stale.sendChange({id,operation:{kind:'eventDelete',eventId:id,expectedRevision:1},writeEpoch:id}),/stale_write_session/);
+ const oldServer=createClient(config,async()=>({ok:false,status:404}));
+ assert.equal(await oldServer.reconcile(),null);
+ const exact=createClient(config,async(url)=>{assert.equal(url,config.apiOrigin+'/v1/guest/changes/'+id);return {ok:true,status:200,json:async()=>({change:{id,kind:'eventDelete',state:'applied'}})}});
+ assert.equal((await exact.changes(id)).change.state,'applied');
+});
+test('applied receipts may carry a safe freshness marker, without exposing it on other outcomes',async()=>{
+ const { snapshotAfter }=require('../assets/companion.js');
+ assert.equal(snapshotAfter({snapshotSequence:2},1),true);
+ for (const snapshotSequence of [undefined,'2',0,1,2.5,Infinity]) assert.equal(snapshotAfter({snapshotSequence},1),false);
+ for (const [state,afterSequence,valid] of [['applied',0,true],['applied',9007199254740991,true],['applied',-1,false],['applied',1.5,false],['queued',1,false]]) {
+  const client=createClient(config,async()=>({ok:true,status:200,json:async()=>({change:{id,kind:'eventUpdate',state,afterSequence}})}));
+  if (valid) assert.equal((await client.changes(id)).change.afterSequence,afterSequence);
+  else await assert.rejects(client.changes(id),/invalid_response/);
+ }
+});
 test("an uncertain save retains its exact request and needs an explicit check before retry", () => {
  const { createSaveRecovery } = require('../assets/companion.js');
  let ids=0; const recovery=createSaveRecovery(()=>String(++ids));
@@ -140,6 +206,14 @@ test("validates the extra settings and offsets only in an extended snapshot", ()
         sync: { foregroundIntervalSeconds: 60, backgroundIntervalMinutes: null }, futureDrinkSeconds: 86400 };
     assert.equal(readToday({ ...response, snapshot: scheduled }).snapshot.futureDrinkSeconds, 86400);
     assert.throws(() => readToday({ ...response, snapshot: { ...scheduled, futureDrinkSeconds: 86401 } }), /invalid_response/);
+    const managed = { ...scheduled, schemaVersion: 5, snapshotSequence: 1,
+        events: [{ ...snapshot.events[0], id, revision: 1, name: '', mg: 712.125 }],
+        customDrinks: [{ id: '11234567-89ab-cdef-0123-456789abcdef', revision: 2, name: 'x'.repeat(100), mg: 900.5 }], drinkOrder: [0] };
+    assert.deepEqual(readToday({ ...response, snapshot: managed }).snapshot.events, managed.events);
+    assert.throws(() => readToday({ ...response, snapshot: { ...managed, events: [...managed.events, ...managed.events] } }), /invalid_response/);
+    assert.throws(() => readToday({ ...response, snapshot: { ...managed, events: [{ ...managed.events[0], revision: 0 }] } }), /invalid_response/);
+    assert.throws(() => readToday({ ...response, snapshot: { ...managed, events: [{ ...managed.events[0], name: 'x'.repeat(257) }] } }), /invalid_response/);
+    assert.throws(() => readToday({ ...response, snapshot: { ...managed, schemaVersion: 4 } }), /invalid_response/);
 });
 
 test("connected drinks follow the watch's combined preset/custom order", () => {

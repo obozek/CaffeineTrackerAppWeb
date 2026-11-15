@@ -13,10 +13,18 @@
     }
     const unix = value => Number.isInteger(value) && value >= 0 && value <= 0xffffffff;
     const finite = value => typeof value === "number" && Number.isFinite(value);
+    const uuid = value => typeof value === "string" && /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(value);
+    const revision = value => Number.isInteger(value) && value >= 1 && value <= 2147483647;
+    const sharedName = value => typeof value === "string" && new TextEncoder().encode(value).length <= 256;
+    const changeKinds = ["drink", "custom", "setting", "eventUpdate", "eventDelete", "customUpdate", "customDelete", "customReorder"];
     function calendarDate(value) {
         if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
         const date = new Date(value + "T00:00:00Z");
         return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+    }
+    function snapshotAfter(snapshot, afterSequence) {
+        return Number.isSafeInteger(snapshot?.snapshotSequence) && snapshot.snapshotSequence > 0 &&
+            Number.isSafeInteger(afterSequence) && afterSequence >= 0 && snapshot.snapshotSequence > afterSequence;
     }
 
     // Retain one immutable request until its exact receipt is known. Checking
@@ -24,15 +32,23 @@
     // a late server commit safe, even when the user has edited another draft.
     function createSaveRecovery(createId) {
         let attempt = null;
+        function freeze(value) {
+            if (value && typeof value === "object") {
+                Object.values(value).forEach(freeze);
+                Object.freeze(value);
+            }
+            return value;
+        }
         return {
             get pending() { return attempt !== null; },
             get canRetry() { return attempt?.checked === true; },
             get attempt() { return attempt; },
-            prepare(operation, draftKey, priorCount) {
+            prepare(operation, draftKey, priorCount, writeEpoch) {
                 const key = JSON.stringify(operation);
                 if (attempt && attempt.key !== key) throw new Error("save_uncertain");
                 if (!attempt) attempt = { key, draftKey, priorCount, checked: false,
-                    request: Object.freeze({ id: createId(), operation: Object.freeze({ ...operation }) }) };
+                    request: Object.freeze({ id: createId(), operation: freeze(JSON.parse(key)),
+                        ...(writeEpoch ? { writeEpoch } : {}) }) };
                 attempt.checked = false;
                 return attempt;
             },
@@ -48,13 +64,14 @@
 
     function readToday(data) {
         if (!data || !unix(data.serverTime)) throw new Error("invalid_response");
+        if (data.sessionId !== undefined && !uuid(data.sessionId)) throw new Error("invalid_response");
         if (data.snapshot === null && data.receivedAt === null && data.expiresAt === null) return data;
         const snapshot = data.snapshot;
         const day = snapshot?.watchDay;
         const display = snapshot?.watchDisplay;
         const model = snapshot?.model;
         if (!unix(data.receivedAt) || !unix(data.expiresAt) || data.expiresAt <= data.serverTime ||
-            ![1, 2, 3, 4].includes(snapshot?.schemaVersion) || !unix(snapshot.capturedAt) ||
+            ![1, 2, 3, 4, 5].includes(snapshot?.schemaVersion) || !unix(snapshot.capturedAt) ||
             !day || !calendarDate(day.date) || !unix(day.startSec) || day.endSec !== day.startSec + 86400 ||
             !Array.isArray(day.offsetSegments) || day.offsetSegments.length < 1 || day.offsetSegments.length > 2 ||
             day.offsetSegments[0]?.fromSec !== day.startSec ||
@@ -82,14 +99,20 @@
         }
         if (snapshot.schemaVersion >= 3 && snapshot.customDrinks !== null &&
             (!Array.isArray(snapshot.customDrinks) || snapshot.customDrinks.length > 32 ||
-                snapshot.customDrinks.some(drink => typeof drink?.name !== "string" ||
-                    !Number.isInteger(drink.mg) || drink.mg < 0 || drink.mg > 500))) {
+                snapshot.customDrinks.some(drink => snapshot.schemaVersion === 5
+                    ? !sharedName(drink?.name) || !finite(drink.mg) || drink.mg < 0 || drink.mg > 100000
+                    : typeof drink?.name !== "string" || !Number.isInteger(drink.mg) || drink.mg < 0 || drink.mg > 500))) {
             throw new Error("invalid_response");
         }
-        if (snapshot.schemaVersion === 4 && ((snapshot.futureDrinkSeconds !== undefined && snapshot.futureDrinkSeconds !== 86400) ||
+        if (snapshot.schemaVersion >= 4 && ((snapshot.futureDrinkSeconds !== undefined && snapshot.futureDrinkSeconds !== 86400) ||
             !validDrinkOrder(snapshot) ||
             snapshot.sync?.foregroundIntervalSeconds !== 60 ||
             ![null, 5].includes(snapshot.sync.backgroundIntervalMinutes))) throw new Error("invalid_response");
+        if (snapshot.schemaVersion === 5 && ((!Number.isSafeInteger(snapshot.snapshotSequence) || snapshot.snapshotSequence < 1) ||
+            snapshot.events.some(event => !uuid(event.id) || !revision(event.revision) || !sharedName(event.name) || event.mg > 100000) ||
+            new Set(snapshot.events.map(event => event.id)).size !== snapshot.events.length ||
+            (snapshot.customDrinks !== null && (snapshot.customDrinks.some(drink => !uuid(drink.id) || !revision(drink.revision)) ||
+                new Set(snapshot.customDrinks.map(drink => drink.id)).size !== snapshot.customDrinks.length)))) throw new Error("invalid_response");
         return data;
     }
 
@@ -108,6 +131,12 @@
         return (order ? order.map(index => drinks[index]) : drinks).filter(Boolean);
     }
 
+    function loggableDrink(drink) {
+        return drink && typeof drink.name === "string" && drink.name.length > 0 && drink.name === drink.name.trim() &&
+            new TextEncoder().encode(drink.name).length <= 64 && !/[\u0000-\u001f\u007f-\u009f]/.test(drink.name) &&
+            Number.isInteger(drink.mg) && drink.mg >= 0 && drink.mg <= 500;
+    }
+
     function drinkTime(value, now, futureSeconds = 0) {
         if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) throw new Error("invalid_time");
         const date = new Date(value);
@@ -120,6 +149,26 @@
     function localDateTime(date) {
         const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
         return local.toISOString().slice(0, 16);
+    }
+
+    // Only changed fields cross the wire. Historic values can predate current
+    // authoring limits, and a minute picker must not erase original seconds.
+    function recordPatch(original, values, now, futureSeconds, originalTimeValue = null) {
+        const patch = {};
+        const name = values.name === original.name ? original.name : values.name.trim();
+        if (name !== original.name) {
+            if (!name || new TextEncoder().encode(name).length > 64 || /[\u0000-\u001f\u007f-\u009f]/.test(name)) throw new Error("invalid_name");
+            patch.name = name;
+        }
+        const mg = Number(values.mg);
+        if (mg !== original.mg || values.mg.trim() === "") {
+            if (!Number.isInteger(mg) || mg < 0 || mg > 500 || values.mg.trim() === "") throw new Error("invalid_amount");
+            patch.mg = mg;
+        }
+        if (values.time !== undefined && values.time !== (originalTimeValue ?? localDateTime(new Date(original.time * 1000)))) {
+            patch.time = drinkTime(values.time, now, futureSeconds);
+        }
+        return patch;
     }
 
     function validWatchSettings(settings) {
@@ -153,7 +202,7 @@
             const scheduled = event.time > now;
             const time = schemaVersion === 1 && insideWatchDay
                 ? watchTime(event.time, watchDay.offsetSegments) : stamp.slice(11, 16);
-            group.entries.push({ time, mg: event.mg, scheduled });
+            group.entries.push({ time, mg: event.mg, scheduled, ...(schemaVersion >= 5 ? { record: event } : {}) });
             if (!scheduled) group.total += event.mg;
             groups.set(key, group);
         }
@@ -170,26 +219,35 @@
             if (!config.enabled || closed) throw new Error("unavailable");
             if (active) throw new Error("busy");
             active = true; controller = new AbortController();
+            const exactChange = path.startsWith("/v1/guest/changes/") && uuid(path.slice("/v1/guest/changes/".length));
             const timer = setTimeout(() => controller.abort(), 15000);
             try {
                 const response = await fetcher(api.origin + path, { method, credentials: "include", cache: "no-store", signal: controller.signal,
                     headers: { "X-Caffeine-Companion": "1", ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
                     ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
                 if (closed) throw new Error("unavailable");
-                if (response.status === 404 && ["/v1/guest/today", "/v1/guest/changes"].includes(path)) return null;
-                if (response.status === 409) throw new Error("change_conflict");
+                if (response.status === 404 && ["/v1/guest/today", "/v1/guest/changes", "/v1/guest/changes/reconcile"].includes(path)) return null;
+                if (response.status === 409) {
+                    let failure;
+                    try { failure = await response.json(); } catch { /* Older servers may omit a JSON error. */ }
+                    throw new Error(failure?.error === "stale_write_session" ? "stale_write_session" : "change_conflict");
+                }
                 if (path === "/v1/guest/changes" && method === "POST" && [400, 413].includes(response.status)) throw new Error("invalid_change");
                 if (!response.ok) throw new Error(response.status === 401 ? "expired" : response.status === 429 ? "rate_limited" : "unavailable");
                 if (response.status === 204) return null;
                 const data = await response.json();
                 if (closed) throw new Error("unavailable");
-                if (path === "/v1/guest/changes") {
-                    if (!data || (data.change !== null && (!data.change || typeof data.change.id !== "string" ||
-                        !["drink", "custom", "setting"].includes(data.change.kind) ||
-                        !["queued", "offered", "applied", "conflict", "premium", "invalid", "interrupted", "expired", "unconfirmed"].includes(data.change.state)))) {
+                if (path === "/v1/guest/changes" || path === "/v1/guest/changes/reconcile" || exactChange) {
+                    if (!data || (data.sessionId !== undefined && !uuid(data.sessionId)) || (data.change !== null && (!data.change || !uuid(data.change.id) ||
+                        !changeKinds.includes(data.change.kind) ||
+                        !["queued", "offered", "applied", "conflict", "premium", "invalid", "interrupted", "expired", "unconfirmed"].includes(data.change.state) ||
+                        (data.change.afterSequence !== undefined && (data.change.state !== "applied" ||
+                            !Number.isSafeInteger(data.change.afterSequence) || data.change.afterSequence < 0))))) {
                         throw new Error("invalid_response");
                     }
-                    if (method === "POST" && (data.change?.id !== body.id || data.change.kind !== body.operation.kind)) throw new Error("invalid_response");
+                    if (path.endsWith("/reconcile")) {
+                        if (!uuid(data.writeEpoch) || !uuid(data.sessionId)) throw new Error("invalid_response");
+                    } else if (method === "POST" && (data.change?.id !== body.id || data.change.kind !== body.operation.kind)) throw new Error("invalid_response");
                     return data;
                 }
                 if (path === "/v1/guest/today") return readToday(data);
@@ -202,13 +260,14 @@
             redeem: handoff => request("/v1/guest/redeem", "POST", handoff),
             resume: () => request("/v1/guest/session", "GET"),
             today: () => request("/v1/guest/today", "GET"),
-            changes: () => request("/v1/guest/changes", "GET"),
+            changes: (id = null) => request("/v1/guest/changes" + (id ? "/" + id : ""), "GET"),
+            reconcile: () => request("/v1/guest/changes/reconcile", "POST", {}),
             sendChange: change => request("/v1/guest/changes", "POST", change),
             logout: () => request("/v1/guest/session", "DELETE", {}),
             close: () => { closed = true; if (controller) controller.abort(); }
         };
     }
-    const exported = { takeHandoff, createClient, readToday, watchTime, retainedHistory, watchDrinks, drinkTime, createSaveRecovery };
+    const exported = { takeHandoff, createClient, readToday, watchTime, retainedHistory, watchDrinks, drinkTime, createSaveRecovery, recordPatch, localDateTime, loggableDrink, snapshotAfter };
     if (typeof module !== "undefined" && module.exports) { module.exports = exported; return; }
     // Consume before loading styles/images or rendering. Never write secrets to
     // storage, DOM, logs, URL query parameters or analytics.
@@ -248,7 +307,7 @@
         const checkSync = document.getElementById("watch-change-check");
         const retrySave = document.getElementById("watch-change-retry");
         const checkedWatch = document.getElementById("watch-change-reviewed");
-        let reviewedChangeId = null;
+        const reviewedChanges = new Set();
         const recovery = createSaveRecovery(() => root.crypto.randomUUID());
         const addForm = document.getElementById("watch-add-form");
         const customForm = document.getElementById("watch-custom-form");
@@ -260,7 +319,7 @@
         const addOpen = document.getElementById("watch-add-open");
         const reviewChange = document.getElementById("watch-change-review");
         const customSection = document.getElementById("watch-custom-section");
-        let editorMode, editorReturn, selectedDrink = null, addDraftStarted = false;
+        let editorMode, editorReturn, editorReturnTarget, selectedDrink = null, addDraftStarted = false;
         const timeInput = document.getElementById("watch-drink-time");
         const addError = document.getElementById("watch-add-error");
         const customList = document.getElementById("watch-custom-list");
@@ -269,9 +328,29 @@
         const settingValue = document.getElementById("watch-setting-value");
         const settingError = document.getElementById("watch-setting-error");
         const settingHint = document.getElementById("watch-settings-edit-note");
-        const changeForms = [addForm, customForm, settingForm];
+        const eventForm = document.getElementById("watch-event-form");
+        const deleteForm = document.getElementById("watch-delete-form");
+        const reorderForm = document.getElementById("watch-reorder-form");
+        const eventError = document.getElementById("watch-event-error");
+        const deleteError = document.getElementById("watch-delete-error");
+        const reorderError = document.getElementById("watch-reorder-error");
+        const recordEdit = document.getElementById("watch-record-edit");
+        const recordDelete = document.getElementById("watch-record-delete");
+        const customReorder = document.getElementById("watch-custom-reorder");
+        const reorderList = document.getElementById("watch-reorder-list");
+        const changeForms = [addForm, customForm, settingForm, eventForm, deleteForm, reorderForm];
         let writable, workspaceSnapshot, workspaceClock, currentChange, sent, settingEdit, picks = [];
-        let busyChange = false, snapshotChecks = 0;
+        let writeEpoch = null, writeSessionId = null, needsReconcile = true, scopeRestarts = 0;
+        let recoveredHandoffId = null;
+        let selectedRecord = null, eventEdit = null, eventTimeBaseline = null, customEdit = null, orderEdit = null;
+        let editorEntry = null, closingEditorEntry = null;
+        let busyChange = false, snapshotChecks = 0, awaitingSnapshot = false;
+        const management = () => writable && workspaceSnapshot?.schemaVersion === 5;
+        const recordName = record => record.name || "Unnamed drink";
+        const currentRecord = selection => selection?.type === "event"
+            ? workspaceSnapshot?.events.find(record => record.id === selection.record.id)
+            : workspaceSnapshot?.customDrinks?.find(record => record.id === selection?.record.id);
+        const canDeleteCustom = () => (workspaceSnapshot?.availablePresets.length || 0) + (workspaceSnapshot?.customDrinks?.length || 0) > 1;
 
         const changeLabels = {
             queued: ["Waiting for watch", "On your watch, open Phone → Sync from web. Then tap Check sync here."],
@@ -285,8 +364,8 @@
             unconfirmed: ["Save wasn’t confirmed", "Check the watch’s History or setting first, then choose “I checked the watch” to continue. New saves are paused."],
         };
         const pendingChange = () => ["queued", "offered"].includes(currentChange?.state);
-        const uncertainOutcome = () => ["interrupted", "unconfirmed"].includes(currentChange?.state) && currentChange.id !== reviewedChangeId;
-        const saveBlocked = () => pendingChange() || uncertainOutcome() || recovery.pending;
+        const uncertainOutcome = () => ["interrupted", "unconfirmed"].includes(currentChange?.state) && !reviewedChanges.has(currentChange.id);
+        const saveBlocked = () => pendingChange() || uncertainOutcome() || recovery.pending || awaitingSnapshot;
 
         function setChangeStatus(title = "", detail = "", state = "", canCheck = false) {
             const announcement = [title, detail].filter(Boolean).join(". ");
@@ -306,24 +385,32 @@
         function showChange(result) {
             recovery.resolve(result);
             const operation = result && result.id === sent?.id ? sent.operation : null;
-            if (operation && result.state === "applied" && (currentChange?.id !== result.id || currentChange?.state !== "applied")) snapshotChecks = 3;
-            if (snapshotChecks && reflectsSave()) snapshotChecks = 0;
+            if (result?.state === "applied" && (operation || result.afterSequence !== undefined)) {
+                if (currentChange?.id !== result.id || currentChange?.state !== "applied" || currentChange?.afterSequence !== result.afterSequence) snapshotChecks = 3;
+                awaitingSnapshot = result.afterSequence !== undefined
+                    ? !snapshotAfter(workspaceSnapshot, result.afterSequence) : !reflectsSave();
+                if (!awaitingSnapshot) snapshotChecks = 0;
+            }
             if (operation && result.state === "applied" && (result.id !== currentChange?.id || pendingChange())) {
                 discardMatchedDraft(sent);
             }
             currentChange = result;
             if (result) {
-                const kind = { drink: "Drink", custom: "Custom drink", setting: "Setting" }[result.kind];
-                const subject = operation?.name || (operation?.kind === "setting" &&
+                const kind = { drink: "Drink", custom: "Custom drink", setting: "Setting", eventUpdate: "Drink update",
+                    eventDelete: "Drink deletion", customUpdate: "Custom drink update", customDelete: "Custom drink deletion", customReorder: "Drink order" }[result.kind];
+                const subject = sent?.id === result.id && sent.summary || operation?.name || (operation?.kind === "setting" &&
                     settingFields(workspaceSnapshot).find(field => field[0] === operation.field)?.[1]) || kind;
                 const [title, detail] = changeLabels[result.state];
-                const guidance = result.id === reviewedChangeId && ["interrupted", "unconfirmed"].includes(result.state)
+                const guidance = reviewedChanges.has(result.id) && ["interrupted", "unconfirmed"].includes(result.state)
                     ? "You reviewed the watch. The earlier save result is still unknown; any new save is a separate change."
                     : result.state === "queued" && workspaceSnapshot?.schemaVersion >= 4
                         ? "Return to Caffeine’s main screen on your watch. It checks within a minute. Or choose Phone → Sync from web."
-                        : result.state === "applied" && snapshotChecks ? "Saved on your watch. Updating the latest data…" : detail;
-                const reviewed = result.id === reviewedChangeId && ["interrupted", "unconfirmed"].includes(result.state);
-                setChangeStatus(reviewed ? "Previous save reviewed" : title, subject + " · " + guidance, result.state, pendingChange() || uncertainOutcome());
+                        : result.state === "applied" && awaitingSnapshot ? snapshotChecks
+                            ? "Confirmed by your watch. Waiting for refreshed watch data…"
+                            : "Confirmed by your watch. Open Caffeine’s main screen, then tap Refresh for updated data. New changes wait for this update." : detail;
+                const reviewed = reviewedChanges.has(result.id) && ["interrupted", "unconfirmed"].includes(result.state);
+                const appliedTitle = result.state === "applied" && ["eventDelete", "customDelete"].includes(result.kind) ? "Deleted from watch" : title;
+                setChangeStatus(reviewed ? "Previous save reviewed" : appliedTitle, subject + " · " + guidance, result.state, pendingChange() || uncertainOutcome() || awaitingSnapshot);
             } else {
                 setChangeStatus();
             }
@@ -344,6 +431,13 @@
                 customForm.reset();
             } else if (operation.kind === "setting" && settingEdit?.[0] === operation.field && editedSetting() === operation.value) {
                 closeSetting();
+            } else if (operation.kind === "eventUpdate" && eventEdit && eventDraftKey() === saved.draftKey) {
+                eventEdit = null;
+            } else if (operation.kind === "customUpdate" && customEdit && customDraftKey() === saved.draftKey) {
+                customEdit = null;
+                customForm.reset();
+            } else if (operation.kind === "customReorder" && orderEdit && JSON.stringify(orderEdit.order) === saved.draftKey) {
+                orderEdit = null;
             }
         }
 
@@ -355,15 +449,21 @@
         function updateChangeButtons() {
             const pending = saveBlocked();
             checkedWatch.disabled = busyChange || refresh.disabled;
-            retrySave.disabled = busyChange || refresh.disabled || pendingChange() || uncertainOutcome();
+            retrySave.disabled = !writable || busyChange || refresh.disabled || pendingChange() || uncertainOutcome() || awaitingSnapshot;
             addOpen.disabled = !writable || busyChange || refresh.disabled || pending;
             document.getElementById("watch-custom-open").disabled = addOpen.disabled || workspaceSnapshot?.customDrinks === null;
-            reviewChange.disabled = busyChange || refresh.disabled || pendingChange();
-            for (const button of values.querySelectorAll("button")) button.disabled = busyChange || pending;
+            customReorder.disabled = addOpen.disabled;
+            recordEdit.disabled = !management() || busyChange || refresh.disabled || pending;
+            recordDelete.disabled = recordEdit.disabled || (selectedRecord?.type === "custom" && !canDeleteCustom());
+            reviewChange.disabled = !writable || busyChange || refresh.disabled || pendingChange();
+            for (const button of values.querySelectorAll("button")) button.disabled = !writable || refresh.disabled || busyChange || pending;
             for (const form of changeForms) {
                 form.querySelector('button[type="submit"]').disabled = !writable || busyChange || refresh.disabled || pending ||
-                    (form === addForm && !picks.length) || (form === customForm && workspaceSnapshot?.customDrinks === null);
+                    (form === addForm && !loggableDrink(selectedDrink)) || (form === customForm && workspaceSnapshot?.customDrinks === null) ||
+                    ([eventForm, deleteForm, reorderForm].includes(form) && !management()) ||
+                    (form === reorderForm && (!orderEdit || JSON.stringify(orderEdit.order) === JSON.stringify(orderEdit.expected.map(record => record.id))));
             }
+            refreshRecordBadges();
         }
 
         function settingFields(snapshot) {
@@ -379,6 +479,151 @@
                     ["smartSorting", "Sort drinks by use", watch.smartSorting, [false, true]],
                 ] : []),
             ];
+        }
+
+        function recordDetails(element, record, type) {
+            const rows = [["Drink", recordName(record)], ["Caffeine", dose(record.mg)]];
+            if (type === "event") {
+                const stamp = new Date((record.time + record.offsetSeconds) * 1000).toISOString();
+                rows.push(["When", friendlyDay(stamp.slice(0, 10)) + " · " + stamp.slice(11, record.time % 60 ? 19 : 16) + " · watch time"]);
+            }
+            element.replaceChildren(...rows.map(([label, value]) => {
+                const row = document.createElement("div"), name = document.createElement("dt"), text = document.createElement("dd");
+                name.textContent = label; text.textContent = value; row.append(name, text); return row;
+            }));
+        }
+
+        function openRecord(type, record) {
+            selectedRecord = { type, record: { ...record } };
+            recordDetails(document.getElementById("watch-record-details"), record, type);
+            document.getElementById("watch-record-note").textContent = saveBlocked() || !writable
+                ? "Changes are paused. Check the latest watch data before making another change." : type === "event"
+                ? "Changes update this drink on your watch and its caffeine graph."
+                : canDeleteCustom() ? "Changes affect future drinks. Drinks already logged keep their original name and amount."
+                    : "Keep at least one drink available. Add another drink before deleting this one.";
+            openEditor("detail");
+            editorTitle.textContent = type === "event" ? "Drink details" : "Custom drink";
+            editorTitle.focus({ preventScroll: true });
+        }
+
+        function configureAmount(input, original) {
+            input.value = String(original.mg);
+            input.min = "0";
+            input.max = String(Math.max(500, original.mg));
+            input.step = "any";
+        }
+
+        function openEvent(record, preserve = false) {
+            if (!preserve) {
+                eventEdit = { ...record };
+                eventTimeBaseline = { text: localDateTime(new Date(record.time * 1000)), zone: Intl.DateTimeFormat().resolvedOptions().timeZone };
+                eventForm.elements.name.value = record.name;
+                configureAmount(eventForm.elements.mg, record);
+                eventForm.elements.time.value = eventTimeBaseline.text;
+            }
+            showFormError(eventError);
+            document.getElementById("watch-event-time-note").textContent = "Time zone for this edit · " +
+                eventTimeBaseline.zone.replaceAll("_", " ") + ". Original seconds are kept unless you change the time.";
+            openEditor("event");
+            eventForm.elements.name.focus({ preventScroll: true });
+        }
+
+        function openCustom(record = null, preserve = false) {
+            if (!preserve) {
+                customEdit = record ? { ...record } : null;
+                customForm.reset();
+                if (record) {
+                    customForm.elements.name.value = record.name;
+                    configureAmount(customForm.elements.mg, record);
+                } else {
+                    customForm.elements.mg.min = "0"; customForm.elements.mg.max = "500"; customForm.elements.mg.step = "1";
+                }
+            }
+            customForm.elements.name.maxLength = Math.max(64, record?.name.length || customEdit?.name.length || 0);
+            document.getElementById("watch-custom-intro").textContent = customEdit
+                ? "Changes affect future drinks only. Editing requires Premium on your watch."
+                : "Save a favourite with its caffeine amount. Requires Premium on your watch.";
+            customForm.noValidate = Boolean(customEdit);
+            customForm.querySelector('[type="submit"]').textContent = customEdit ? "Save changes" : "Save custom drink";
+            showFormError(customError);
+            openEditor("custom");
+            editorTitle.textContent = customEdit ? "Edit custom drink" : "Create a drink";
+        }
+
+        function confirmDelete() {
+            if (!selectedRecord || !management()) return;
+            const { type, record } = selectedRecord;
+            recordDetails(document.getElementById("watch-delete-details"), record, type);
+            document.getElementById("watch-delete-question").textContent = type === "event"
+                ? "Remove this drink from your watch?" : "Remove this custom drink from your list?";
+            document.getElementById("watch-delete-note").textContent = type === "event"
+                ? "Your watch’s caffeine graph and totals will update after deletion."
+                : "Drinks already logged keep their original name and amount.";
+            showFormError(deleteError);
+            openEditor("delete");
+            document.getElementById("watch-delete-cancel").focus({ preventScroll: true });
+        }
+
+        function openOrder(preserve = false) {
+            const records = workspaceSnapshot.customDrinks;
+            if (!preserve) orderEdit = { records: records.map(record => ({ ...record })),
+                expected: records.map(({ id, revision }) => ({ id, revision })), order: records.map(record => record.id) };
+            document.getElementById("watch-reorder-note").textContent = workspaceSnapshot.watchSettings?.smartSorting
+                ? "Move drinks into your preferred default order. With sorting by use on, your watch uses this order to break ties."
+                : "Move drinks into your preferred default order. The Add drink list follows your watch’s next sync.";
+            showFormError(reorderError);
+            renderOrder();
+            openEditor("reorder");
+            editorTitle.focus({ preventScroll: true });
+        }
+
+        function renderOrder(focusedId, direction) {
+            if (!orderEdit) return;
+            reorderList.replaceChildren(...orderEdit.order.map((id, index) => {
+                const record = orderEdit.records.find(record => record.id === id);
+                const item = document.createElement("li"), copy = document.createElement("span"), amount = document.createElement("small");
+                copy.className = "reorder-copy"; copy.textContent = recordName(record); amount.textContent = dose(record.mg); copy.append(amount);
+                const controls = document.createElement("div"); controls.className = "reorder-controls";
+                for (const [step, title, symbol] of [[-1, "up", "↑"], [1, "down", "↓"]]) {
+                    const button = document.createElement("button");
+                    button.type = "button"; button.className = "secondary"; button.textContent = symbol;
+                    button.dataset.record = id; button.dataset.direction = title;
+                    button.setAttribute("aria-label", "Move " + recordName(record) + " " + title);
+                    button.disabled = index + step < 0 || index + step >= orderEdit.order.length || saveBlocked();
+                    button.addEventListener("click", () => {
+                        [orderEdit.order[index], orderEdit.order[index + step]] = [orderEdit.order[index + step], orderEdit.order[index]];
+                        renderOrder(id, title);
+                        document.getElementById("watch-reorder-announcement").textContent = recordName(record) + " moved to " + (index + step + 1) + " of " + orderEdit.order.length + ".";
+                        updateChangeButtons();
+                    });
+                    controls.append(button);
+                }
+                item.append(copy, controls); return item;
+            }));
+            if (focusedId) {
+                const button = reorderList.querySelector(`[data-record="${focusedId}"][data-direction="${direction}"]`);
+                (button?.disabled ? button.parentElement.querySelector('button:not(:disabled)') : button)?.focus({ preventScroll: true });
+            }
+        }
+
+        const eventDraftKey = () => JSON.stringify([eventEdit?.id, eventForm.elements.name.value, eventForm.elements.mg.value, eventForm.elements.time.value]);
+        const customDraftKey = () => JSON.stringify([customEdit?.id, customForm.elements.name.value, customForm.elements.mg.value]);
+
+        function unchangedRecord(type, record, error) {
+            const current = currentRecord({ type, record });
+            if (!current || current.revision !== record.revision) {
+                showFormError(error, current ? "This drink changed on your watch. Refresh and reopen it to review the latest version."
+                    : "This drink is no longer on your watch. Refresh to update the list.");
+                return false;
+            }
+            return true;
+        }
+
+        function patchError(error) {
+            return error.message === "invalid_name" ? "Use a drink name up to 64 bytes, without control characters."
+                : error.message === "invalid_amount" ? "Use a whole caffeine amount from 0 to 500 mg."
+                    : error.message === "time_range" ? "Choose a changed time in the past 48 hours or next 24 hours."
+                        : "Enter a valid local date and time.";
         }
 
         function openSetting(field) {
@@ -463,27 +708,32 @@
                 ? "Only preset drinks are shared. Manage other drinks on your watch."
                 : snapshot.schemaVersion >= 4 ? "Drink order matches your watch’s latest sync."
                     : "Sync with the updated watch app to use its drink order.";
-            selectedDrink = selection ? picks.find(drink => drink.name === selection.name && drink.mg === selection.mg) || null : picks[0] || null;
+            selectedDrink = selection ? picks.find(drink => drink.name === selection.name && drink.mg === selection.mg && loggableDrink(drink)) || null : picks.find(loggableDrink) || null;
             renderDrinkChoices();
             updateTimeHint();
             customForm.hidden = catalog === null;
             customNote.hidden = Boolean(catalog?.length);
             customNote.textContent = catalog === null ? "Your custom drink list isn’t available in this session. Manage it on your watch."
                 : "No custom drinks on your watch yet.";
-            customList.replaceChildren(...(catalog || []).map(drink => drinkRow(drink.name, drink.mg, false)));
+            customList.replaceChildren(...(catalog || []).map(drink => management() ? recordRow("custom", drink, "") : drinkRow(drink.name, drink.mg, false)));
+            customReorder.hidden = !management() || !catalog || catalog.length < 2;
             document.getElementById("watch-add-custom").hidden = catalog === null;
             updateChangeButtons();
         }
 
         async function submitChange(operation, draftKey, retrying = false) {
-            if (!session || !writable || busyChange || refresh.disabled || pendingChange() || uncertainOutcome() ||
+            if (!session || !writable || busyChange || refresh.disabled || pendingChange() || uncertainOutcome() || awaitingSnapshot ||
                 (recovery.pending && !retrying)) return;
             const current = generation;
             const restoreFocus = changeForms.some(form => form.contains(document.activeElement));
             const attempt = recovery.prepare(operation, draftKey, operation.kind === "drink"
-                ? workspaceSnapshot.events.filter(event => event.time === operation.time && event.mg === operation.mg).length : 0);
+                ? workspaceSnapshot.events.filter(event => event.time === operation.time && event.mg === operation.mg).length : 0, writeEpoch);
             const request = attempt.request;
-            sent = { ...request, draftKey: attempt.draftKey, priorCount: attempt.priorCount };
+            const context = retrying && sent?.id === request.id ? sent.context : operation.kind === "eventUpdate" ? eventEdit : operation.kind === "customUpdate" ? customEdit
+                : operation.kind === "customReorder" ? orderEdit : ["eventDelete", "customDelete"].includes(operation.kind) ? selectedRecord : null;
+            const summary = operation.kind === "customReorder" ? "Custom drink order" : context ? recordName(context.record || context) : null;
+            sent = { ...request, draftKey: attempt.draftKey, priorCount: attempt.priorCount,
+                context: context ? JSON.parse(JSON.stringify(context)) : null, summary };
             snapshotChecks = 0;
             busyChange = true;
             refresh.disabled = action.disabled = checkSync.disabled = true;
@@ -493,6 +743,7 @@
                 const result = await client.sendChange(request);
                 if (generation !== current || !session) return;
                 if (!result) throw new Error("unavailable");
+                if (result.sessionId !== writeSessionId) { await changedConnection(current); return; }
                 recovery.resolve(result.change);
                 showChange(result.change);
                 if (pendingChange() || result.change?.state === "applied") {
@@ -504,6 +755,8 @@
                 if (error.message === "invalid_change") {
                     recovery.clear();
                     setChangeStatus("Change wasn’t sent", "Check your entry and try again.", "invalid");
+                } else if (error.message === "stale_write_session") {
+                    await reconcileStale(current);
                 } else {
                     setChangeStatus(error.message === "change_conflict" ? "A change may already be waiting" : "Send couldn’t be confirmed",
                         "Keep this tab open. Check sync before trying again. New saves are paused.", "unconfirmed", true);
@@ -522,7 +775,8 @@
 
         function focusChangeStatus() {
             closeEditor(false);
-            showPane("today");
+            showPane(sent?.operation.kind.startsWith("event") ? "history"
+                : sent?.operation.kind === "setting" || sent?.operation.kind.startsWith("custom") ? "settings" : "today");
             changeTitle.focus({ preventScroll: true });
             changeStatus.scrollIntoView({ block: "nearest", behavior:
                 root.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
@@ -555,45 +809,97 @@
                 const radio = document.createElement("input");
                 radio.type = "radio"; radio.name = "drink"; radio.value = String(index);
                 radio.checked = drink === selectedDrink;
+                radio.disabled = !loggableDrink(drink);
                 const name = document.createElement("span"); name.textContent = drink.name;
-                const amount = document.createElement("small"); amount.textContent = dose(drink.mg);
+                const amount = document.createElement("small"); amount.textContent = dose(drink.mg) + (radio.disabled ? " · edit this drink before logging" : "");
                 label.append(radio, name, amount);
-                radio.addEventListener("change", () => { selectedDrink = drink; showFormError(addError); });
+                radio.addEventListener("change", () => { selectedDrink = drink; showFormError(addError); updateChangeButtons(); });
                 return label;
             }));
             if (focused) drinkChoices.querySelector('input:checked')?.focus({ preventScroll: true });
         }
 
         function openEditor(mode, preserveDraft = false) {
-            if (!writable) return;
-            if (!editor.open) editorReturn = document.activeElement;
+            if (!session || (!writable && !(mode === "detail" && workspaceSnapshot))) return;
+            if (!editor.open) {
+                editorReturn = document.activeElement;
+                editorReturnTarget = { id: editorReturn.id, eventId: editorReturn.dataset.eventId,
+                    customId: editorReturn.dataset.customId, setting: editorReturn.dataset.setting,
+                    pane: editorReturn.closest("#watch-pane-today, #watch-pane-history, #watch-pane-settings")?.id };
+            }
             editorMode = mode;
-            document.getElementById("watch-pane-add").hidden = mode !== "drink";
-            document.getElementById("watch-pane-custom").hidden = mode !== "custom";
+            for (const [name, selected] of [["add", "drink"], ["custom", "custom"], ["detail", "detail"], ["event", "event"], ["delete", "delete"], ["reorder", "reorder"]]) {
+                document.getElementById("watch-pane-" + name).hidden = mode !== selected;
+            }
             settingForm.hidden = mode !== "setting";
-            editorTitle.textContent = { drink: "Add a drink", custom: "Create a drink", setting: "Edit setting" }[mode];
+            editorTitle.textContent = { drink: "Add a drink", custom: "Create a drink", setting: "Edit setting",
+                detail: "Drink details", event: "Edit drink", delete: "Delete drink?", reorder: "Default drink order" }[mode];
             editorFeedback.hidden = true;
             if (mode === "drink") {
                 if (!addDraftStarted && !preserveDraft) {
                     timeInput.value = localDateTime(new Date(workspaceNow() * 1000));
                     addDraftStarted = true;
-                    selectedDrink = selectedDrink || picks[0] || null;
+                    selectedDrink = selectedDrink || picks.find(loggableDrink) || null;
                 }
                 renderDrinkChoices();
                 updateTimeHint();
             }
-            if (!editor.open) editor.showModal();
+            if (!editor.open) {
+                editor.showModal();
+                editorEntry = root.crypto.randomUUID();
+                if (!closingEditorEntry) root.history.pushState(sheetHistoryState(), "");
+            }
             editor.scrollTop = 0;
             if (mode === "drink") (drinkChoices.querySelector('input:checked') || drinkChoices.querySelector('input'))?.focus({ preventScroll: true });
             if (mode === "custom") customForm.elements.name.focus({ preventScroll: true });
             updateChangeButtons();
         }
 
-        function closeEditor(restore = true) {
+        function closeEditor(restore = true, fromBack = false) {
             if (editor.open) editor.close();
             editorMode = null;
-            if (restore && editorReturn?.isConnected) editorReturn.focus({ preventScroll: true });
+            if (restore) {
+                let target = editorReturn?.isConnected ? editorReturn : null;
+                const scope = document.getElementById(editorReturnTarget?.pane) || document;
+                if (!target && editorReturnTarget?.eventId) target = scope.querySelector(`[data-event-id="${editorReturnTarget.eventId}"]`);
+                if (!target && editorReturnTarget?.customId) target = scope.querySelector(`[data-custom-id="${editorReturnTarget.customId}"]`);
+                if (!target && editorReturnTarget?.setting) target = values.querySelector(`[data-setting="${editorReturnTarget.setting}"]`);
+                if (!target && editorReturnTarget?.id) target = document.getElementById(editorReturnTarget.id);
+                if (!target || target.disabled || !target.getClientRects().length) target = document.getElementById("today-title");
+                target.focus({ preventScroll: true });
+            }
+            const owned = editorEntry && root.history.state?.caffeineCompanionEditor === editorEntry;
+            if (owned && !fromBack) closingEditorEntry = editorEntry;
+            editorEntry = null;
+            if (owned && !fromBack) root.history.back();
         }
+        function sheetHistoryState() {
+            return { caffeineCompanionEditor: editorEntry, caffeineCompanionPage: root.location.pathname };
+        }
+        async function restoreSheetNavigation() {
+            // A reload discards the in-memory editor, but not its history entry.
+            // Unwind only entries explicitly marked by this same-page sheet.
+            for (let remaining = root.history.length; remaining > 0; remaining -= 1) {
+                const state = root.history.state;
+                if (!uuid(state?.caffeineCompanionEditor) || state.caffeineCompanionPage !== root.location.pathname) break;
+                const moved = await new Promise(resolve => {
+                    const complete = () => { clearTimeout(timer); root.removeEventListener("popstate", changed); resolve(true); };
+                    const changed = () => complete();
+                    const timer = setTimeout(() => { root.removeEventListener("popstate", changed); resolve(false); }, 500);
+                    root.addEventListener("popstate", changed, { once: true });
+                    root.history.back();
+                });
+                if (!moved) { root.history.replaceState(null, ""); break; }
+            }
+        }
+        root.addEventListener("popstate", () => {
+            if (closingEditorEntry) {
+                closingEditorEntry = null;
+                if (editor.open && editorEntry) root.history.pushState(sheetHistoryState(), "");
+                return;
+            }
+            if (editor.open && root.history.state?.caffeineCompanionEditor !== editorEntry) closeEditor(true, true);
+        });
         editor.addEventListener("cancel", event => { event.preventDefault(); closeEditor(); });
         editor.addEventListener("keydown", event => {
             if (event.key === "Escape") { event.preventDefault(); closeEditor(); }
@@ -602,16 +908,77 @@
         addOpen.addEventListener("click", () => openEditor("drink"));
         document.getElementById("watch-custom-open").addEventListener("click", () => {
             document.getElementById("watch-custom-back").hidden = true;
-            openEditor("custom");
+            openCustom();
         });
         document.getElementById("watch-add-custom").addEventListener("click", () => {
             document.getElementById("watch-custom-back").hidden = false;
-            openEditor("custom");
+            openCustom();
         });
         document.getElementById("watch-custom-back").addEventListener("click", () => openEditor("drink", true));
+        recordEdit.addEventListener("click", () => {
+            if (selectedRecord?.type === "event") openEvent(selectedRecord.record);
+            else if (selectedRecord) openCustom(selectedRecord.record);
+        });
+        recordDelete.addEventListener("click", confirmDelete);
+        document.getElementById("watch-event-cancel").addEventListener("click", () => openRecord("event", eventEdit));
+        document.getElementById("watch-delete-cancel").addEventListener("click", () => openRecord(selectedRecord.type, selectedRecord.record));
+        customReorder.addEventListener("click", () => openOrder());
+        document.getElementById("watch-reorder-cancel").addEventListener("click", () => closeEditor());
+        eventForm.addEventListener("input", () => showFormError(eventError));
+        eventForm.addEventListener("submit", event => {
+            event.preventDefault();
+            if (!eventEdit || !unchangedRecord("event", eventEdit, eventError)) return;
+            if (eventForm.elements.time.value !== eventTimeBaseline.text && Intl.DateTimeFormat().resolvedOptions().timeZone !== eventTimeBaseline.zone) {
+                showFormError(eventError, "Your time zone changed. Close and reopen this drink before changing its time."); return;
+            }
+            let patch;
+            try { patch = recordPatch(eventEdit, Object.fromEntries(new FormData(eventForm)), workspaceNow(), futureWindow(), eventTimeBaseline.text); }
+            catch (error) { showFormError(eventError, patchError(error)); return; }
+            if (!Object.keys(patch).length) { showFormError(eventError, "Change a value to save an edit."); return; }
+            void submitChange({ kind: "eventUpdate", eventId: eventEdit.id, expectedRevision: eventEdit.revision, patch }, eventDraftKey());
+        });
+        deleteForm.addEventListener("submit", event => {
+            event.preventDefault();
+            if (!selectedRecord || !unchangedRecord(selectedRecord.type, selectedRecord.record, deleteError)) return;
+            const { type, record } = selectedRecord;
+            if (type === "custom" && !canDeleteCustom()) { showFormError(deleteError, "Keep at least one drink available. Add another drink first."); return; }
+            void submitChange(type === "event" ? { kind: "eventDelete", eventId: record.id, expectedRevision: record.revision }
+                : { kind: "customDelete", customId: record.id, expectedRevision: record.revision });
+        });
+        reorderForm.addEventListener("submit", event => {
+            event.preventDefault();
+            if (!orderEdit) return;
+            const current = workspaceSnapshot.customDrinks?.map(({ id, revision }) => ({ id, revision }));
+            if (JSON.stringify(current) !== JSON.stringify(orderEdit.expected)) {
+                showFormError(reorderError, "Your custom drinks changed on the watch. Close this editor and review the latest list."); return;
+            }
+            void submitChange({ kind: "customReorder", expected: orderEdit.expected, order: orderEdit.order }, JSON.stringify(orderEdit.order));
+        });
         reviewChange.addEventListener("click", () => {
             if (!sent) return;
-            if (sent.operation.kind === "setting") {
+            const operation = sent.operation;
+            if (operation.kind === "eventUpdate") {
+                if (eventEdit?.id === operation.eventId) openEvent(eventEdit, true);
+                else {
+                    openEvent(sent.context);
+                    if (operation.patch.name !== undefined) eventForm.elements.name.value = operation.patch.name;
+                    if (operation.patch.mg !== undefined) eventForm.elements.mg.value = String(operation.patch.mg);
+                    if (operation.patch.time !== undefined) eventForm.elements.time.value = localDateTime(new Date(operation.patch.time * 1000));
+                }
+            } else if (operation.kind === "customUpdate") {
+                if (customEdit?.id === operation.customId) openCustom(customEdit, true);
+                else {
+                    openCustom(sent.context);
+                    if (operation.patch.name !== undefined) customForm.elements.name.value = operation.patch.name;
+                    if (operation.patch.mg !== undefined) customForm.elements.mg.value = String(operation.patch.mg);
+                }
+            } else if (["eventDelete", "customDelete"].includes(operation.kind)) {
+                selectedRecord = sent.context;
+                confirmDelete();
+            } else if (operation.kind === "customReorder") {
+                orderEdit = sent.context;
+                openOrder(true);
+            } else if (operation.kind === "setting") {
                 if (settingEdit?.[0] !== sent.operation.field) {
                     const field = settingFields(workspaceSnapshot).find(field => field[0] === sent.operation.field);
                     if (!field) return;
@@ -624,7 +991,8 @@
                             : String(Math.floor(sent.operation.value / 60)).padStart(2, "0") + ":" + String(sent.operation.value % 60).padStart(2, "0")
                         : String(sent.operation.value);
                 } else openEditor("setting", true);
-            } else openEditor(sent.operation.kind, true);
+            } else if (operation.kind === "custom") openCustom(null, true);
+            else openEditor(operation.kind, true);
             editorFeedback.hidden = false;
             editorFeedback.textContent = changeTitle.textContent + ". " + changeDetail.textContent;
         });
@@ -649,6 +1017,15 @@
         });
         customForm.addEventListener("submit", event => {
             event.preventDefault();
+            if (customEdit) {
+                if (!unchangedRecord("custom", customEdit, customError)) return;
+                let patch;
+                try { patch = recordPatch(customEdit, Object.fromEntries(new FormData(customForm))); }
+                catch (error) { showFormError(customError, patchError(error)); return; }
+                if (!Object.keys(patch).length) { showFormError(customError, "Change a value to save an edit."); return; }
+                void submitChange({ kind: "customUpdate", customId: customEdit.id, expectedRevision: customEdit.revision, patch }, customDraftKey());
+                return;
+            }
             const name = customForm.elements.name.value.trim();
             if (!name || new TextEncoder().encode(name).length > 64) {
                 showFormError(customError, name ? "This name is too long. Try a shorter name." : "Enter a name for your drink.");
@@ -701,9 +1078,13 @@
             history = [];
             writable = false;
             workspaceSnapshot = workspaceClock = sent = null;
-            recovery.clear(); reviewedChangeId = null;
-            busyChange = false; snapshotChecks = 0;
+            recovery.clear(); reviewedChanges.clear();
+            writeEpoch = writeSessionId = null; needsReconcile = true;
+            recoveredHandoffId = null;
+            selectedRecord = eventEdit = eventTimeBaseline = customEdit = orderEdit = null;
+            busyChange = false; snapshotChecks = 0; awaitingSnapshot = false;
             closeEditor(false);
+            editorReturn = editorReturnTarget = null;
             editorFeedback.textContent = "";
             editorFeedback.hidden = true;
             for (const form of changeForms) form.reset();
@@ -712,11 +1093,18 @@
             document.getElementById("watch-sync-help").hidden = true;
             drinkChoices.replaceChildren();
             customList.replaceChildren();
+            document.getElementById("watch-record-details").replaceChildren();
+            document.getElementById("watch-delete-details").replaceChildren();
+            reorderList.replaceChildren();
+            for (const id of ["watch-record-note", "watch-delete-question", "watch-delete-note", "watch-reorder-note", "watch-reorder-announcement", "watch-event-time-note"]) {
+                document.getElementById(id).textContent = "";
+            }
             showFormError(addError);
             customNote.hidden = true;
             customNote.textContent = "";
             closeSetting();
             showFormError(customError);
+            showFormError(eventError); showFormError(deleteError); showFormError(reorderError);
             picks = [];
             showChange(null);
             showPane("today");
@@ -730,6 +1118,7 @@
             scrub.removeAttribute("aria-valuetext");
             status.textContent = "";
             document.getElementById("watch-sync-note").textContent = "";
+            document.getElementById("watch-connection-notice").hidden = true;
             document.getElementById("today-day").textContent = "";
             privacy.textContent = purchaseNote;
             document.getElementById("today-reading").textContent = "";
@@ -809,6 +1198,38 @@
             return row;
         }
 
+        function recordRow(type, record, subtitle) {
+            const row = document.createElement("li"), button = document.createElement(writable ? "button" : "div");
+            button.className = "record-button";
+            if (writable) {
+                button.type = "button";
+                button.dataset[type + "Id"] = record.id;
+                button.setAttribute("aria-label", "View " + recordName(record) + ", " + dose(record.mg) + (subtitle ? ", " + subtitle : ""));
+                button.addEventListener("click", () => openRecord(type, record));
+            }
+            const copy = document.createElement("span"), name = document.createElement("span");
+            copy.className = "record-copy"; name.className = "record-name"; name.textContent = recordName(record); copy.append(name);
+            if (subtitle) { const line = document.createElement("small"); line.textContent = subtitle; copy.append(line); }
+            const pending = document.createElement("small"); pending.className = "record-pending"; pending.dataset.recordStatus = record.id;
+            pending.hidden = true; copy.append(pending);
+            const amount = document.createElement("span"), value = document.createElement("strong");
+            amount.className = "record-amount"; value.textContent = dose(record.mg); amount.append(value);
+            button.append(copy, amount); row.append(button);
+            return row;
+        }
+
+        function refreshRecordBadges() {
+            const op = sent?.operation;
+            for (const label of document.querySelectorAll("[data-record-status]")) {
+                const target = op && [op.eventId, op.customId].includes(label.dataset.recordStatus);
+                const waiting = target && currentChange?.id === sent.id && pendingChange();
+                label.textContent = target && busyChange ? "Sending…" : waiting
+                    ? op.kind.endsWith("Delete") ? "Deletion waiting for watch" : "Update waiting for watch"
+                    : target && currentChange?.id === sent.id && currentChange.state === "applied" && awaitingSnapshot ? "Waiting for refreshed watch data" : "";
+                label.hidden = !label.textContent;
+            }
+        }
+
         function renderHistory() {
             historyDays.replaceChildren();
             const visible = historyDay.value ? history.filter(day => day.key === historyDay.value) : history;
@@ -829,7 +1250,9 @@
                     " · " + dose(day.total) + " logged";
                 const list = document.createElement("ul");
                 list.className = "drink-list";
-                list.append(...day.entries.map(entry => drinkRow(entry.time, entry.mg, entry.scheduled)));
+                list.append(...day.entries.map(entry => entry.record
+                    ? recordRow("event", entry.record, entry.time + (entry.scheduled ? " · scheduled" : ""))
+                    : drinkRow(entry.time, entry.mg, entry.scheduled)));
                 group.append(heading, total, list);
                 historyDays.append(group);
             }
@@ -894,13 +1317,24 @@
                     : "Additional settings were unavailable in this watch snapshot.";
         }
 
-        function renderToday(data) {
-            if (!data.snapshot) {
-                clearToday();
-                today.hidden = false;
-                status.textContent = "No recent snapshot. Open Today from your watch to sync.";
-                return;
+        function renderSnapshotWait(hasStatus) {
+            today.hidden = false;
+            if (workspaceSnapshot) {
+                status.textContent = "Waiting for refreshed watch data. You’re seeing the last synced copy; new changes are paused.";
+            } else {
+                status.textContent = hasStatus ? "Waiting for refreshed watch data. Open Caffeine’s main screen, then tap Refresh."
+                    : "No recent snapshot. Open Today from your watch to sync.";
+                content.hidden = !hasStatus;
+                addOpen.hidden = customSection.hidden = true;
+                for (const button of paneButtons) {
+                    button.disabled = true;
+                    document.getElementById(button.getAttribute("aria-controls")).hidden = true;
+                }
             }
+        }
+
+        function renderToday(data) {
+            if (!data.snapshot) return;
             const { watchDay, watchDisplay, capturedAt } = data.snapshot;
             const clockSkew = Math.abs(data.receivedAt - capturedAt) > 600;
             const pastDay = data.serverTime >= watchDay.endSec;
@@ -926,7 +1360,9 @@
                 (scheduled ? " · " + scheduled + " scheduled" : "");
             document.getElementById("today-empty").hidden = rows.length !== 0;
             for (const event of rows.reverse()) {
-                events.append(drinkRow(watchTime(event.time, watchDay.offsetSegments), event.mg, event.time > reference));
+                events.append(data.snapshot.schemaVersion === 5
+                    ? recordRow("event", event, watchTime(event.time, watchDay.offsetSegments) + (event.time > reference ? " · scheduled" : ""))
+                    : drinkRow(watchTime(event.time, watchDay.offsetSegments), event.mg, event.time > reference));
             }
             const previousDay = historyDay.value;
             history = retainedHistory(data.snapshot, reference);
@@ -934,7 +1370,9 @@
                 new Option(day.date + (day.usesWatchTime ? "" : " UTC"), day.key)));
             if (history.some(day => day.key === previousDay)) historyDay.value = previousDay;
             historyNote.textContent = "Time and caffeine amount for entries still stored on your watch. " +
-                (data.snapshot.schemaVersion === 1 ? "Earlier dates are shown in UTC." : "Times follow the watch’s time zone.");
+                (data.snapshot.schemaVersion === 1 ? "Earlier dates are shown in UTC." : "Times follow the watch’s time zone.") +
+                (data.snapshot.schemaVersion === 5 && writable ? " Tap a drink to edit its details or delete it."
+                    : " History is read-only in this watch snapshot.");
             renderHistory();
             renderSettings(data.snapshot);
             updateHistoryButton();
@@ -947,7 +1385,13 @@
             if (op.kind === "drink") return workspaceSnapshot.events.filter(event =>
                 event.time === op.time && event.mg === op.mg).length > sent.priorCount;
             if (op.kind === "custom") return workspaceSnapshot.customDrinks?.some(drink => drink.name === op.name && drink.mg === op.mg);
-            return settingFields(workspaceSnapshot).find(field => field[0] === op.field)?.[2] === op.value;
+            if (op.kind === "setting") return settingFields(workspaceSnapshot).find(field => field[0] === op.field)?.[2] === op.value;
+            if (op.kind === "eventDelete") return !workspaceSnapshot.events.some(record => record.id === op.eventId);
+            if (op.kind === "customDelete") return !workspaceSnapshot.customDrinks?.some(record => record.id === op.customId);
+            if (op.kind === "customReorder") return JSON.stringify(workspaceSnapshot.customDrinks?.map(record => record.id)) === JSON.stringify(op.order);
+            const record = op.kind === "eventUpdate" ? workspaceSnapshot.events.find(record => record.id === op.eventId)
+                : workspaceSnapshot.customDrinks?.find(record => record.id === op.customId);
+            return record && record.revision > op.expectedRevision && Object.entries(op.patch).every(([field, value]) => record[field] === value);
         }
 
         function scheduleChangeCheck() {
@@ -962,37 +1406,126 @@
             }
         }
 
+        async function reconcileStale(current) {
+            needsReconcile = true;
+            writeEpoch = null;
+            try {
+                const result = await client.reconcile();
+                if (generation !== current || !session) return;
+                if (result === null) {
+                    writable = false;
+                    setChangeStatus("Saves unavailable", "Your draft is kept. Refresh or open a new connection to try again.", "unconfirmed", true);
+                    return;
+                }
+                if (result.sessionId !== writeSessionId) { await changedConnection(current); return; }
+                writeEpoch = result.writeEpoch;
+                needsReconcile = false;
+                // The atomic server barrier retires the previous epoch. An
+                // absent request can no longer arrive later and create a save.
+                recovery.clear();
+                showChange(result.change);
+                if (!result.change || result.change.id !== sent?.id) {
+                    const waiting = pendingChange() || uncertainOutcome();
+                    setChangeStatus(waiting ? changeTitle.textContent : "Review your draft",
+                        (waiting ? changeDetail.textContent + " " : "") + "This page was refreshed elsewhere. Your unsent draft is kept; review it before a new save.",
+                        result.change?.state || "conflict", waiting);
+                }
+            } catch (error) {
+                if (generation !== current || !session) return;
+                if (error.message === "expired") { problem("expired"); return; }
+                setChangeStatus("Couldn’t check the session", "Keep this tab open. Check sync before trying again. Your draft is kept.", "unconfirmed", true);
+            }
+        }
+
+        async function changedConnection(current) {
+            if (generation !== current || !session) return;
+            if (scopeRestarts >= 1) { problem("connection_context"); return; }
+            scopeRestarts += 1;
+            await begin(null, null, true);
+        }
+
         async function loadToday(current) {
             if (refresh.disabled) return;
             const focusedCheck = document.activeElement === checkSync;
+            let loadedData = null;
             refresh.disabled = action.disabled = checkSync.disabled = true;
             updateChangeButtons();
             try {
+                const reconcile = needsReconcile;
+                let changes = null, retiredRequest = false;
+                if (reconcile) {
+                    changes = await client.reconcile();
+                    if (generation !== current || !session) return;
+                    if (changes !== null) {
+                        if (writeSessionId && changes.sessionId !== writeSessionId) { await changedConnection(current); return; }
+                        retiredRequest = recovery.pending;
+                        writeEpoch = changes.writeEpoch; writeSessionId = changes.sessionId; needsReconcile = false;
+                        recovery.clear();
+                    }
+                }
                 const data = await client.today();
                 if (generation !== current || !session || data === null) return;
+                if (writeSessionId && data.sessionId !== writeSessionId) { await changedConnection(current); return; }
+                loadedData = data;
                 lastRead = Date.now();
                 today.hidden = false;
                 detail.textContent = "Latest snapshot from your watch.";
                 detail.dataset.normal = "true";
-                const changes = data.snapshot?.schemaVersion >= 3 ? await client.changes() : null;
+                const heldId = recovery.attempt?.request.id || ((pendingChange() || uncertainOutcome() || awaitingSnapshot) ? currentChange?.id : null);
+                if (!reconcile && writeEpoch) changes = await client.changes(heldId);
                 if (generation !== current || !session) return;
-                writable = changes !== null;
-                renderToday(data);
-                if (data.snapshot) renderWorkspace(data.snapshot, data.serverTime);
-                if (writable) {
+                if (changes !== null && writeSessionId && changes.sessionId !== writeSessionId) { await changedConnection(current); return; }
+                if (!heldId && changes?.change && reviewedChanges.has(changes.change.id) &&
+                    ["interrupted", "unconfirmed"].includes(changes.change.state) && currentChange && currentChange.id !== changes.change.id) {
+                    // A previously reviewed older unknown must not replace a
+                    // newer result. A different pending/unreviewed ID still wins.
+                    changes = await client.changes(currentChange.id);
+                    if (generation !== current || !session) return;
+                    if (changes !== null && changes.sessionId !== writeSessionId) { await changedConnection(current); return; }
+                }
+                writable = data.snapshot?.schemaVersion >= 3 && changes !== null && uuid(writeEpoch);
+                if (changes === null) { writeEpoch = null; needsReconcile = true; }
+                if (data.snapshot) {
+                    renderToday(data);
+                    renderWorkspace(data.snapshot, data.serverTime);
+                    for (const button of paneButtons) button.disabled = false;
+                    showPane(paneButtons.find(button => button.getAttribute("aria-pressed") === "true")?.dataset.watchPane || "today");
+                } else renderSnapshotWait(Boolean(changes?.change || currentChange || recovery.pending || sent));
+                if (changes !== null) {
                     showChange(changes.change);
-                    recovery.checked(changes.change?.id === reviewedChangeId ? null : changes.change);
+                    recovery.checked(reviewedChanges.has(changes.change?.id) ? null : changes.change);
+                    if (retiredRequest && !changes.change) {
+                        setChangeStatus("Review your draft", "The session was refreshed. Your draft is kept; review it before a new save.", "conflict");
+                    }
                     if (recovery.pending && !pendingChange() && !uncertainOutcome()) {
                         setChangeStatus("No receipt found", "Retry the same save to check or send it safely. Your current draft will be kept.", "unconfirmed", true);
                     }
                 }
                 privacy.textContent = "This session shows a temporary copy of recent entries and settings from your watch. " + purchaseNote;
+                if (recoveredHandoffId && writeSessionId !== recoveredHandoffId) {
+                    const notice = document.getElementById("watch-connection-notice");
+                    notice.textContent = writeSessionId
+                        ? "The new link wasn’t accepted. Your previous connection is still open. Review its data before saving."
+                        : "The connection was recovered. Review the watch data shown.";
+                    notice.hidden = false;
+                }
+                recoveredHandoffId = null;
+                scopeRestarts = 0;
                 return true;
             } catch (error) {
                 if (generation !== current || !session) return;
                 if (error.message === "expired") { problem("expired"); return; }
+                writable = false;
                 today.hidden = false;
-                status.textContent = workspaceSnapshot
+                if (!workspaceSnapshot && !loadedData && !writeSessionId) {
+                    try { loadedData = await client.today(); } catch { /* The read-only retry is bounded to this load. */ }
+                    if (generation !== current || !session) return;
+                }
+                if (!workspaceSnapshot && loadedData?.snapshot) {
+                    renderToday(loadedData);
+                    renderWorkspace(loadedData.snapshot, loadedData.serverTime);
+                    status.textContent = "Watch data loaded. Saves couldn’t be checked. Tap Refresh to try again.";
+                } else status.textContent = workspaceSnapshot
                     ? "Couldn’t refresh. You’re seeing the last synced watch data."
                     : "Couldn’t load watch data. Tap Refresh to try again.";
                 if (!checkSync.hidden) {
@@ -1018,7 +1551,7 @@
             const current = generation;
             const fresh = await loadToday(current);
             if (fresh !== true || generation !== current || !session || currentChange?.id !== id || !uncertainOutcome()) return;
-            reviewedChangeId = id;
+            reviewedChanges.add(id);
             if (sent?.id === id) {
                 discardMatchedDraft(sent);
                 sent = null;
@@ -1053,6 +1586,7 @@
             clearTimeout(expiryTimer); session = null;
             if (client) client.close();
             clearToday();
+            scopeRestarts = 0;
             const expired = code === "expired";
             show(expired ? "Session ended" : "Connection unavailable", expired ? "Open again from your watch" : "We couldn’t connect",
                 code === "invalid_link" ? "This connection link is incomplete. Open a new link from Caffeine Tracker on your watch." :
@@ -1077,10 +1611,16 @@
         root.addEventListener("pagehide", () => { generation += 1; clearTimeout(expiryTimer); handoff = null; clearToday(); if (client) client.close(); });
         // BFCache must revalidate; neither cached DOM nor an old promise proves access.
         root.addEventListener("pageshow", event => { if (event.persisted) root.location.reload(); });
-        async function begin(token, linkFailure) {
+        async function begin(token, linkFailure, changed = false) {
         const current = ++generation;
         clearTimeout(expiryTimer); session = null;
         clearToday();
+        if (!changed) scopeRestarts = 0;
+        if (changed) {
+            const notice = document.getElementById("watch-connection-notice");
+            notice.textContent = "The watch connection changed. Previous drafts were cleared. Review this watch’s data before saving.";
+            notice.hidden = false;
+        }
         if (client) client.close();
         show("Connecting", "Connecting to your watch", "Please keep this page open for a moment.");
         try {
@@ -1094,6 +1634,7 @@
                     if (generation !== current) return;
                     try { data = await client.resume(); }
                     catch { throw error; }
+                    recoveredHandoffId = token.sessionId;
                 }
             } else data = await client.resume();
             if (generation === current) connected(data, current);
@@ -1103,6 +1644,7 @@
             try { const token = takeHandoff(root.location, root.history); if (token) void begin(token); }
             catch (error) { void begin(null, error.message); }
         });
+        await restoreSheetNavigation();
         await begin(handoff, linkError);
     });
 })(typeof window === "undefined" ? globalThis : window);

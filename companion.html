@@ -22,6 +22,7 @@
         <button id="today-refresh" type="button" class="secondary refresh-button" aria-label="Refresh watch data">↻ <span>Refresh</span></button>
       </div>
       <p id="today-status" class="detail" role="status"></p>
+      <p id="watch-connection-notice" class="form-note" role="status" hidden></p>
       <div id="today-content" hidden>
         <nav class="workspace-nav" aria-label="Watch companion">
           <button type="button" data-watch-pane="today" aria-controls="watch-pane-today" aria-pressed="true">Today</button>
@@ -75,6 +76,7 @@
             <div class="section-heading"><h3 id="watch-custom-heading">My drinks</h3><button id="watch-custom-open" class="secondary" type="button">Create drink</button></div>
             <p id="watch-custom-note" class="detail" hidden></p>
             <ul id="watch-custom-list" class="drink-list"></ul>
+            <button id="watch-custom-reorder" class="secondary" type="button" hidden>Change default order</button>
           </section>
         </section>
       </div>
@@ -105,7 +107,7 @@
       </form>
     </section>
     <section id="watch-pane-custom" hidden>
-      <p class="detail">Save a favourite with its caffeine amount. Requires Premium on your watch.</p>
+      <p id="watch-custom-intro" class="detail">Save a favourite with its caffeine amount. Requires Premium on your watch.</p>
       <form id="watch-custom-form" class="change-form">
         <label>Drink name<input name="name" placeholder="e.g. My morning coffee" autocomplete="off" required maxlength="64"></label>
         <label>Caffeine (mg)<input name="mg" type="number" inputmode="numeric" min="0" max="500" step="1" placeholder="e.g. 90" required></label>
@@ -113,7 +115,40 @@
         <div class="sheet-actions"><button type="submit">Save custom drink</button><button id="watch-custom-back" type="button" class="text-button" hidden>Back to add drink</button></div>
       </form>
     </section>
-          <form id="watch-setting-form" class="change-form setting-editor" hidden>
+    <section id="watch-pane-detail" hidden>
+      <dl id="watch-record-details" class="record-details"></dl>
+      <p id="watch-record-note" class="detail"></p>
+      <div class="sheet-actions"><button id="watch-record-edit" type="button">Edit drink</button><button id="watch-record-delete" class="danger secondary" type="button">Delete drink</button></div>
+    </section>
+    <section id="watch-pane-event" hidden>
+      <form id="watch-event-form" class="change-form" novalidate>
+        <label>Drink name<input name="name" autocomplete="off" required></label>
+        <label>Caffeine (mg)<input name="mg" type="number" inputmode="decimal" step="any" required></label>
+        <label>Time<input name="time" type="datetime-local" step="60" required aria-describedby="watch-event-time-note"></label>
+        <p id="watch-event-time-note" class="detail"></p>
+        <p id="watch-event-error" class="form-note" role="alert" hidden></p>
+        <div class="sheet-actions"><button type="submit">Save changes</button><button id="watch-event-cancel" class="text-button" type="button">Back to details</button></div>
+      </form>
+    </section>
+    <section id="watch-pane-delete" hidden>
+      <p id="watch-delete-question"></p>
+      <dl id="watch-delete-details" class="record-details"></dl>
+      <p id="watch-delete-note" class="detail"></p>
+      <form id="watch-delete-form" class="change-form">
+        <p id="watch-delete-error" class="form-note" role="alert" hidden></p>
+        <div class="sheet-actions"><button class="danger" type="submit">Delete drink</button><button id="watch-delete-cancel" class="secondary" type="button">Keep drink</button></div>
+      </form>
+    </section>
+    <section id="watch-pane-reorder" hidden>
+      <p id="watch-reorder-note" class="detail"></p>
+      <form id="watch-reorder-form" class="change-form">
+        <ol id="watch-reorder-list" class="reorder-list"></ol>
+        <p id="watch-reorder-announcement" class="visually-hidden" role="status"></p>
+        <p id="watch-reorder-error" class="form-note" role="alert" hidden></p>
+        <div class="sheet-actions"><button type="submit">Save order</button><button id="watch-reorder-cancel" class="text-button" type="button">Cancel</button></div>
+      </form>
+    </section>
+    <form id="watch-setting-form" class="change-form setting-editor" hidden>
             <div id="watch-setting-value"></div>
             <p id="watch-setting-error" class="form-note" role="alert" hidden></p>
             <div class="form-actions">
