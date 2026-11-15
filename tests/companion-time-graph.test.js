@@ -35,6 +35,9 @@ test("the connected chart plots and labels the watch's sleep threshold alongside
     assert.match(low, /Sleep threshold · 1.5 mg\/L/);
     assert.match(low, /class="ct-threshold-sleep"[^>]+y1="63.33"/);
     assert.equal(JSON.stringify(empty), before);
+    const retained = renderer.CaffeineTrackerGraph.renderGraph({ ...empty, thresholds: { ...empty.thresholds, belowAt: 10 } }, options);
+    assert.match(retained, /class="ct-threshold-high"/);
+    assert.match(retained, /class="ct-threshold-max"/);
 });
 
 // A fresh process gives Date/Intl an explicit browser-zone analogue without

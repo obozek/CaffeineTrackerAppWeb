@@ -87,7 +87,7 @@
             { value: graph.thresholds.optimal, label: dict.thresholdHigh, className: "ct-threshold-high" },
             { value: graph.thresholds.max, label: dict.thresholdMax, className: "ct-threshold-max" },
             ...(options.formatTime && !options.watchStyle ? [{ value: graph.thresholds.belowAt, label: "Your threshold", className: "ct-threshold-personal" }] : []),
-        ].filter(threshold => !options.formatTime || (threshold.value > 0 && threshold.value <= graph.maxLevel &&
+        ].filter(threshold => !options.formatTime || (threshold.value > 0 && threshold.value <= maxLevel &&
             (threshold.className !== "ct-threshold-personal" || ![graph.thresholds.sleep, graph.thresholds.optimal, graph.thresholds.max].includes(threshold.value))))
             .map(function (threshold) {
             const y = yFor(threshold.value);
