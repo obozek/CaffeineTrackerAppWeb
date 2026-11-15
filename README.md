@@ -91,6 +91,8 @@ Add drink. At least one active catalog drink must remain. Custom creation/editin
 requires locally validated Premium; History management, custom deletion and
 default ordering do not. Legacy definitions outside the new-drink name/dose
 contract stay visible/manageable but cannot be selected for logging until fixed.
+An empty legacy name is labeled **Unnamed drink**, including its disabled add
+choice, without changing the saved literal name.
 Supported setting edits open the same focused modal, keeping the latest watch
 value as the expected value. Legacy values outside the writable contract remain
 visible with guidance to adjust them on the watch. Watch-only model details are
@@ -121,6 +123,8 @@ guidance. Modern applied receipts carry `afterSequence`, the highest Today
 sequence reserved before the next export. A strictly newer, valid snapshot
 releases the gate even if the watch has since edited or pruned that record.
 Older receipts use the current tab’s exact value/ID reflection instead.
+The status card says **Updated watch data is loaded** only after that proof;
+reloading a markerless legacy receipt retains cautious upload guidance.
 If an acknowledged mutation invalidates the server’s old snapshot, the current
 tab keeps its last copy explicitly stale/read-only. A fresh page shows the
 confirmed receipt and waiting guidance without an invented graph or zero values.

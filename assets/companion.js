@@ -125,7 +125,8 @@
         function showChange(result) {
             recovery.resolve(result);
             const operation = result && result.id === sent?.id ? sent.operation : null;
-            if (result?.state === "applied" && (operation || result.afterSequence !== undefined)) {
+            const canVerifySnapshot = result?.state === "applied" && (operation !== null || result.afterSequence !== undefined);
+            if (canVerifySnapshot) {
                 if (currentChange?.id !== result.id || currentChange?.state !== "applied" || currentChange?.afterSequence !== result.afterSequence) snapshotChecks = 3;
                 awaitingSnapshot = result.afterSequence !== undefined
                     ? !snapshotAfter(workspaceSnapshot, result.afterSequence) : !reflectsSave();
@@ -136,6 +137,7 @@
             }
             currentChange = result;
             if (result) {
+                const updatedDataLoaded = canVerifySnapshot && !awaitingSnapshot;
                 const kind = { drink: "Drink", custom: "Custom drink", setting: "Setting", eventUpdate: "Drink update",
                     eventDelete: "Drink deletion", customUpdate: "Custom drink update", customDelete: "Custom drink deletion", customReorder: "Drink order" }[result.kind];
                 const subject = sent?.id === result.id && sent.summary || operation?.name || (operation?.kind === "setting" &&
@@ -147,7 +149,8 @@
                         ? "Return to Caffeine’s main screen on your watch. It checks within a minute. Or choose Phone → Sync from web."
                         : result.state === "applied" && awaitingSnapshot ? snapshotChecks
                             ? "Confirmed by your watch. Waiting for refreshed watch data…"
-                            : "Confirmed by your watch. Open Caffeine’s main screen, then tap Refresh for updated data. New changes wait for this update." : detail;
+                            : "Confirmed by your watch. Open Caffeine’s main screen, then tap Refresh for updated data. New changes wait for this update."
+                            : updatedDataLoaded ? "Saved on your watch. Updated watch data is loaded." : detail;
                 const reviewed = reviewedChanges.has(result.id) && ["interrupted", "unconfirmed"].includes(result.state);
                 const appliedTitle = result.state === "applied" && ["eventDelete", "customDelete"].includes(result.kind) ? "Deleted from watch" : title;
                 setChangeStatus(reviewed ? "Previous save reviewed" : appliedTitle, subject + " · " + guidance, result.state, pendingChange() || uncertainOutcome() || awaitingSnapshot);
@@ -577,7 +580,7 @@
                 radio.type = "radio"; radio.name = "drink"; radio.value = String(index);
                 radio.checked = drink === selectedDrink;
                 radio.disabled = !loggableDrink(drink);
-                const name = document.createElement("span"); name.textContent = drink.name;
+                const name = document.createElement("span"); name.textContent = recordName(drink);
                 const amount = document.createElement("small"); amount.textContent = dose(drink.mg) + (radio.disabled ? " · edit this drink before logging" : "");
                 label.append(radio, name, amount);
                 radio.addEventListener("change", () => { selectedDrink = drink; showFormError(addError); updateChangeButtons(); });
