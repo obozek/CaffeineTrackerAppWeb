@@ -39,7 +39,9 @@ raw storage keys, unlock/device codes or watch credentials to the browser.
 watch redeems a one-use fragment into a host-only HttpOnly cookie, removes the
 fragment immediately and permits refresh within the original ten-minute expiry.
 Redeeming a new link replaces the previous session; browser logout preserves
-watch identity. No account or standalone tracker storage is involved. A separate,
+watch identity. No account or standalone tracker storage is involved.
+Session end clears connected readouts and resets the timeline selection; a new
+connection shows its own deadline. A separate,
 default-off Today endpoint supplies the latest authenticated watch snapshot when
 enabled. Today shows the watch’s cached reading, sync time, doses and an
 interactive estimate of the caffeine curve. The synced **Sleep threshold** is

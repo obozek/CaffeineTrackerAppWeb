@@ -856,16 +856,19 @@
             graphState = null;
             lastRead = -Infinity;
             estimate.textContent = "";
+            scrub.value = "0";
             scrub.removeAttribute("aria-valuetext");
             status.textContent = "";
             document.getElementById("watch-sync-note").textContent = "";
             document.getElementById("watch-connection-notice").hidden = true;
             document.getElementById("today-day").textContent = "";
+            document.getElementById("today-offset").textContent = "";
             privacy.textContent = purchaseNote;
             document.getElementById("today-reading").textContent = "";
             document.getElementById("today-captured").textContent = "";
             document.getElementById("today-total").textContent = "";
             document.getElementById("today-count").textContent = "";
+            duration.textContent = "";
             refresh.disabled = checkSync.disabled = false;
         }
 
