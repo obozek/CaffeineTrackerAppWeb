@@ -89,9 +89,9 @@ div.record-button .record-amount::after { content: none; }
 .custom-section { margin-top: 1.8rem; padding-top: 1.4rem; border-top: 1px solid var(--line); }
 #watch-custom-reorder { margin-top: 1rem; }
 .settings { border-top: 1px solid var(--line); margin-top: 1.25rem; padding-top: 1rem; }
-.settings summary, .sync-help summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-size: .85rem; font-weight: 600; }
-.settings summary::before, .sync-help summary::before { content: "+"; margin-right: .5rem; }
-.settings[open] summary::before, .sync-help[open] summary::before { content: "−"; }
+.settings summary, .sync-help summary, .connection-data summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-size: .85rem; font-weight: 600; }
+.settings summary::before, .sync-help summary::before, .connection-data summary::before { content: "+"; margin-right: .5rem; }
+.settings[open] summary::before, .sync-help[open] summary::before, .connection-data[open] summary::before { content: "−"; }
 .badge { display: inline-flex; align-items: center; gap: .4rem; border-radius: 2rem; padding: .35rem .65rem; background: var(--paper); color: var(--muted); font-size: .75rem; font-weight: 650; }
 .badge::before { content: ""; width: .4rem; height: .4rem; border-radius: 50%; background: #6c8a58; }
 .session-card h1 { margin: 1rem 0; }
@@ -105,7 +105,10 @@ main:has(#today-content:not([hidden])) .session-card button { margin: 0; backgro
 .sync-help { flex-basis: 100%; }
 .sync-help p { margin: 0 0 .5rem; }
 .privacy { padding: 0 .3rem; margin: 1rem 0 0; font-size: .75rem; }
-footer { justify-content: center; margin-top: auto; }
+footer { justify-content: center; align-items: flex-start; flex-wrap: wrap; margin-top: auto; }
+footer > a { display: flex; align-items: center; min-height: 44px; }
+.connection-data[open] { width: min(100%, 42rem); }
+.connection-data p { margin: .35rem 0 .8rem; font-size: .85rem; line-height: 1.6; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* Native modal gives keyboard containment and an inert page behind the editor. */
 .editor-sheet { width: min(100% - 2rem, 36rem); max-height: min(90dvh, 58rem); overflow: auto; padding: 1.5rem 1.5rem 0; border: 1px solid var(--line); border-radius: 1.5rem; background: var(--card); color: var(--ink); box-shadow: 0 2rem 6rem #17110c38; overscroll-behavior: contain; }

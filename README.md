@@ -93,8 +93,13 @@ Add drink. At least one active catalog drink must remain. Custom creation/editin
 requires locally validated Premium; History management, custom deletion and
 default ordering do not. Legacy definitions outside the new-drink name/dose
 contract stay visible/manageable but cannot be selected for logging until fixed.
-An empty legacy name is labeled **Unnamed drink**, including its disabled add
-choice, without changing the saved literal name.
+Empty legacy names, and names containing only whitespace or C0/C1 controls,
+are labeled **Unnamed drink**, including disabled add choices. Visible text stays
+literal, and editing another field preserves the original name.
+The collapsed **Connection data** disclosure explains temporary sharing, expiry,
+scheduled cleanup and the two disconnect actions. Its **Website and purchase
+privacy** link points to the existing public policy; the revised full policy
+remains a separate unpublished draft.
 Supported setting edits open the same focused modal, keeping the latest watch
 value as the expected value. Legacy values outside the writable contract remain
 visible with guidance to adjust them on the watch. Watch-only model details are

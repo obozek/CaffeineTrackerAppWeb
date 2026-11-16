@@ -4,6 +4,25 @@ const { takeHandoff, createClient } = require('../assets/companion.js');
 const id='01234567-89ab-cdef-0123-456789abcdef', secret='a'.repeat(43);
 const config={enabled:true,apiOrigin:'https://worker.caffeinetracker.app'};
 const data={protocolVersion:1,appId:'caffeine',destination:'today',expiresAt:1600,serverTime:1000};
+test('legacy display names use a fallback only when whitespace and controls leave no visible text',()=>{
+ const { recordName }=require('../assets/companion.js');
+ for (const name of ['', ' \t\r\n\u00a0\u2003', '\u0000\u001f\u007f\u0085\u009f', ' \t\u0000\u001f\u007f\u009f\r\n']) {
+  const record=Object.freeze({name});
+  assert.equal(recordName(record),'Unnamed drink');
+  assert.equal(record.name,name);
+ }
+ for (const name of ['Espresso', ' Čaj ', '\u0000Brew\r\nLegacy\u009f', '茶\t']) {
+  assert.equal(recordName({name}),name);
+ }
+});
+test('unrelated patches preserve blank legacy literals after single-line input display conversion',()=>{
+ const { recordPatch }=require('../assets/companion.js');
+ for (const name of ['', '\r\n', ' \t\u0000\u007f\u009f\r\n']) {
+  const original=Object.freeze({name,mg:90.5}), displayed=name.replace(/[\r\n]/g,'');
+  assert.deepEqual(recordPatch(original,{name:displayed,mg:'50'},0,0,{name:displayed}),{mg:50});
+  assert.equal(original.name,name);
+ }
+});
 test('history patches preserve original seconds and legacy values until explicitly changed',()=>{
  const { recordPatch, localDateTime }=require('../assets/companion.js');
  const now=Math.floor(Date.now()/1000), original={name:'Legacy drink',mg:712.5,time:now-3600+17};

@@ -136,6 +136,11 @@
     const authoredName = name => typeof name === "string" && name.length > 0 && name === name.trim() &&
         new TextEncoder().encode(name).length <= 64 && !/[\u0000-\u001f\u007f-\u009f]/.test(name);
     const authoredAmount = mg => Number.isInteger(mg) && mg >= 0 && mg <= 500;
+    function recordName(record) {
+        const name = record?.name;
+        // A display fallback must never normalize the retained watch literal.
+        return typeof name === "string" && /[^\s\u0000-\u001f\u007f-\u009f]/u.test(name) ? name : "Unnamed drink";
+    }
     function loggableDrink(drink) { return Boolean(drink && authoredName(drink.name) && authoredAmount(drink.mg)); }
     function authoredDrink(values) {
         const name = typeof values.name === "string" ? values.name.trim() : "";
@@ -277,7 +282,7 @@
             close: () => { closed = true; if (controller) controller.abort(); }
         };
     }
-    const exported = { takeHandoff, createClient, readToday, watchTime, retainedHistory, watchDrinks, drinkTime, createSaveRecovery, recordPatch, localDateTime, loggableDrink, authoredDrink, snapshotAfter, isId: uuid };
+    const exported = { takeHandoff, createClient, readToday, watchTime, retainedHistory, watchDrinks, drinkTime, createSaveRecovery, recordName, recordPatch, localDateTime, loggableDrink, authoredDrink, snapshotAfter, isId: uuid };
     if (typeof module !== "undefined" && module.exports) { module.exports = exported; return; }
     root.CaffeineCompanionProtocol = Object.freeze(exported);
 })(typeof window === "undefined" ? globalThis : window);

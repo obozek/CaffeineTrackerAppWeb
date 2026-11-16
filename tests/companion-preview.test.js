@@ -27,3 +27,16 @@ test('rejects unapproved API origins before creating output',()=>{
  const temp=fs.mkdtempSync(path.join(os.tmpdir(),'companion-preview-'));
  try{const output=path.join(temp,'preview');assert.throws(()=>buildPreview(output,'https://evil.example'),/approved/);assert.equal(fs.existsSync(output),false)}finally{fs.rmSync(temp,{recursive:true,force:true})}
 });
+test('keeps connection facts in the companion page and labels the existing website privacy policy',()=>{
+ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'companion-disclosure-'));
+ try{
+  const output=path.join(temp,'preview');buildPreview(output);
+  const page=fs.readFileSync(path.join(output,'companion.html'),'utf8');
+  assert.match(page,/<summary>Connection data<\/summary>/);
+  assert.match(page,/Website and purchase privacy<\/a>/);
+  for(const name of ['index.html','privacy.html','how-it-works.html']) assert.ok(page.includes('href="https://www.caffeinetracker.app/'+name+'"'));
+  assert.match(page,/72 hours/);
+  assert.match(page,/profile weight or the app’s fallback/);
+  assert.equal(fs.existsSync(path.join(output,'privacy.html')),false);
+ }finally{fs.rmSync(temp,{recursive:true,force:true})}
+});

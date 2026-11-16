@@ -7,7 +7,7 @@
         return;
     }
     const { takeHandoff, createClient, watchTime, retainedHistory, watchDrinks,
-        drinkTime, createSaveRecovery, recordPatch, localDateTime, loggableDrink, authoredDrink,
+        drinkTime, createSaveRecovery, recordName, recordPatch, localDateTime, loggableDrink, authoredDrink,
         snapshotAfter, isId: uuid } = root.CaffeineCompanionProtocol;
     // Consume before loading styles/images or rendering. Never write secrets to
     // storage, DOM, logs, URL query parameters or analytics.
@@ -86,7 +86,6 @@
         let editorEntry = null, closingEditorEntry = null;
         let busyChange = false, snapshotChecks = 0, awaitingSnapshot = false;
         const management = () => writable && workspaceSnapshot?.schemaVersion === 5;
-        const recordName = record => record.name || "Unnamed drink";
         const currentRecord = selection => selection?.type === "event"
             ? workspaceSnapshot?.events.find(record => record.id === selection.record.id)
             : workspaceSnapshot?.customDrinks?.find(record => record.id === selection?.record.id);
@@ -260,7 +259,7 @@
                 eventForm.elements.name.value = record.name;
                 eventBaseline = Object.freeze({ name: eventForm.elements.name.value,
                     time: localDateTime(new Date(record.time * 1000)), zone: Intl.DateTimeFormat().resolvedOptions().timeZone });
-                eventForm.elements.name.required = Boolean(record.name);
+                eventForm.elements.name.required = Boolean(eventBaseline.name);
                 configureAmount(eventForm.elements.mg, record);
                 eventForm.elements.time.value = eventBaseline.time;
             }
@@ -288,7 +287,7 @@
                 ? "Changes affect future drinks only. Editing requires Premium on your watch."
                 : "Save a favourite with its caffeine amount. Requires Premium on your watch.";
             customForm.noValidate = Boolean(customEdit);
-            customForm.elements.name.required = !customEdit || Boolean(customEdit.name);
+            customForm.elements.name.required = !customEdit || Boolean(customBaseline?.name);
             customForm.querySelector('[type="submit"]').textContent = customEdit ? "Save changes" : "Save custom drink";
             showFormError(customError);
             openEditor("custom");
