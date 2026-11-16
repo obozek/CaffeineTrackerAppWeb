@@ -35,7 +35,8 @@ test('keeps connection facts in the companion page and labels the existing websi
   assert.match(page,/<summary>Connection data<\/summary>/);
   assert.match(page,/Website and purchase privacy<\/a>/);
   for(const name of ['index.html','privacy.html','how-it-works.html']) assert.ok(page.includes('href="https://www.caffeinetracker.app/'+name+'"'));
-  assert.match(page,/72 hours/);
+  assert.match(page,/Browser access lasts up to 10 minutes/);
+  assert.match(page,/72 hours after it is first received/);
   assert.match(page,/profile weight or the app’s fallback/);
   assert.equal(fs.existsSync(path.join(output,'privacy.html')),false);
  }finally{fs.rmSync(temp,{recursive:true,force:true})}
