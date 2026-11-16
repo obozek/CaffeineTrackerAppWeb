@@ -33,6 +33,7 @@ test('keeps connection facts in the companion page and labels the existing websi
   const output=path.join(temp,'preview');buildPreview(output);
   const page=fs.readFileSync(path.join(output,'companion.html'),'utf8');
   assert.match(page,/<summary>Connection data<\/summary>/);
+  assert.match(page,/Watch data shared through the companion can include/);
   assert.match(page,/Website and purchase privacy<\/a>/);
   for(const name of ['index.html','privacy.html','how-it-works.html']) assert.ok(page.includes('href="https://www.caffeinetracker.app/'+name+'"'));
   assert.match(page,/Browser access lasts up to 10 minutes/);
